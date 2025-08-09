@@ -1,0 +1,83 @@
+selection:
+   ### use `&`, `|`, `~` for logical operations on numpy arrays
+   ### can use functions from `math`, `np` (numpy), and `awkward` in the expression
+
+new_variables:
+   ### [format] name: formula
+   ### can use functions from `math`, `np` (numpy), and `awkward` in the expression
+   part_mask: ak.ones_like(part_deta)
+   part_pt: np.hypot(part_px, part_py)
+   part_pt_log: np.log(part_pt)
+   part_e_log: np.log(part_energy)
+   part_logptrel: np.log(part_pt/jet_pt)
+   part_logerel: np.log(part_energy/jet_energy)
+   part_deltaR: np.hypot(part_deta, part_dphi)
+   jet_isGluon: label == 0
+   jet_isQuark: label == 1
+   jet_isW: label == 2
+   jet_isZ: label == 3
+   jet_isTop: label == 4
+
+preprocess:
+   ### method: [manual, auto] - whether to use manually specified parameters for variable standardization
+   method: auto
+   ### data_fraction: fraction of events to use when calculating the mean/scale for the standardization
+   data_fraction: 0.5
+
+inputs:
+   pf_points:
+      length: 150
+      pad_mode: wrap
+      vars:
+         - part_deta
+         - part_dphi
+   pf_features:
+      length: 150
+      pad_mode: wrap
+      vars:
+         ### [format 1]: var_name (no transformation)
+         ### [format 2]: [var_name,
+         ###              subtract_by(optional, default=None, no transf. if preprocess.method=manual, auto transf. if preprocess.method=auto),
+         ###              multiply_by(optional, default=1),
+         ###              clip_min(optional, default=-5),
+         ###              clip_max(optional, default=5),
+         ###              pad_value(optional, default=0)]
+         - [part_pt_log, null]
+         - [part_e_log, null]
+         - [part_logptrel, null]
+         - [part_logerel, null]
+         - [part_deltaR, null]
+         - part_deta
+         - part_dphi
+   pf_vectors:
+      length: 150
+      pad_mode: wrap
+      vars:
+         - part_px
+         - part_py
+         - part_pz
+         - part_energy
+   pf_mask:
+      length: 150
+      pad_mode: constant
+      vars:
+         - part_mask
+
+labels:
+   ### type can be `simple`, `custom`
+   ### [option 1] use `simple` for binary/multi-class classification, then `value` is a list of 0-1 labels
+   type: simple
+   value: [jet_isGluon, jet_isQuark, jet_isW, jet_isZ, jet_isTop]
+   ### [option 2] otherwise use `custom` to define the label, then `value` is a map
+   # type: custom
+   # value:
+   #    truth_label: label.argmax(1)
+
+observers:
+   - jet_pt
+   - jet_eta
+   - jet_mass
+   - jet_phi
+   - jet_nparticles
+
+weights:

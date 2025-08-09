@@ -1,0 +1,52 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: timlegge-qg-training
+spec:
+  backoffLimit: 0
+  template:
+    spec:
+      containers:
+      - name: qg-training
+        image: gitlab-registry.nrp-nautilus.io/jmduarte/weaver:latest
+        command: ["/bin/bash", "-c"]
+        args:
+        - |
+          git clone https://github.com/tim-legge/particle_transformer_legge && \
+          pip install 'weaver-core>=0.4' && \
+          cd particle_transformer_legge && \
+          mkdir datasets datasets/qg_dataset datasets/tl_dataset && \
+          ./get_datasets.py QuarkGluon -d datasets/qg_dataset && \
+          ./train_QuarkGluon.sh ParT kinpidplus --model-prefix /part-vol-3/timlegge-ParT-trained/on-qg --batch-size 32 --fetch-step 0.15
+        resources:
+          limits:
+            cpu: "2.4"
+            memory: 32Gi
+            nvidia.com/gpu: 1
+          requests:
+            cpu: "2"
+            memory: 30Gi
+            nvidia.com/gpu: 1
+        volumeMounts:
+        - name: part-vol-3
+          mountPath: /part-vol-3
+      restartPolicy: Never
+      volumes:
+      - name: part-vol-3
+        persistentVolumeClaim:
+          claimName: part-vol-3
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: kubernetes.io/hostname
+                operator: NotIn
+                values:
+                  - gpn-fiona-mizzou-2.rnet.missouri.edu
+                  - rci-nrp-gpu-05.sdsu.edu
+                  - node-2-2.sdsc.optiputer.net
+              - key: nvidia.com/gpu.product
+                operator: In
+                values:
+                  - NVIDIA-GeForce-RTX-4090
