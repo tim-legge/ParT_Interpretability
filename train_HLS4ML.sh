@@ -58,7 +58,7 @@ weaver \
     "${DATADIR}/train/jetImage_4*.h5" \
     "${DATADIR}/train/jetImage_5*.h5" \
     --data-val "${DATADIR}/val/*.h5" \
-    --data-test "${DATADIR}/test/jetImage_6*.h5" \
+    --data-test "${DATADIR}/train/jetImage_6*.h5" \
     --data-config data/HLS4ML/hls4ml.yaml --network-config $modelopts \
     --model-prefix training/HLS4ML/${model}/{auto}${suffix}/net \
     --num-workers 1 --fetch-step 1 --in-memory \

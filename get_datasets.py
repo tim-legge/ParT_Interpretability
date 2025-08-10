@@ -38,13 +38,13 @@ datasets = {
         ],
     },
     'HLS4ML': {
-        '../train': [
+        './train': [
             ('https://zenodo.org/records/3602260/files/hls4ml_LHCjet_150p_train.tar.gz', 'af12d3a500414924e70a73b56fc49aec'),
         ],
-        '../test': [
+        './test': [
             ('https://zenodo.org/records/3602260/files/hls4ml_LHCjet_150p_train.tar.gz', 'af12d3a500414924e70a73b56fc49aec'),
         ],
-        '../val': [
+        './val': [
             ('https://zenodo.org/records/3602260/files/hls4ml_LHCjet_150p_val.tar.gz', 'ff902e6a02bfb4247a9068bf7ff7f6db'),
         ],
     },
