@@ -1,8 +1,3 @@
-<<<<<<< HEAD
-version https://git-lfs.github.com/spec/v1
-oid sha256:7d2d8d5ef7f90e9325a1c4a7f338bd054ec610871280c487247feb3bbb670a94
-size 7258
-=======
 # Particle Transformer
 
 This repo is the official implementation of "[Particle Transformer for Jet Tagging](https://arxiv.org/abs/2202.03772)". It includes the code, pre-trained models, and the JetClass dataset.
@@ -218,4 +213,3 @@ For the TopLandscape dataset, please cite:
   url          = {https://doi.org/10.5281/zenodo.2603256}
 }
 ```
->>>>>>> 2925bdb249e8ef78560cc2b9b651eda3615da8c7
