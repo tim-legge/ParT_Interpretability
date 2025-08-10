@@ -6,9 +6,9 @@ source env.sh
 
 echo "args: $@"
 
-# set the dataset dir via `DATADIR_TopLandscape`
-DATADIR=${DATADIR_TopLandscape}
-[[ -z $DATADIR ]] && DATADIR='./datasets/TopLandscape'
+# set the dataset dir via `DATADIR_HLS4ML`
+DATADIR=${DATADIR_HLS4ML}
+[[ -z $DATADIR ]] && DATADIR='./datasets/HLS4ML'
 # set a comment via `COMMENT`
 suffix=${COMMENT}
 
@@ -54,10 +54,10 @@ weaver \
     --data-train "${DATADIR}/train_file.parquet" \
     --data-val "${DATADIR}/val_file.parquet" \
     --data-test "${DATADIR}/test_file.parquet" \
-    --data-config data/TopLandscape/top_${FEATURE_TYPE}.yaml --network-config $modelopts \
-    --model-prefix training/TopLandscape/${model}/{auto}${suffix}/net \
+    --data-config data/HLS4ML/hls4ml.yaml --network-config $modelopts \
+    --model-prefix training/HLS4ML/${model}/{auto}${suffix}/net \
     --num-workers 1 --fetch-step 1 --in-memory \
     --batch-size 512 --samples-per-epoch $((2400 * 512)) --samples-per-epoch-val $((800 * 512)) --num-epochs 20 --gpus 0 \
-    --start-lr $lr --optimizer ranger --log logs/TopLandscape_${model}_{auto}${suffix}.log --predict-output pred.root \
-    --tensorboard TopLandscape_${FEATURE_TYPE}_${model}${suffix} \
+    --start-lr $lr --optimizer ranger --log logs/HLS4ML_${model}_{auto}${suffix}.log --predict-output pred.root \
+    --tensorboard HLS4ML_${FEATURE_TYPE}_${model}${suffix} \
     ${extraopts} "${@:3}"

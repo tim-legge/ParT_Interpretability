@@ -1,8 +1,3 @@
-<<<<<<< HEAD
-version https://git-lfs.github.com/spec/v1
-oid sha256:7d43b497e2f77e9d132a05e4fb8c9c1300de5e003b07393a247c5358e19c97b9
-size 4192
-=======
 #!/usr/bin/env python3
 
 import argparse
@@ -78,4 +73,3 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     download_dataset(args.dataset, args.basedir, args.envfile, args.force)
->>>>>>> 2925bdb249e8ef78560cc2b9b651eda3615da8c7
