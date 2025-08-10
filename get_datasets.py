@@ -37,6 +37,17 @@ datasets = {
             ('https://hqu.web.cern.ch/datasets/QuarkGluon/QuarkGluon.tar', 'd8dd7f71a7aaaf9f1d2ee3cddef998f9'),
         ],
     },
+    'HLS4ML': {
+        'Train/': [
+            ('https://zenodo.org/records/3602260/files/hls4ml_LHCjet_150p_train.tar.gz', 'af12d3a500414924e70a73b56fc49aec'),
+        ],
+        'Test/': [
+            ('https://zenodo.org/records/3602260/files/hls4ml_LHCjet_150p_train.tar.gz', 'af12d3a500414924e70a73b56fc49aec'),
+        ],
+        'Val/': [
+            ('https://zenodo.org/records/3602260/files/hls4ml_LHCjet_150p_val.tar.gz', 'ff902e6a02bfb4247a9068bf7ff7f6db'),
+        ],
+    },
 }
 
 
