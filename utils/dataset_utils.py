@@ -1,8 +1,3 @@
-<<<<<<< HEAD
-version https://git-lfs.github.com/spec/v1
-oid sha256:1613d221dc20096edb46aa18c57e58dd1c471931dbd0e08d4ed6e7ba26f642be
-size 8428
-=======
 '''
 Adapted from:
 https://github.com/keras-team/keras/blob/master/keras/utils/data_utils.py
@@ -222,4 +217,3 @@ def get_file(origin=None,
         extract_archive(fpath, datadir, archive_format)
 
     return fpath, download
->>>>>>> 2925bdb249e8ef78560cc2b9b651eda3615da8c7

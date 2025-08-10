@@ -1,8 +1,3 @@
-<<<<<<< HEAD
-version https://git-lfs.github.com/spec/v1
-oid sha256:36877596aaaca2e9b43ab709de7ddf3a3ce1b3f590ee6c5f743eaf85ad00d0e6
-size 4739
-=======
 import os
 import numpy as np
 import awkward as ak
@@ -149,4 +144,3 @@ if __name__ == '__main__':
 
     convert(train_sources, destdir=args.outputdir, basename='train_file')
     convert(test_sources, destdir=args.outputdir, basename='test_file')
->>>>>>> 2925bdb249e8ef78560cc2b9b651eda3615da8c7

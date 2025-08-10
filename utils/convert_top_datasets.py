@@ -1,8 +1,3 @@
-<<<<<<< HEAD
-version https://git-lfs.github.com/spec/v1
-oid sha256:ba72c109e6d5a03d89770d9e4f284956e3424d9f702e3911ebd3cab5b9e66de0
-size 2900
-=======
 import os
 import pandas as pd
 import numpy as np
@@ -109,4 +104,3 @@ if __name__ == '__main__':
 
     # conver testing file
     convert(os.path.join(args.inputdir, 'test.h5'), destdir=args.outputdir, basename='test_file')
->>>>>>> 2925bdb249e8ef78560cc2b9b651eda3615da8c7
