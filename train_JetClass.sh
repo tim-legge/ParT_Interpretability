@@ -1,8 +1,3 @@
-<<<<<<< HEAD
-version https://git-lfs.github.com/spec/v1
-oid sha256:5a9aa68401412749857c67d8cc870d9b0d7b1384c83b41384786594f4abc668f
-size 3481
-=======
 #!/bin/bash
 
 set -x
@@ -94,4 +89,3 @@ $CMD \
     --optimizer ranger --log logs/JetClass_${SAMPLE_TYPE}_${FEATURE_TYPE}_${model}_{auto}${suffix}.log --predict-output pred.root \
     --tensorboard JetClass_${SAMPLE_TYPE}_${FEATURE_TYPE}_${model}${suffix} \
     "${@:3}"
->>>>>>> 2925bdb249e8ef78560cc2b9b651eda3615da8c7

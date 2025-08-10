@@ -64,6 +64,8 @@ def download_dataset(dataset, basedir, envfile, force_download):
             if download:
                 extract_archive(fpath, path=os.path.join(datadir, subdir))
 
+    #may need to call batch_convert for parquet conversions if original HLS4ML training fails
+
     datapath = f'DATADIR_{dataset}={datadir}'
     with open(envfile) as f:
         lines = f.readlines()

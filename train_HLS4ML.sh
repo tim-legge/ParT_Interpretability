@@ -51,9 +51,9 @@ if [[ "${FEATURE_TYPE}" != "kin" ]]; then
 fi
 
 weaver \
-    --data-train "${DATADIR}/train_file.parquet" \
-    --data-val "${DATADIR}/val_file.parquet" \
-    --data-test "${DATADIR}/test_file.parquet" \
+    --data-train "${DATADIR}/Train/*.h5" \
+    --data-val "${DATADIR}/Test/*.h5" \
+    --data-test "${DATADIR}/Val/*.h5" \
     --data-config data/HLS4ML/hls4ml.yaml --network-config $modelopts \
     --model-prefix training/HLS4ML/${model}/{auto}${suffix}/net \
     --num-workers 1 --fetch-step 1 --in-memory \
