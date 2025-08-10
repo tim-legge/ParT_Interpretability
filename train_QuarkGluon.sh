@@ -1,8 +1,3 @@
-<<<<<<< HEAD
-version https://git-lfs.github.com/spec/v1
-oid sha256:4204a9efed7f06bc26cd19ca6f5b815353429247a03416bfe1212e1227ad95ee
-size 2480
-=======
 #!/bin/bash
 
 set -x
@@ -78,4 +73,3 @@ weaver \
     --start-lr $lr --optimizer ranger --log logs/QuarkGluon_${model}_{auto}${suffix}.log --predict-output pred.root \
     --tensorboard QuarkGluon_${FEATURE_TYPE}_${model}${suffix} \
     ${extraopts} "${@:3}"
->>>>>>> 2925bdb249e8ef78560cc2b9b651eda3615da8c7

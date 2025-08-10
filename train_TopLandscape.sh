@@ -1,8 +1,3 @@
-<<<<<<< HEAD
-version https://git-lfs.github.com/spec/v1
-oid sha256:53857f6c87b6078d15a15a1bcdec8c4b73e981090440563ffaf902e55deb2e98
-size 2241
-=======
 #!/bin/bash
 
 set -x
@@ -66,4 +61,3 @@ weaver \
     --start-lr $lr --optimizer ranger --log logs/TopLandscape_${model}_{auto}${suffix}.log --predict-output pred.root \
     --tensorboard TopLandscape_${FEATURE_TYPE}_${model}${suffix} \
     ${extraopts} "${@:3}"
->>>>>>> 2925bdb249e8ef78560cc2b9b651eda3615da8c7
