@@ -6,7 +6,8 @@ Usage: python batch_convert.py [input_dir] [output_dir]
 
 import os
 import sys
-from convert_h5_to_parquet import convert_h5_to_parquet
+#from convert_h5_to_parquet import convert_h5_to_parquet
+from convert_h5_to_parquet_proper_masking import convert_h5_to_parquet
 
 def batch_convert(input_dir, output_dir, max_files=None):
     """
