@@ -15,7 +15,7 @@ from typing import Dict, List, Any
 
 def extract_particle_features(particle_data: np.ndarray, jets_data: np.ndarray) -> Dict[str, List[List[float]]]:
     """
-    Extract particle features with proper zero-particle filtering.
+    Extract particle features with proper filtering.
     """
     n_jets, n_particles, n_features = particle_data.shape
     
@@ -105,29 +105,46 @@ def convert_h5_to_parquet(h5_file_path: str, parquet_file_path: str) -> None:
         
         # Extract labels (same as before)
         j_g = jets_data[:, 53]
-        j_q = jets_data[:, 54] 
+        j_q = jets_data[:, 54]
         j_w = jets_data[:, 55]
         j_z = jets_data[:, 56]
         j_t = jets_data[:, 57]
         
-        label_probs = np.stack([j_g, j_q, j_w, j_z, j_t], axis=1)
-        labels = np.argmax(label_probs, axis=1).astype(np.float64)
+        #label_probs = np.stack([j_g, j_q, j_w, j_z, j_t], axis=1)
+        #labels = np.argmax(label_probs, axis=1).astype(np.float64)
         
         # Extract particle features with filtering
         particle_features = extract_particle_features(particle_data, jets_data)
         
         # Create data dictionary
+        #data = {
+        #    'label': labels,
+        #    'jet_pt': jet_pt,
+        #    'jet_eta': jet_eta, 
+        #    'jet_phi': jet_phi,
+        #    'jet_energy': jet_energy,
+        #    'jet_mass': jet_mass,
+        #    'jet_nparticles': jet_nparticles,
+        #    **particle_features
+        #}
+        
+        # Create data dictionary
         data = {
-            'label': labels,
+            'label': [],
             'jet_pt': jet_pt,
             'jet_eta': jet_eta, 
             'jet_phi': jet_phi,
             'jet_energy': jet_energy,
             'jet_mass': jet_mass,
             'jet_nparticles': jet_nparticles,
+            'jet_isGluon': j_g,
+            'jet_isQuark': j_q,
+            'jet_isW': j_w,
+            'jet_isZ': j_z,
+            'jet_isTop': j_t,
             **particle_features
         }
-        
+
         # Write to parquet
         schema = create_parquet_schema()
         table = pa.Table.from_pydict(data, schema=schema)
