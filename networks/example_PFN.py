@@ -1,8 +1,3 @@
-<<<<<<< HEAD
-version https://git-lfs.github.com/spec/v1
-oid sha256:fed6b797e229593af9db153a82dd2ce624276f742de366152f49aec12a53f807
-size 2680
-=======
 import torch
 import torch.nn as nn
 
@@ -79,4 +74,3 @@ def get_model(data_config, **kwargs):
 
 def get_loss(data_config, **kwargs):
     return torch.nn.CrossEntropyLoss()
->>>>>>> 2925bdb249e8ef78560cc2b9b651eda3615da8c7

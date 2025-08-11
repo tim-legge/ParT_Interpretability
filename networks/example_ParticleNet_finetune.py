@@ -1,8 +1,3 @@
-<<<<<<< HEAD
-version https://git-lfs.github.com/spec/v1
-oid sha256:e1541cecddc028a999c53f905d691136224e1ca3e167872f75d6a4cd28f0b26a
-size 2105
-=======
 import torch
 import torch.nn as nn
 from weaver.nn.model.ParticleNet import ParticleNet
@@ -69,4 +64,3 @@ def get_model(data_config, **kwargs):
 
 def get_loss(data_config, **kwargs):
     return torch.nn.CrossEntropyLoss()
->>>>>>> 2925bdb249e8ef78560cc2b9b651eda3615da8c7
