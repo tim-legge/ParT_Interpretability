@@ -51,14 +51,14 @@ if [[ "${FEATURE_TYPE}" != "kin" ]]; then
 fi
 
 weaver \
-    --data-train "${DATADIR}/train/jetImage_0*.h5" \
-    "${DATADIR}/train/jetImage_1*.h5" \
-    "${DATADIR}/train/jetImage_2*.h5" \
-    "${DATADIR}/train/jetImage_3*.h5" \
-    "${DATADIR}/train/jetImage_4*.h5" \
-    "${DATADIR}/train/jetImage_5*.h5" \
-    --data-val "${DATADIR}/val/*.h5" \
-    --data-test "${DATADIR}/train/jetImage_6*.h5" \
+    --data-train "${DATADIR}/train/train-parquet/jetImage_0*.parquet" \
+    "${DATADIR}/train/train-parquet/jetImage_1*.parquet" \
+    "${DATADIR}/train/train-parquet/jetImage_2*.parquet" \
+    "${DATADIR}/train/train-parquet/jetImage_3*.parquet" \
+    "${DATADIR}/train/train-parquet/jetImage_4*.parquet" \
+    "${DATADIR}/train/train-parquet/jetImage_5*.parquet" \
+    --data-val "${DATADIR}/val/val-parquet/*.parquet" \
+    --data-test "${DATADIR}/train/train-parquet/jetImage_6*.parquet" \
     --data-config data/HLS4ML/hls4ml.yaml --network-config $modelopts \
     --model-prefix training/HLS4ML/${model}/{auto}${suffix}/net \
     --num-workers 1 --fetch-step 1 --in-memory \
