@@ -1,8 +1,3 @@
-<<<<<<< HEAD
-version https://git-lfs.github.com/spec/v1
-oid sha256:185454c9614a72b244b716f4f8281f14ec83226833ecea102484036805dcf7a0
-size 3007
-=======
 selection:
    ### use `&`, `|`, `~` for logical operations on numpy arrays
    ### can use functions from `math`, `np` (numpy), and `awkward` in the expression
@@ -98,4 +93,3 @@ observers:
    - jet_tau4
 
 weights:
->>>>>>> 2925bdb249e8ef78560cc2b9b651eda3615da8c7
