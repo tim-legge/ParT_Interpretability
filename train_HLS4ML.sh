@@ -64,5 +64,5 @@ weaver \
     --num-workers 1 --fetch-step 1 --in-memory \
     --batch-size 512 --samples-per-epoch $((2400 * 512)) --samples-per-epoch-val $((800 * 512)) --num-epochs 20 --gpus 0 \
     --start-lr $lr --optimizer ranger --log logs/HLS4ML_${model}_{auto}${suffix}.log --predict-output pred.root \
-    --tensorboard HLS4ML_${FEATURE_TYPE}_${model}${suffix} \
+    --tensorboard HLS4ML_${FEATURE_TYPE}_${model}${suffix} --clip-grad-norm 1.0 \
     ${extraopts} "${@:3}"
