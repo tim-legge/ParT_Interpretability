@@ -52,13 +52,17 @@ def extract_particle_features(particle_data: np.ndarray, jets_data: np.ndarray) 
 def create_parquet_schema() -> pa.Schema:
     """Create PyArrow schema matching QG parquet format."""
     return pa.schema([
-        pa.field("label", pa.float64()),
         pa.field("jet_pt", pa.float32()),
         pa.field("jet_eta", pa.float32()),
         pa.field("jet_phi", pa.float32()),
         pa.field("jet_energy", pa.float32()),
         pa.field("jet_mass", pa.float32()),
         pa.field("jet_nparticles", pa.int64()),
+        pa.field("jet_isGluon", pa.float64()),
+        pa.field("jet_isQuark", pa.float64()),
+        pa.field("jet_isW", pa.float64()),
+        pa.field("jet_isZ", pa.float64()),
+        pa.field("jet_isTop", pa.float64()),
         pa.field("part_px", pa.list_(pa.float32())),
         pa.field("part_py", pa.list_(pa.float32())),
         pa.field("part_pz", pa.list_(pa.float32())),
@@ -130,7 +134,6 @@ def convert_h5_to_parquet(h5_file_path: str, parquet_file_path: str) -> None:
         
         # Create data dictionary
         data = {
-            #'label': [],
             'jet_pt': jet_pt,
             'jet_eta': jet_eta, 
             'jet_phi': jet_phi,
