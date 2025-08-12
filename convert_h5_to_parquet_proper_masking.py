@@ -130,7 +130,7 @@ def convert_h5_to_parquet(h5_file_path: str, parquet_file_path: str) -> None:
         
         # Create data dictionary
         data = {
-            'label': [],
+            #'label': [],
             'jet_pt': jet_pt,
             'jet_eta': jet_eta, 
             'jet_phi': jet_phi,
