@@ -1532,7 +1532,7 @@ def main():
         all_init_fractions.extend(init_batch_fractions)
 
         # Clear memory
-        del attention, batch_features, batch_vectors, batch_mask, batch_points
+        del attention, init_attention, batch_features, batch_vectors, batch_mask, batch_points
         torch.cuda.empty_cache() if torch.cuda.is_available() else None
     
     # Save results
