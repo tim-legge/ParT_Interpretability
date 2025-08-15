@@ -15,6 +15,55 @@ import mplhep as hep
 
 hep.style.use(hep.style.ROOT)
 
+CMS = {
+    # "font.sans-serif": ["TeX Gyre Heros", "Helvetica", "Arial"],
+    "font.family": "sans-serif",
+    "mathtext.fontset": "custom",
+    "mathtext.rm": "TeX Gyre Heros",
+    "mathtext.bf": "TeX Gyre Heros:bold",
+    "mathtext.sf": "TeX Gyre Heros",
+    "mathtext.it": "TeX Gyre Heros:italic",
+    "mathtext.tt": "TeX Gyre Heros",
+    "mathtext.cal": "TeX Gyre Heros",
+    "mathtext.default": "regular",
+    "figure.figsize": (8.0, 8.0),
+    "font.size": 14,
+    #"text.usetex": True,
+    "axes.labelsize": "medium",
+    "axes.unicode_minus": False,
+    "xtick.labelsize": "small",
+    "ytick.labelsize": "small",
+    # Make legends smaller
+    "legend.fontsize": "x-small",  # Adjusted to a smaller size
+    "legend.handlelength": 1.5,
+    "legend.borderpad": 0.5,
+    "xtick.direction": "in",
+    "xtick.major.size": 12,
+    "xtick.minor.size": 6,
+    "xtick.major.pad": 6,
+    "xtick.top": True,
+    "xtick.major.top": True,
+    "xtick.major.bottom": True,
+    "xtick.minor.top": True,
+    "xtick.minor.bottom": True,
+    "xtick.minor.visible": True,
+    "ytick.direction": "in",
+    "ytick.major.size": 12,
+    "ytick.minor.size": 6.0,
+    "ytick.right": True,
+    "ytick.major.left": True,
+    "ytick.major.right": True,
+    "ytick.minor.left": True,
+    "ytick.minor.right": True,
+    "ytick.minor.visible": True,
+    "grid.alpha": 0.8,
+    "grid.linestyle": ":",
+    "axes.linewidth": 2,
+    "savefig.transparent": False,
+}
+plt.style.use(CMS)
+
+
 def build_features_and_labels_tl(tree, transform_features=True):
     """Build features for TopLandscape dataset based on top_kin.yaml"""
     # load arrays from the tree
@@ -1478,8 +1527,8 @@ def main():
     print("Loading initialized model...")
     init_model = get_model('tl')
     print("Loading trained model...")
+    model = get_model('tl')
     tl_state_dict = torch.load('./save_tl_model/on-tl-run2_best_epoch_state.pt', map_location=torch.device('cpu'))
-    model = init_model
     model[0].load_state_dict(tl_state_dict)
     
     # Process in batches to manage memory

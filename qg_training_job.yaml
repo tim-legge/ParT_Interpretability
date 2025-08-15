@@ -12,12 +12,13 @@ spec:
         command: ["/bin/bash", "-c"]
         args:
         - |
-          git clone https://github.com/tim-legge/particle_transformer_legge && \
+          git clone https://github.com/tim-legge/ParT_Interpretability && \
           pip install 'weaver-core>=0.4' && \
-          cd particle_transformer_legge && \
+          cd ParT_Interpretability && \
           mkdir datasets datasets/qg_dataset datasets/tl_dataset && \
           ./get_datasets.py QuarkGluon -d datasets/qg_dataset && \
-          ./train_QuarkGluon.sh ParT kinpidplus --model-prefix /part-vol-3/timlegge-ParT-trained/on-qg --batch-size 32 --fetch-step 0.15
+          ./train_QuarkGluon.sh ParT kinpidplus --model-prefix /part-vol-3/timlegge-ParT-trained/on-qg --batch-size 32 --fetch-step 0.15 \
+          --num-epochs 3 --tensorboard /part-vol-3/timlegge-ParT-trained/on-qg-run3-tb/QuarkGluon_${FEATURE_TYPE}_${SUFFIX}_${model}${suffix}
         resources:
           limits:
             cpu: "2.4"
