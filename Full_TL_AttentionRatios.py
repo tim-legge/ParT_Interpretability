@@ -1478,12 +1478,12 @@ def main():
     print("Loading initialized model...")
     init_model = get_model('tl')
     print("Loading trained model...")
-    tl_state_dict = torch.load('/path/to/model.pt', map_location=torch.device('cpu'))
+    tl_state_dict = torch.load('./save-tl-model/on-tl-run2_best_state_epoch.pt', map_location=torch.device('cpu'))
     model = init_model
     model[0].load_state_dict(tl_state_dict)
     
     # Process in batches to manage memory
-    batch_size = 1000
+    batch_size = 400
     all_init_fractions = []
     all_fractions = []
     
