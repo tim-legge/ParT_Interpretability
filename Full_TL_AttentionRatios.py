@@ -1483,7 +1483,7 @@ def main():
     model[0].load_state_dict(tl_state_dict)
     
     # Process in batches to manage memory
-    batch_size = 400
+    batch_size = 200
     all_init_fractions = []
     all_fractions = []
     
@@ -1535,17 +1535,17 @@ def main():
         del attention, init_attention, batch_features, batch_vectors, batch_mask, batch_points
         torch.cuda.empty_cache() if torch.cuda.is_available() else None
     
-    # Save results
-    print(f"Saving {len(all_fractions)} fractions to file...")
-    with open('/output/tl_inter_subjet_fractions.pkl', 'wb') as f:
-        pickle.dump(all_fractions, f)
+        # Save results
+        print(f"Saving {len(all_fractions)} fractions to file...")
+        with open('/part-vol-3/tl-intersubjet-attn/tl_inter_subjet_fractions.pkl', 'wb') as f:
+            pickle.dump(all_fractions, f)
     
-    # Generate plots
-    plot_inter_subjet_fraction_histogram(
-        fractions=all_fractions,
-        init_fractions=all_init_fractions,
-        save_path='/home/jovyan/inter_subjet_histogram.png'
-    )
+        # Generate plots
+        plot_inter_subjet_fraction_histogram(
+            fractions=all_fractions,
+            init_fractions=all_init_fractions,
+            save_path='/part-vol-3/tl-intersubjet-attn/inter_subjet_histogram.png'
+        )
     
     print("Analysis complete!")
 
