@@ -1532,7 +1532,7 @@ def main():
     model[0].load_state_dict(tl_state_dict)
     
     # Process in batches to manage memory
-    batch_size = 200
+    batch_size = 500
     all_init_fractions = []
     all_fractions = []
     
