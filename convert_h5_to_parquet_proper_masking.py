@@ -52,13 +52,17 @@ def extract_particle_features(particle_data: np.ndarray, jets_data: np.ndarray) 
 def create_parquet_schema() -> pa.Schema:
     """Create PyArrow schema matching QG parquet format."""
     return pa.schema([
-        pa.field("label", pa.float32()),
         pa.field("jet_pt", pa.float32()),
         pa.field("jet_eta", pa.float32()),
         pa.field("jet_phi", pa.float32()),
         pa.field("jet_energy", pa.float32()),
         pa.field("jet_mass", pa.float32()),
         pa.field("jet_nparticles", pa.int64()),
+        pa.field("jet_isGluon", pa.int32()),
+        pa.field("jet_isQuark", pa.int32()),
+        pa.field("jet_isW", pa.int32()),
+        pa.field("jet_isZ", pa.int32()),
+        pa.field("jet_isTop", pa.int32()),
         pa.field("part_px", pa.list_(pa.float32())),
         pa.field("part_py", pa.list_(pa.float32())),
         pa.field("part_pz", pa.list_(pa.float32())),
@@ -110,39 +114,39 @@ def convert_h5_to_parquet(h5_file_path: str, parquet_file_path: str) -> None:
         j_z = jets_data[:, 56]
         j_t = jets_data[:, 57]
         
-        label_probs = np.stack([j_g, j_q, j_w, j_z, j_t], axis=1)
-        labels = np.argmax(label_probs, axis=1).astype(np.float64)
+        #label_probs = np.stack([j_g, j_q, j_w, j_z, j_t], axis=1)
+        #labels = np.argmax(label_probs, axis=1).astype(np.float64)
         
         # Extract particle features with filtering
         particle_features = extract_particle_features(particle_data, jets_data)
         
         # Create data dictionary
-        data = {
-            'label': labels,
-            'jet_pt': jet_pt,
-            'jet_eta': jet_eta, 
-            'jet_phi': jet_phi,
-            'jet_energy': jet_energy,
-            'jet_mass': jet_mass,
-            'jet_nparticles': jet_nparticles,
-            **particle_features
-        }
-        
-        # Create data dictionary
         #data = {
+        #    'label': labels,
         #    'jet_pt': jet_pt,
         #    'jet_eta': jet_eta, 
         #    'jet_phi': jet_phi,
         #    'jet_energy': jet_energy,
         #    'jet_mass': jet_mass,
         #    'jet_nparticles': jet_nparticles,
-        #    'jet_isGluon': j_g,
-        #    'jet_isQuark': j_q,
-        #    'jet_isW': j_w,
-        #    'jet_isZ': j_z,
-        #    'jet_isTop': j_t,
         #    **particle_features
         #}
+        
+        # Create data dictionary
+        data = {
+            'jet_pt': jet_pt,
+            'jet_eta': jet_eta, 
+            'jet_phi': jet_phi,
+            'jet_energy': jet_energy,
+            'jet_mass': jet_mass,
+            'jet_nparticles': jet_nparticles,
+            'jet_isGluon': j_g,
+            'jet_isQuark': j_q,
+            'jet_isW': j_w,
+            'jet_isZ': j_z,
+            'jet_isTop': j_t,
+            **particle_features
+        }
 
         # Write to parquet
         schema = create_parquet_schema()
