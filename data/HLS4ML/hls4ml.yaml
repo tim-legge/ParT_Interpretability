@@ -27,13 +27,13 @@ preprocess:
 inputs:
    pf_points:
       length: 150
-      pad_mode: wrap
+      pad_mode: constant
       vars:
          - part_deta
          - part_dphi
    pf_features:
       length: 150
-      pad_mode: wrap
+      pad_mode: constant
       vars:
          ### [format 1]: var_name (no transformation)
          ### [format 2]: [var_name,
@@ -51,7 +51,7 @@ inputs:
          - part_dphi
    pf_vectors:
       length: 150
-      pad_mode: wrap
+      pad_mode: constant
       vars:
          - part_px
          - part_py
