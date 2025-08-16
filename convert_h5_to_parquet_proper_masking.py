@@ -52,7 +52,7 @@ def extract_particle_features(particle_data: np.ndarray, jets_data: np.ndarray) 
 def create_parquet_schema() -> pa.Schema:
     """Create PyArrow schema matching QG parquet format."""
     return pa.schema([
-        pa.field("labels", pa.float32()),
+        pa.field("label", pa.float32()),
         pa.field("jet_pt", pa.float32()),
         pa.field("jet_eta", pa.float32()),
         pa.field("jet_phi", pa.float32()),
