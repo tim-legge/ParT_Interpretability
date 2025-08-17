@@ -52,23 +52,23 @@ def extract_particle_features(particle_data: np.ndarray, jets_data: np.ndarray) 
 def create_parquet_schema() -> pa.Schema:
     """Create PyArrow schema matching QG parquet format."""
     return pa.schema([
-        pa.field("jet_pt", pa.float32()),
-        pa.field("jet_eta", pa.float32()),
-        pa.field("jet_phi", pa.float32()),
-        pa.field("jet_energy", pa.float32()),
-        pa.field("jet_mass", pa.float32()),
-        pa.field("jet_nparticles", pa.int64()),
-        pa.field("jet_isGluon", pa.int32()),
-        pa.field("jet_isQuark", pa.int32()),
-        pa.field("jet_isW", pa.int32()),
-        pa.field("jet_isZ", pa.int32()),
-        pa.field("jet_isTop", pa.int32()),
-        pa.field("part_px", pa.list_(pa.float32())),
-        pa.field("part_py", pa.list_(pa.float32())),
-        pa.field("part_pz", pa.list_(pa.float32())),
-        pa.field("part_energy", pa.list_(pa.float32())),
-        pa.field("part_deta", pa.list_(pa.float32())),
-        pa.field("part_dphi", pa.list_(pa.float32())),
+        pa.field("jet_pt", pa.float32(), nullable = False),
+        pa.field("jet_eta", pa.float32(), nullable = False),
+        pa.field("jet_phi", pa.float32(), nullable = False),
+        pa.field("jet_energy", pa.float32(), nullable = False),
+        pa.field("jet_mass", pa.float32(), nullable = False),
+        pa.field("jet_nparticles", pa.int64(), nullable = False),
+        pa.field("jet_isGluon", pa.int32(), nullable = False),
+        pa.field("jet_isQuark", pa.int32(), nullable = False),
+        pa.field("jet_isW", pa.int32(), nullable = False),
+        pa.field("jet_isZ", pa.int32(), nullable = False),
+        pa.field("jet_isTop", pa.int32(), nullable = False),
+        pa.field("part_px", pa.list_(pa.float32(), nullable = False), nullable = False),
+        pa.field("part_py", pa.list_(pa.float32(), nullable = False), nullable = False),
+        pa.field("part_pz", pa.list_(pa.float32(), nullable = False), nullable = False),
+        pa.field("part_energy", pa.list_(pa.float32(), nullable = False), nullable = False),
+        pa.field("part_deta", pa.list_(pa.float32(), nullable = False), nullable = False),
+        pa.field("part_dphi", pa.list_(pa.float32(), nullable = False), nullable = False),
     ])
 
 
@@ -147,6 +147,26 @@ def convert_h5_to_parquet(h5_file_path: str, parquet_file_path: str) -> None:
             'jet_isTop': j_t,
             **particle_features
         }
+
+        # Validate and clean data before writing
+        for key, values in data.items():
+            if isinstance(values, np.ndarray):
+                if np.isnan(values).any() or np.isinf(values).any():
+                    print(f"Warning: NaN/inf values found in {key}")
+                    # Replace with safe defaults
+                    if key.startswith('jet_'):
+                        if key in ['jet_pt', 'jet_energy']:
+                            data[key] = np.nan_to_num(values, nan=1.0, posinf=1000.0, neginf=0.0)
+                        else:
+                            data[key] = np.nan_to_num(values, nan=0.0, posinf=1.0, neginf=-1.0)
+                    elif key.startswith('jet_is'):
+                        data[key] = np.nan_to_num(values, nan=0).astype(np.int32)
+            elif isinstance(values, list):
+                # Validate particle feature lists
+                for i, sublist in enumerate(values):
+                    if any(np.isnan(sublist)) or any(np.isinf(sublist)):
+                        print(f"Warning: NaN/inf values found in {key}[{i}]")
+                        values[i] = [np.nan_to_num(x, nan=0.0, posinf=100.0, neginf=-100.0) for x in sublist]
 
         # Write to parquet
         schema = create_parquet_schema()
