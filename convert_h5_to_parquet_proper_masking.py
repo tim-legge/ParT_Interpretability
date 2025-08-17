@@ -63,12 +63,12 @@ def create_parquet_schema() -> pa.Schema:
         pa.field("jet_isW", pa.int32(), nullable = False),
         pa.field("jet_isZ", pa.int32(), nullable = False),
         pa.field("jet_isTop", pa.int32(), nullable = False),
-        pa.field("part_px", pa.list_(pa.float32(), nullable = False), nullable = False),
-        pa.field("part_py", pa.list_(pa.float32(), nullable = False), nullable = False),
-        pa.field("part_pz", pa.list_(pa.float32(), nullable = False), nullable = False),
-        pa.field("part_energy", pa.list_(pa.float32(), nullable = False), nullable = False),
-        pa.field("part_deta", pa.list_(pa.float32(), nullable = False), nullable = False),
-        pa.field("part_dphi", pa.list_(pa.float32(), nullable = False), nullable = False),
+        pa.field("part_px", pa.list_(pa.float32()), nullable = False),
+        pa.field("part_py", pa.list_(pa.float32()), nullable = False),
+        pa.field("part_pz", pa.list_(pa.float32()), nullable = False),
+        pa.field("part_energy", pa.list_(pa.float32()), nullable = False),
+        pa.field("part_deta", pa.list_(pa.float32()), nullable = False),
+        pa.field("part_dphi", pa.list_(pa.float32()), nullable = False),
     ])
 
 
