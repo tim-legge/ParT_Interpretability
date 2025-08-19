@@ -44,11 +44,11 @@ fi
 
 # "kin, kinpid"
 FEATURE_TYPE=$2
-[[ -z ${FEATURE_TYPE} ]] && FEATURE_TYPE="kin"
-if [[ "${FEATURE_TYPE}" =~ ^(kin|kinpid)$ ]]; then
-    echo "Invalid feature type ${FEATURE_TYPE}!"
-    exit 1
-fi
+#[[ -z ${FEATURE_TYPE} ]] && FEATURE_TYPE="kin"
+#if [[ "${FEATURE_TYPE}" =~ ^(kin|kinpid)$ ]]; then
+#    echo "Invalid feature type ${FEATURE_TYPE}!"
+#    exit 1
+#fi
 
 weaver \
     --data-train "${DATADIR}/train/train-parquet/jetImage_0*.parquet" \

@@ -42,11 +42,11 @@ inputs:
          ###              clip_min(optional, default=-5),
          ###              clip_max(optional, default=5),
          ###              pad_value(optional, default=0)]
-         - [part_pt_log, null]
-         - [part_e_log, null]
-         - [part_logptrel, null]
-         - [part_logerel, null]
-         - [part_deltaR, null]
+         - [part_pt_log, 1.7, 0.7]
+         - [part_e_log, 2.0, 0.7]
+         - [part_logptrel, -4.7, 0.7]
+         - [part_logerel, -4.7, 0.7]
+         - [part_deltaR, 0.2, 4.0]
          - part_deta
          - part_dphi
          - part_pdgid
