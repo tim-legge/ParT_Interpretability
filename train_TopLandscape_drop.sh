@@ -6,9 +6,9 @@ source env.sh
 
 echo "args: $@"
 
-# set the dataset dir via `DATADIR_HLS4ML`
-DATADIR=${DATADIR_HLS4ML}
-[[ -z $DATADIR ]] && DATADIR='./datasets/HLS4ML'
+# set the dataset dir via `DATADIR_TopLandscape`
+DATADIR=${DATADIR_TopLandscape}
+[[ -z $DATADIR ]] && DATADIR='./datasets/TopLandscape'
 # set a comment via `COMMENT`
 suffix=${COMMENT}
 
@@ -16,7 +16,7 @@ suffix=${COMMENT}
 model=$1
 extraopts=""
 if [[ "$model" == "ParT" ]]; then
-    modelopts="networks/example_ParticleTransformer.py --use-amp --optimizer-option weight_decay 0.01"
+    modelopts="networks/ParT_drop.py --use-amp --optimizer-option weight_decay 0.01"
     lr="1e-3"
 elif [[ "$model" == "ParT-FineTune" ]]; then
     modelopts="networks/example_ParticleTransformer_finetune.py --use-amp --optimizer-option weight_decay 0.01"
@@ -42,27 +42,22 @@ else
     exit 1
 fi
 
-# "kin, kinplus"
+# "kin"
 FEATURE_TYPE=$2
 [[ -z ${FEATURE_TYPE} ]] && FEATURE_TYPE="kin"
-if ! [[ "${FEATURE_TYPE}" =~ ^(kin|kinplus)$ ]]; then
+if [[ "${FEATURE_TYPE}" != "kin" ]]; then
     echo "Invalid feature type ${FEATURE_TYPE}!"
     exit 1
 fi
 
 weaver \
-    --data-train "${DATADIR}/train/train-parquet/jetImage_0*.parquet" \
-    "${DATADIR}/train/train-parquet/jetImage_1*.parquet" \
-    "${DATADIR}/train/train-parquet/jetImage_2*.parquet" \
-    "${DATADIR}/train/train-parquet/jetImage_3*.parquet" \
-    "${DATADIR}/train/train-parquet/jetImage_4*.parquet" \
-    "${DATADIR}/train/train-parquet/jetImage_5*.parquet" \
-    --data-val "${DATADIR}/val/val-parquet/*.parquet" \
-    --data-test "${DATADIR}/train/train-parquet/jetImage_6*.parquet" \
-    --data-config data/HLS4ML/hls4ml_kin.yaml --network-config $modelopts \
-    --model-prefix training/HLS4ML/${model}/{auto}${suffix}/net \
+    --data-train "${DATADIR}/train_file.parquet" \
+    --data-val "${DATADIR}/val_file.parquet" \
+    --data-test "${DATADIR}/test_file.parquet" \
+    --data-config data/TopLandscape/top_${FEATURE_TYPE}.yaml --network-config $modelopts \
+    --model-prefix training/TopLandscape/${model}/{auto}${suffix}/net \
     --num-workers 1 --fetch-step 1 --in-memory \
     --batch-size 512 --samples-per-epoch $((2400 * 512)) --samples-per-epoch-val $((800 * 512)) --num-epochs 20 --gpus 0 \
-    --start-lr $lr --optimizer ranger --log logs/HLS4ML_${model}_{auto}${suffix}.log --predict-output pred.root \
-    --tensorboard HLS4ML_${FEATURE_TYPE}_${model}${suffix} \
+    --start-lr $lr --optimizer ranger --log logs/TopLandscape_${model}_{auto}${suffix}.log --predict-output pred.root \
+    --tensorboard TopLandscape_${FEATURE_TYPE}_${model}${suffix} \
     ${extraopts} "${@:3}"

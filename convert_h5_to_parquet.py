@@ -24,8 +24,18 @@ def extract_particle_features(particle_data: np.ndarray, jets_data: np.ndarray) 
         'part_py': [],
         'part_pz': [],
         'part_energy': [],
-        'part_deta': [],
-        'part_dphi': []
+        'part_erel': [],
+        'part_pt': [],
+        'part_ptrel': [],
+        'part_eta': [],
+        'part_etarel': [],
+        'part_etarot': [],
+        'part_phi': [],
+        'part_phirel': [],
+        'part_phirot': [],
+        'part_deltaR': [],
+        'part_costheta': [],
+        'part_costhetarel': [],
     }
     
     for jet_idx in range(n_jets):
@@ -43,9 +53,19 @@ def extract_particle_features(particle_data: np.ndarray, jets_data: np.ndarray) 
         particle_features['part_py'].append(valid_particles[:, 1].tolist())
         particle_features['part_pz'].append(valid_particles[:, 2].tolist())
         particle_features['part_energy'].append(valid_particles[:, 3].tolist())
-        particle_features['part_deta'].append(valid_particles[:, 7].tolist())
-        particle_features['part_dphi'].append(valid_particles[:, 10].tolist())
-    
+        particle_features['part_erel'].append(valid_particles[:, 4].tolist())
+        particle_features['part_pt'].append(valid_particles[:, 5].tolist())
+        particle_features['part_ptrel'].append(valid_particles[:, 6].tolist())
+        particle_features['part_eta'].append(valid_particles[:, 7].tolist())
+        particle_features['part_etarel'].append(valid_particles[:, 8].tolist())
+        particle_features['part_etarot'].append(valid_particles[:, 9].tolist())
+        particle_features['part_phi'].append(valid_particles[:, 10].tolist())
+        particle_features['part_phirel'].append(valid_particles[:, 11].tolist())
+        particle_features['part_phirot'].append(valid_particles[:, 12].tolist())
+        particle_features['part_deltaR'].append(valid_particles[:, 13].tolist())
+        particle_features['part_costheta'].append(valid_particles[:, 14].tolist())
+        particle_features['part_costhetarel'].append(valid_particles[:, 15].tolist())
+
     return particle_features
 
 
@@ -67,8 +87,18 @@ def create_parquet_schema() -> pa.Schema:
         pa.field("part_py", pa.list_(pa.float32()), nullable = False),
         pa.field("part_pz", pa.list_(pa.float32()), nullable = False),
         pa.field("part_energy", pa.list_(pa.float32()), nullable = False),
-        pa.field("part_deta", pa.list_(pa.float32()), nullable = False),
-        pa.field("part_dphi", pa.list_(pa.float32()), nullable = False),
+        pa.field("part_erel", pa.list_(pa.float32()), nullable = False),
+        pa.field("part_pt", pa.list_(pa.float32()), nullable = False),
+        pa.field("part_ptrel", pa.list_(pa.float32()), nullable = False),
+        pa.field("part_eta", pa.list_(pa.float32()), nullable = False),
+        pa.field("part_etarel", pa.list_(pa.float32()), nullable = False),
+        pa.field("part_etarot", pa.list_(pa.float32()), nullable = False),
+        pa.field("part_phi", pa.list_(pa.float32()), nullable = False),
+        pa.field("part_phirel", pa.list_(pa.float32()), nullable = False),
+        pa.field("part_phirot", pa.list_(pa.float32()), nullable = False),
+        pa.field("part_deltaR", pa.list_(pa.float32()), nullable = False),
+        pa.field("part_costheta", pa.list_(pa.float32()), nullable = False),
+        pa.field("part_costhetarel", pa.list_(pa.float32()), nullable = False),
     ])
 
 
@@ -119,18 +149,6 @@ def convert_h5_to_parquet(h5_file_path: str, parquet_file_path: str) -> None:
         
         # Extract particle features with filtering
         particle_features = extract_particle_features(particle_data, jets_data)
-        
-        # Create data dictionary
-        #data = {
-        #    'label': labels,
-        #    'jet_pt': jet_pt,
-        #    'jet_eta': jet_eta, 
-        #    'jet_phi': jet_phi,
-        #    'jet_energy': jet_energy,
-        #    'jet_mass': jet_mass,
-        #    'jet_nparticles': jet_nparticles,
-        #    **particle_features
-        #}
         
         # Create data dictionary
         data = {
