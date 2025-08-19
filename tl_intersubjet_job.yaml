@@ -1,0 +1,50 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: timlegge-tl-intersubjet
+spec:
+  backoffLimit: 0
+  template:
+    spec:
+      containers:
+      - name: tl-intersubjet
+        image: gitlab-registry.nrp-nautilus.io/jmduarte/weaver:latest
+        command: ["/bin/bash", "-c"]
+        args:
+        - |
+          sudo apt update && \
+          sudo apt install git-lfs && \
+          pip install mplhep && \
+          git clone https://github.com/tim-legge/ParT_Interpretability && \
+          pip install 'weaver-core>=0.4' && \
+          cd ParT_Interpretability && \
+          git-lfs install && \
+          python ./Full_TL_AttentionRatios.py
+        resources:
+          limits:
+            cpu: "2.5"
+            memory: 20Gi
+            nvidia.com/gpu: '1'
+          requests:
+            cpu: "2.5"
+            memory: 18Gi
+            nvidia.com/gpu: '1'
+        volumeMounts:
+        - name: part-vol-3
+          mountPath: /part-vol-3
+      restartPolicy: Never
+      volumes:
+      - name: part-vol-3
+        persistentVolumeClaim:
+          claimName: part-vol-3
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: kubernetes.io/hostname
+                operator: NotIn
+                values:
+                  - gpn-fiona-mizzou-2.rnet.missouri.edu
+                  - rci-nrp-gpu-05.sdsu.edu
+                  - node-2-2.sdsc.optiputer.net

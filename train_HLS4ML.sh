@@ -42,10 +42,10 @@ else
     exit 1
 fi
 
-# "kin"
+# "kin, kinpid"
 FEATURE_TYPE=$2
 [[ -z ${FEATURE_TYPE} ]] && FEATURE_TYPE="kin"
-if [[ "${FEATURE_TYPE}" != "kin" ]]; then
+if [[ "${FEATURE_TYPE}" =~ ^(kin|kinpid)$ ]]; then
     echo "Invalid feature type ${FEATURE_TYPE}!"
     exit 1
 fi
@@ -59,7 +59,7 @@ weaver \
     "${DATADIR}/train/train-parquet/jetImage_5*.parquet" \
     --data-val "${DATADIR}/val/val-parquet/*.parquet" \
     --data-test "${DATADIR}/train/train-parquet/jetImage_6*.parquet" \
-    --data-config data/HLS4ML/hls4ml.yaml --network-config $modelopts \
+    --data-config data/HLS4ML/hls4ml_${FEATURE_TYPE}.yaml --network-config $modelopts \
     --model-prefix training/HLS4ML/${model}/{auto}${suffix}/net \
     --num-workers 1 --fetch-step 1 --in-memory \
     --batch-size 512 --samples-per-epoch $((2400 * 512)) --samples-per-epoch-val $((800 * 512)) --num-epochs 20 --gpus 0 \

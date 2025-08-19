@@ -1,0 +1,131 @@
+================================================================================
+ROOT FILE COMPARISON REPORT
+================================================================================
+Generated on: 2025-08-18 16:21:56.270983 PST
+
+STRUCTURE COMPARISON
+----------------------------------------
+File 1: jetImage_6_test
+  Path: jetImage_6_test.root
+  Entries: 10,000
+  Branches: 100
+
+File 2: tl_test_file_0
+  Path: tl_test_file_0.root
+  Entries: 403,999
+  Branches: 19
+
+Common branches (1): label
+
+Branches only in jetImage_6_test (99):
+  j1_costheta, j1_costhetarel, j1_deltaR, j1_e, j1_erel
+  j1_eta, j1_etarel, j1_etarot, j1_phi, j1_phirel
+  j1_phirot, j1_pt, j1_ptrel, j1_px, j1_py
+  j1_pz, j_c1_b0, j_c1_b0_mmdt, j_c1_b1, j_c1_b1_mmdt
+  j_c1_b2, j_c1_b2_mmdt, j_c2_b1, j_c2_b1_mmdt, j_c2_b2
+  j_c2_b2_mmdt, j_d2_a1_b1, j_d2_a1_b1_mmdt, j_d2_a1_b2, j_d2_a1_b2_mmdt
+  j_d2_b1, j_d2_b1_mmdt, j_d2_b2, j_d2_b2_mmdt, j_energy
+  j_eta, j_g, j_isGluon, j_isQuark, j_isTop
+  j_isW, j_isZ, j_m2_b1, j_m2_b1_mmdt, j_m2_b2
+  j_m2_b2_mmdt, j_mass, j_mass_mmdt, j_mass_prun, j_mass_sdb2
+  j_mass_sdm1, j_mass_trim, j_multiplicity, j_n2_b1, j_n2_b1_mmdt
+  j_n2_b2, j_n2_b2_mmdt, j_nparticles, j_phi, j_pt
+  j_ptfrac, j_q, j_t, j_tau1_b1, j_tau1_b1_mmdt
+  j_tau1_b2, j_tau1_b2_mmdt, j_tau2_b1, j_tau2_b1_mmdt, j_tau2_b2
+  j_tau2_b2_mmdt, j_tau32_b1, j_tau32_b1_mmdt, j_tau32_b2, j_tau32_b2_mmdt
+  j_tau3_b1, j_tau3_b1_mmdt, j_tau3_b2, j_tau3_b2_mmdt, j_undef
+  j_w, j_z, j_zlogz, nj1_costheta, nj1_costhetarel
+  nj1_deltaR, nj1_e, nj1_erel, nj1_eta, nj1_etarel
+  nj1_etarot, nj1_phi, nj1_phirel, nj1_phirot, nj1_pt
+  nj1_ptrel, nj1_px, nj1_py, nj1_pz
+
+Branches only in tl_test_file_0 (18):
+  jet_energy, jet_eta, jet_mass, jet_nparticles, jet_phi
+  jet_pt, npart_deta, npart_dphi, npart_energy, npart_px
+  npart_py, npart_pz, part_deta, part_dphi, part_energy
+  part_px, part_py, part_pz
+
+SIMILAR BRANCHES ANALYSIS
+----------------------------------------
+
+JET_FEATURES:
+  transverse momentum:
+    j_pt vs jet_pt
+    Mean: 1041.8820 vs 596.0223
+    Std:  119.6138 vs 29.3622
+    Range: [479.7139, 1809.0928] vs [550.1517, 649.8812]
+  pseudorapidity:
+    j_eta vs jet_eta
+    Mean: -0.0372 vs 0.0087
+    Std:  0.7717 vs 0.9171
+    Range: [-1.9270, 1.9469] vs [-1.9944, 1.9873]
+  azimuthal angle:
+    j_phi vs jet_phi
+    Mean: -0.0172 vs -0.0957
+    Std:  1.7685 vs 1.8421
+    Range: [-3.1347, 3.1317] vs [-3.1177, 3.1405]
+  mass:
+    j_mass vs jet_mass
+    Mean: 93.3851 vs 135.6656
+    Std:  42.8416 vs 57.1490
+    Range: [16.1874, 335.6151] vs [21.0542, 335.7726]
+  energy:
+    j_energy vs jet_energy
+    Mean: 1393.4684 vs 902.8229
+    Std:  473.4576 vs 351.8967
+    Range: [527.2629, 3538.1064] vs [562.9380, 2247.1824]
+  number of particles:
+    j_nparticles vs jet_nparticles
+    Mean: 50.1050 vs 48.8040
+    Std:  20.8202 vs 17.2640
+    Range: [11.0000, 144.0000] vs [8.0000, 114.0000]
+
+PARTICLE_FEATURES:
+  particle px:
+    j1_px vs part_px
+    Mean length: 50.10 vs 48.80
+    Flattened mean: 0.7701 vs -0.4017
+    Flattened std:  33.8667 vs 22.2546
+  particle py:
+    j1_py vs part_py
+    Mean length: 50.10 vs 48.80
+    Flattened mean: -0.7190 vs -0.4193
+    Flattened std:  35.3496 vs 22.3062
+  particle pz:
+    j1_pz vs part_pz
+    Mean length: 50.10 vs 48.80
+    Flattened mean: -1.0545 vs 0.0786
+    Flattened std:  48.2158 vs 41.8517
+  particle energy:
+    j1_e vs part_energy
+    Mean length: 50.10 vs 48.80
+    Flattened mean: 27.8110 vs 18.4990
+    Flattened std:  62.8501 vs 49.0156
+  relative eta:
+    j1_etarel vs part_deta
+    Mean length: 50.10 vs 48.80
+    Flattened mean: 0.0010 vs -0.0077
+    Flattened std:  0.1152 vs 0.2741
+  relative phi:
+    j1_phirel vs part_dphi
+    Mean length: 50.10 vs 48.80
+    Flattened mean: -0.0006 vs 0.0000
+    Flattened std:  0.1119 vs 0.2747
+
+LABELS:
+  classification label:
+    label vs label
+    Mean: 1.9380 vs 0.5000
+    Std:  1.4129 vs 0.5000
+    Range: [0.0000, 4.0000] vs [0.0000, 1.0000]
+
+
+COMMON BRANCHES DATA COMPARISON
+----------------------------------------
+
+label:
+  Type: regular_array vs regular_array
+  Mean: 1.938000 vs 0.500000
+  Difference: 74.20%
+
+================================================================================

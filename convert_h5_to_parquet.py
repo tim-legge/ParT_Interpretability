@@ -13,19 +13,12 @@ import h5py
 from typing import Dict, List, Any
 
 
-def extract_particle_features(particle_data: np.ndarray) -> Dict[str, List[List[float]]]:
+def extract_particle_features(particle_data: np.ndarray, jets_data: np.ndarray) -> Dict[str, List[List[float]]]:
     """
-    Extract essential particle features from the jetConstituentList array.
-    
-    Args:
-        particle_data: Array of shape (n_jets, n_particles, n_features)
-    
-    Returns:
-        Dictionary with particle feature lists for each jet
+    Extract particle features with proper filtering.
     """
     n_jets, n_particles, n_features = particle_data.shape
     
-    # Initialize lists
     particle_features = {
         'part_px': [],
         'part_py': [],
@@ -38,15 +31,20 @@ def extract_particle_features(particle_data: np.ndarray) -> Dict[str, List[List[
     for jet_idx in range(n_jets):
         jet_particles = particle_data[jet_idx]
         
-        # Extract momentum components (px, py, pz, energy)
-        particle_features['part_px'].append(jet_particles[:, 0].tolist())      # j1_px
-        particle_features['part_py'].append(jet_particles[:, 1].tolist())      # j1_py
-        particle_features['part_pz'].append(jet_particles[:, 2].tolist())      # j1_pz
-        particle_features['part_energy'].append(jet_particles[:, 3].tolist())  # j1_e
+        # Filter out zero-energy particles (padding)
+        valid_mask = jet_particles[:, 3] > 0  # energy > 0
+        valid_particles = jet_particles[valid_mask]
         
-        # Extract relative eta and phi
-        particle_features['part_deta'].append(jet_particles[:, 7].tolist())    # j1_etarel
-        particle_features['part_dphi'].append(jet_particles[:, 10].tolist())   # j1_phirel
+        if len(valid_particles) == 0:
+            # Handle empty jets by adding a single zero particle
+            valid_particles = np.zeros((1, n_features))
+        
+        particle_features['part_px'].append(valid_particles[:, 0].tolist())
+        particle_features['part_py'].append(valid_particles[:, 1].tolist())
+        particle_features['part_pz'].append(valid_particles[:, 2].tolist())
+        particle_features['part_energy'].append(valid_particles[:, 3].tolist())
+        particle_features['part_deta'].append(valid_particles[:, 7].tolist())
+        particle_features['part_dphi'].append(valid_particles[:, 10].tolist())
     
     return particle_features
 
@@ -54,83 +52,125 @@ def extract_particle_features(particle_data: np.ndarray) -> Dict[str, List[List[
 def create_parquet_schema() -> pa.Schema:
     """Create PyArrow schema matching QG parquet format."""
     return pa.schema([
-        pa.field("label", pa.float64()),
-        pa.field("jet_pt", pa.float32()),
-        pa.field("jet_eta", pa.float32()),
-        pa.field("jet_phi", pa.float32()),
-        pa.field("jet_energy", pa.float32()),
-        pa.field("jet_mass", pa.float32()),
-        pa.field("jet_nparticles", pa.int64()),
-        pa.field("part_px", pa.list_(pa.float32())),
-        pa.field("part_py", pa.list_(pa.float32())),
-        pa.field("part_pz", pa.list_(pa.float32())),
-        pa.field("part_energy", pa.list_(pa.float32())),
-        pa.field("part_deta", pa.list_(pa.float32())),
-        pa.field("part_dphi", pa.list_(pa.float32())),
+        pa.field("jet_pt", pa.float32(), nullable = False),
+        pa.field("jet_eta", pa.float32(), nullable = False),
+        pa.field("jet_phi", pa.float32(), nullable = False),
+        pa.field("jet_energy", pa.float32(), nullable = False),
+        pa.field("jet_mass", pa.float32(), nullable = False),
+        pa.field("jet_nparticles", pa.int64(), nullable = False),
+        pa.field("jet_isGluon", pa.int64(), nullable = False),
+        pa.field("jet_isQuark", pa.int64(), nullable = False),
+        pa.field("jet_isW", pa.int64(), nullable = False),
+        pa.field("jet_isZ", pa.int64(), nullable = False),
+        pa.field("jet_isTop", pa.int64(), nullable = False),
+        pa.field("part_px", pa.list_(pa.float32()), nullable = False),
+        pa.field("part_py", pa.list_(pa.float32()), nullable = False),
+        pa.field("part_pz", pa.list_(pa.float32()), nullable = False),
+        pa.field("part_energy", pa.list_(pa.float32()), nullable = False),
+        pa.field("part_deta", pa.list_(pa.float32()), nullable = False),
+        pa.field("part_dphi", pa.list_(pa.float32()), nullable = False),
     ])
 
 
 def convert_h5_to_parquet(h5_file_path: str, parquet_file_path: str) -> None:
-    """
-    Convert a single HDF5 file to Parquet format.
-    
-    Args:
-        h5_file_path: Path to input HDF5 file
-        parquet_file_path: Path to output Parquet file
-    """
+    """Convert with proper particle filtering."""
     print(f"Converting {h5_file_path} to {parquet_file_path}")
     
     with h5py.File(h5_file_path, 'r') as h5_file:
-        # Read jet-level features
         jets_data = h5_file['jets'][:]
         particle_data = h5_file['jetConstituentList'][:]
         
-        # Extract jet features (using indices based on feature names)
-        jet_pt = jets_data[:, 1].astype(np.float32)    # j_pt
-        jet_eta = jets_data[:, 2].astype(np.float32)   # j_eta
-        jet_mass = jets_data[:, 3].astype(np.float32)  # j_mass
+        # Extract jet features
+        jet_pt = jets_data[:, 1].astype(np.float32)
+        jet_eta = jets_data[:, 2].astype(np.float32) 
+        jet_mass = jets_data[:, 3].astype(np.float32)
         
-        # Calculate jet phi from particle data (using first particle's phi as approximation)
-        # You may want to compute a proper weighted average
+        # Compute jet phi and energy from valid particles only
         jet_phi = np.zeros(len(jets_data), dtype=np.float32)
-        jet_energy = np.sum(particle_data[:, :, 3], axis=1).astype(np.float32)  # sum of particle energies
+        jet_energy = np.zeros(len(jets_data), dtype=np.float32)
+        jet_nparticles = np.zeros(len(jets_data), dtype=np.int64)
         
-        # Extract labels from jet classification features
-        # Indices for: j_g=53, j_q=54, j_w=55, j_z=56, j_t=57 (based on feature names)
-        j_g = jets_data[:, 53]   # gluon
-        j_q = jets_data[:, 54]   # quark (non-top)
-        j_w = jets_data[:, 55]   # W boson
-        j_z = jets_data[:, 56]   # Z boson
-        j_t = jets_data[:, 57]   # top quark
+        for jet_idx in range(len(jets_data)):
+            jet_particles = particle_data[jet_idx]
+            valid_mask = jet_particles[:, 3] > 0  # energy > 0
+            valid_particles = jet_particles[valid_mask]
+            
+            if len(valid_particles) > 0:
+                # Compute phi as energy-weighted average
+                px_sum = np.sum(valid_particles[:, 0])
+                py_sum = np.sum(valid_particles[:, 1])
+                jet_phi[jet_idx] = np.arctan2(py_sum, px_sum)
+                jet_energy[jet_idx] = np.sum(valid_particles[:, 3])
+                jet_nparticles[jet_idx] = len(valid_particles)
+            else:
+                jet_phi[jet_idx] = 0.0
+                jet_energy[jet_idx] = 0.0
+                jet_nparticles[jet_idx] = 0
         
-        # Create labels based on the highest score
-        # 0=gluon, 1=quark, 2=W, 3=Z, 4=top
-        label_probs = np.stack([j_g, j_q, j_w, j_z, j_t], axis=1)
-        labels = np.argmax(label_probs, axis=1).astype(np.float64)
+        # Extract labels (same as before)
+        j_g = jets_data[:, 53]
+        j_q = jets_data[:, 54]
+        j_w = jets_data[:, 55]
+        j_z = jets_data[:, 56]
+        j_t = jets_data[:, 57]
         
-        # Count particles per jet (non-zero energy particles)
-        jet_nparticles = np.sum(particle_data[:, :, 3] > 0, axis=1).astype(np.int64)
+        #label_probs = np.stack([j_g, j_q, j_w, j_z, j_t], axis=1)
+        #labels = np.argmax(label_probs, axis=1).astype(np.float64)
         
-        # Extract particle features
-        particle_features = extract_particle_features(particle_data)
+        # Extract particle features with filtering
+        particle_features = extract_particle_features(particle_data, jets_data)
         
-        # Create DataFrame with essential features only
+        # Create data dictionary
+        #data = {
+        #    'label': labels,
+        #    'jet_pt': jet_pt,
+        #    'jet_eta': jet_eta, 
+        #    'jet_phi': jet_phi,
+        #    'jet_energy': jet_energy,
+        #    'jet_mass': jet_mass,
+        #    'jet_nparticles': jet_nparticles,
+        #    **particle_features
+        #}
+        
+        # Create data dictionary
         data = {
-            'label': labels,
             'jet_pt': jet_pt,
-            'jet_eta': jet_eta,
+            'jet_eta': jet_eta, 
             'jet_phi': jet_phi,
             'jet_energy': jet_energy,
             'jet_mass': jet_mass,
             'jet_nparticles': jet_nparticles,
+            'jet_isGluon': j_g,
+            'jet_isQuark': j_q,
+            'jet_isW': j_w,
+            'jet_isZ': j_z,
+            'jet_isTop': j_t,
             **particle_features
         }
-        
-        # Create PyArrow table with proper schema
+
+        # Validate and clean data before writing
+        for key, values in data.items():
+            if isinstance(values, np.ndarray):
+                if np.isnan(values).any() or np.isinf(values).any():
+                    print(f"Warning: NaN/inf values found in {key}")
+                    # Replace with safe defaults
+                    if key.startswith('jet_'):
+                        if key in ['jet_pt', 'jet_energy']:
+                            data[key] = np.nan_to_num(values, nan=1.0, posinf=1000.0, neginf=0.0)
+                        else:
+                            data[key] = np.nan_to_num(values, nan=0.0, posinf=1.0, neginf=-1.0)
+                    elif key.startswith('jet_is'):
+                        data[key] = np.nan_to_num(values, nan=0).astype(np.int32)
+            elif isinstance(values, list):
+                # Validate particle feature lists
+                for i, sublist in enumerate(values):
+                    if any(np.isnan(sublist)) or any(np.isinf(sublist)):
+                        print(f"Warning: NaN/inf values found in {key}[{i}]")
+                        values[i] = [np.nan_to_num(x, nan=0.0, posinf=100.0, neginf=-100.0) for x in sublist]
+
+        # Write to parquet
         schema = create_parquet_schema()
         table = pa.Table.from_pydict(data, schema=schema)
-        
-        # Write to parquet
         pq.write_table(table, parquet_file_path)
         print(f"Successfully converted to {parquet_file_path}")
 
