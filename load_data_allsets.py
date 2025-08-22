@@ -537,7 +537,7 @@ def load_data(dataset_type='qg', batch_size=300):
     try:
         if dataset_type == 'qg':
             # Try to load QuarkGluon data 
-            data_path = "../qg_test_file_0.root"
+            data_path = "./qg_test_file_0.root"
             if os.path.exists(data_path):
                 print(f"Loading QuarkGluon data from {data_path}")
                 with uproot.open(data_path)['tree'] as tree:
@@ -557,7 +557,7 @@ def load_data(dataset_type='qg', batch_size=300):
 
         elif dataset_type == 'tl':
             # Try to load TopLandscape data
-            data_path = "../tl_test_file_0.root"
+            data_path = "./tl_test_file_0.root"
             if os.path.exists(data_path):
                 print(f"Loading TopLandscape data from {data_path}")
                 with uproot.open(data_path)['tree'] as tree:
