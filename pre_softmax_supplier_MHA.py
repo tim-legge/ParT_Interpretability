@@ -1872,7 +1872,7 @@ class ParticleTransformerWrapper(torch.nn.Module):
 # Define Forward Hook to grab pre-softmax w/o altering outputs of forward() for ParticleTransformer
 
 class Pre_Softmax_Hook:
-    def __init__(self, model, layer_name='test'):
+    def __init__(self, model):
         self.model = model
         self.kwargs = self.model.kwargs
 
@@ -1890,8 +1890,7 @@ class Pre_Softmax_Hook:
         #    print(f'A Layer does not match')
 
         # for now, we will not register hooks on class blocks
-        # would not be too terribly difficult to implement, but I am tired as shit
-        # sorry for the language
+        # would not be too terribly difficult to implement, but it is not really the focus of current experiment
 
         #for module in self.model.cls_blocks:
             #if layer_name in name:
@@ -1954,6 +1953,38 @@ class Pre_Softmax_Hook:
     #def __call__(self, input_tensor: Tensor):
     #    output = self.model(input_tensor, **self.kwargs)
     #    return output
+
+    def cut_padding(self, tensor, mask):
+        '''
+        Presents collected tensor from Pre_Softmax_Hook as list of particles with each item a 4d ndarray like (layers, heads, jet_length, jet_length).
+        Padding removed.
+
+        Args:
+        - tensor: The input tensor to process.
+        - config: Model configuration dict. If 'num_layers' is not present, defaults to 8 as in original ParT.
+
+        Outputs:
+        tensor_as_np: list of jagged arrays with shape (layers, heads, jet_length, jet_length)
+        '''
+        config = self.kwargs
+
+        if 'num_layers' in config:
+            num_layers = config['num_layers']
+        else:
+            num_layers = 8
+
+        num_particles = tensor.shape[0] // num_layers
+
+        tensor_as_np = tensor.numpy() # should be (total_num_layers, num_heads, jet_length, jet_length)
+        tensor_as_np = np.split(tensor_as_np, indices_or_sections=num_particles, axis=0)
+
+        for particle_idx, particle in enumerate(tensor_as_np):
+            padding_limit = np.sum(mask[particle_idx])
+            print(f'Padding Limit: {padding_limit}')
+            padding_limit = np.sum(mask[particle_idx]).astype(int)
+            tensor_as_np[particle_idx] = tensor_as_np[particle_idx][:,:,:padding_limit, :padding_limit]
+
+        return tensor_as_np
 
     def clear(self):
         self.pre_softmax_attentions = torch.empty((0, self.num_heads, self.seq_len, self.seq_len), dtype=torch.float32)
