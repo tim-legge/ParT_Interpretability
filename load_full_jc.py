@@ -56,8 +56,8 @@ def build_features_and_labels(tree, transform_features=True):
         a['part_logptrel'] = (a['part_logptrel'] - (-4.7)) * 0.7
         a['part_logerel'] = (a['part_logerel'] - (-4.7)) * 0.7
         a['part_deltaR'] = (a['part_deltaR'] - 0.2) * 4.0
-        a['part_d0err'] = np.clip(a['part_d0err'], 0, 1)
-        a['part_dzerr'] = np.clip(a['part_dzerr'], 0, 1)
+        a['part_d0err'] = _clip(a['part_d0err'], 0, 1)
+        a['part_dzerr'] = _clip(a['part_dzerr'], 0, 1)
 
     feature_list = {
         'pf_points': ['part_deta', 'part_dphi'], # not used in ParT
@@ -649,7 +649,7 @@ def load_data(dataset_type='qg', batch_size=300):
                         }
                     return data
         elif dataset_type == 'jc_full':
-            # Try to load JetClass data w/ PIDs
+            # Try to load JetClass data w/ full features
             data_path = './JetClass_example_100k.root'
             if os.path.exists(data_path):
                 print(f"Loading actual JetClass data from {data_path}")
