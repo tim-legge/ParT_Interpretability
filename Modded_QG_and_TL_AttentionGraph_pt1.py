@@ -1269,7 +1269,7 @@ while counter*batch_to_load < qg_data['pf_points'].shape[0]:
     qg_model.eval()
     with torch.no_grad():
         qg_y_pred= qg_model(torch.from_numpy(qg_pf_points),torch.from_numpy(qg_pf_features),torch.from_numpy(qg_pf_vectors),torch.from_numpy(qg_pf_mask))
-    qg_attention = qg_model.get_attention_matrix().numpy()
+    qg_attention = [tensor.numpy() for tensor in qg_model.get_attention_matrix()]
     np.save(f'/part-vol-3/timlegge-ParT-trained/batched_attns/qg_attention_batch_{counter}.npy', qg_attention)
     counter = counter + 1
     print(f"Processed batch {counter} - inferred from jets {counter*batch_to_load} to {(counter+1)*batch_to_load}")
