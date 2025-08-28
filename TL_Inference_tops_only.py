@@ -24,6 +24,23 @@ import mplhep as hep
 
 hep.style.use(hep.style.ROOT)
 
+def _pad(a, maxlen=128, value=0, dtype='float32'):
+        if isinstance(a, np.ndarray) and a.ndim >= 2 and a.shape[1] == maxlen:
+            return a
+        elif isinstance(a, ak.Array):
+            if a.ndim == 1:
+                a = ak.unflatten(a, 1)
+            a = ak.fill_none(ak.pad_none(a, maxlen, clip=True), value)
+            return ak.values_astype(a, dtype)
+        else:
+            x = (np.ones((len(a), maxlen)) * value).astype(dtype)
+            for idx, s in enumerate(a):
+                if not len(s):
+                    continue
+                trunc = s[:maxlen].astype(dtype)
+                x[idx, :len(trunc)] = trunc
+            return x
+
 def build_features_and_labels(tree, transform_features=True):
 
     # load arrays from the tree
@@ -84,6 +101,152 @@ def build_features_and_labels(tree, transform_features=True):
     for k, names in feature_list.items():
         out[k] = np.stack([_pad(a[n], maxlen=128).to_numpy() for n in names], axis=1)
 
+    label_list = ['label_QCD', 'label_Hbb', 'label_Hcc', 'label_Hgg', 'label_H4q', 'label_Hqql', 'label_Zqq', 'label_Wqq', 'label_Tbqq', 'label_Tbl']
+    out['label'] = np.stack([a[n].to_numpy().astype('int') for n in label_list], axis=1)
+
+    return out
+
+def build_features_and_labels_jck(tree, transform_features=True):
+    """Build features for JetClass dataset based on JetClass_kin.yaml"""
+    # load arrays from the tree
+    a = tree.arrays(filter_name=['part_*', 'jet_pt', 'jet_energy', 'label_*'])
+
+    # compute new features
+    a['part_mask'] = ak.ones_like(a['part_energy'])
+    a['part_pt'] = np.hypot(a['part_px'], a['part_py'])
+    a['part_pt_log'] = np.log(a['part_pt'])
+    a['part_e_log'] = np.log(a['part_energy'])
+    a['part_logptrel'] = np.log(a['part_pt']/a['jet_pt'])
+    a['part_logerel'] = np.log(a['part_energy']/a['jet_energy'])
+    a['part_deltaR'] = np.hypot(a['part_deta'], a['part_dphi'])
+
+    # apply standardization based on JetClass_kin.yaml
+    if transform_features:
+        a['part_pt_log'] = (a['part_pt_log'] - 1.7) * 0.7
+        a['part_e_log'] = (a['part_e_log'] - 2.0) * 0.7
+        a['part_logptrel'] = (a['part_logptrel'] - (-4.7)) * 0.7
+        a['part_logerel'] = (a['part_logerel'] - (-4.7)) * 0.7
+        a['part_deltaR'] = (a['part_deltaR'] - 0.2) * 4.0
+
+    # Feature list for JetClass_kin 
+    feature_list = {
+        'pf_points': ['part_deta', 'part_dphi'],
+        'pf_features': [
+            'part_pt_log',
+            'part_e_log',
+            'part_logptrel', 
+            'part_logerel',
+            'part_deltaR',
+            'part_deta',
+            'part_dphi',
+        ],
+        'pf_vectors': [
+            'part_px',
+            'part_py',
+            'part_pz',
+            'part_energy',
+        ],
+        'pf_mask': ['part_mask']
+    }
+
+    def _pad(a, maxlen=128, value=0, dtype='float32'):
+        if isinstance(a, np.ndarray) and a.ndim >= 2 and a.shape[1] == maxlen:
+            return a
+        elif isinstance(a, ak.Array):
+            if a.ndim == 1:
+                a = ak.unflatten(a, 1)
+            a = ak.fill_none(ak.pad_none(a, maxlen, clip=True), value)
+            return ak.values_astype(a, dtype)
+        else:
+            x = (np.ones((len(a), maxlen)) * value).astype(dtype)
+            for idx, s in enumerate(a):
+                if not len(s):
+                    continue
+                trunc = s[:maxlen].astype(dtype)
+                x[idx, :len(trunc)] = trunc
+            return x
+
+    out = {}
+    for k, names in feature_list.items():
+        out[k] = np.stack([_pad(a[n], maxlen=128).to_numpy() for n in names], axis=1)
+
+    # Labels for JetClass 
+    label_list = ['label_QCD', 'label_Hbb', 'label_Hcc', 'label_Hgg', 'label_H4q', 'label_Hqql', 'label_Zqq', 'label_Wqq', 'label_Tbqq', 'label_Tbl']
+    out['label'] = np.stack([a[n].to_numpy().astype('int') for n in label_list], axis=1)
+
+    return out
+
+def build_features_and_labels_jck_pid(tree, transform_features=True):
+    """Build features for JetClass dataset based on JetClass_kin.yaml"""
+    # load arrays from the tree
+    a = tree.arrays(filter_name=['part_*', 'jet_pt', 'jet_energy', 'label_*'])
+
+    # compute new features
+    a['part_mask'] = ak.ones_like(a['part_energy'])
+    a['part_pt'] = np.hypot(a['part_px'], a['part_py'])
+    a['part_pt_log'] = np.log(a['part_pt'])
+    a['part_e_log'] = np.log(a['part_energy'])
+    a['part_logptrel'] = np.log(a['part_pt']/a['jet_pt'])
+    a['part_logerel'] = np.log(a['part_energy']/a['jet_energy'])
+    a['part_deltaR'] = np.hypot(a['part_deta'], a['part_dphi'])
+
+    # apply standardization based on JetClass_kin.yaml
+    if transform_features:
+        a['part_pt_log'] = (a['part_pt_log'] - 1.7) * 0.7
+        a['part_e_log'] = (a['part_e_log'] - 2.0) * 0.7
+        a['part_logptrel'] = (a['part_logptrel'] - (-4.7)) * 0.7
+        a['part_logerel'] = (a['part_logerel'] - (-4.7)) * 0.7
+        a['part_deltaR'] = (a['part_deltaR'] - 0.2) * 4.0
+
+    # Feature list for JetClass_kinpid
+    feature_list = {
+        'pf_points': ['part_deta', 'part_dphi'],
+        'pf_features': [
+            'part_pt_log',
+            'part_e_log',
+            'part_logptrel', 
+            'part_logerel',
+            'part_deltaR',
+            'part_charge',
+            'part_isChargedHadron',
+            'part_isNeutralHadron',
+            'part_isPhoton',
+            'part_isElectron',
+            'part_isMuon',
+            'part_deta',
+            'part_dphi',
+        ],
+        'pf_vectors': [
+            'part_px',
+            'part_py',
+            'part_pz',
+            'part_energy',
+        ],
+        'pf_mask': ['part_mask']
+    }
+
+    def _pad(a, maxlen=128, value=0, dtype='float32'):
+        if isinstance(a, np.ndarray) and a.ndim >= 2 and a.shape[1] == maxlen:
+            return a
+        elif isinstance(a, ak.Array):
+            if a.ndim == 1:
+                a = ak.unflatten(a, 1)
+            a = ak.fill_none(ak.pad_none(a, maxlen, clip=True), value)
+            return ak.values_astype(a, dtype)
+        else:
+            x = (np.ones((len(a), maxlen)) * value).astype(dtype)
+            for idx, s in enumerate(a):
+                if not len(s):
+                    continue
+                trunc = s[:maxlen].astype(dtype)
+                x[idx, :len(trunc)] = trunc
+            return x
+
+    out = {}
+    for k, names in feature_list.items():
+        out[k] = np.stack([_pad(a[n], maxlen=128).to_numpy() for n in names], axis=1)
+
+    # Labels for JetClass 
     label_list = ['label_QCD', 'label_Hbb', 'label_Hcc', 'label_Hgg', 'label_H4q', 'label_Hqql', 'label_Zqq', 'label_Wqq', 'label_Tbqq', 'label_Tbl']
     out['label'] = np.stack([a[n].to_numpy().astype('int') for n in label_list], axis=1)
 
@@ -1280,6 +1443,8 @@ else:
                 tl_topsonly_attention.append([layer[jet] for layer in tl_attention])
             elif tl_labels[jet] == 1: # QCD
                 tl_qcdonly_attention.append([layer[jet] for layer in tl_attention])
+            else:
+                continue
         np.save(f'/part-vol-3/timlegge-ParT-trained/batched_attns/tl_topsonly_attention_batch_{counter}.npy', tl_topsonly_attention)
         print(f'Saved {len(tl_topsonly_attention)} top jets attention for batch {counter}')
         np.save(f'/part-vol-3/timlegge-ParT-trained/batched_attns/tl_qcdonly_attention_batch_{counter}.npy', tl_qcdonly_attention)
