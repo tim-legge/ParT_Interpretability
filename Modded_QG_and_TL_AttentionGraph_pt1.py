@@ -1196,7 +1196,7 @@ def load_data(dataset_type='qg', batch_size=300):
 
 # Create sample data for both models
 
-if not os.path.exists('/part-vol-3/timlegge-ParT-trained/vol-tl-data/'):
+if not os.path.exists('/part-vol-3/timlegge-ParT-trained/vol_tl_data/'):
     print("Loading data for testing...")
     qg_data = load_data('qg', batch_size=None)
     tl_data = load_data('tl', batch_size=None)
