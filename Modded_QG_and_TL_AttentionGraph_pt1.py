@@ -1196,7 +1196,7 @@ def load_data(dataset_type='qg', batch_size=300):
 
 # Create sample data for both models
 
-if not os.path.exists('./tl_labels.npy'):
+if not os.path.exists('/part-vol-3/timlegge-ParT-trained/vol-tl-data.npy'):
     print("Loading data for testing...")
     qg_data = load_data('qg', batch_size=None)
     tl_data = load_data('tl', batch_size=None)
@@ -1209,4 +1209,244 @@ if not os.path.exists('./tl_labels.npy'):
         np.save(f'./tl_{type}.npy', array)
 
 
-# INPUT NEXT BLOCK HERE
+else:
+    qg_data = {
+        'pf_points': np.load('/part-vol-3/timlegge-ParT-trained/vol_qg_data/qg_pf_points.npy'),
+        'pf_features': np.load('/part-vol-3/timlegge-ParT-trained/vol_qg_data/qg_pf_features.npy'),
+        'pf_vectors': np.load('/part-vol-3/timlegge-ParT-trained/vol_qg_data/qg_pf_vectors.npy'),
+        'pf_mask': np.load('/part-vol-3/timlegge-ParT-trained/vol_qg_data/qg_pf_mask.npy'),
+        'labels': np.load('/part-vol-3/timlegge-ParT-trained/vol_qg_data/qg_labels.npy')}
+    tl_data = {
+        'pf_points': np.load('/part-vol-3/timlegge-ParT-trained/vol_tl_data/tl_pf_points.npy'),
+        'pf_features': np.load('/part-vol-3/timlegge-ParT-trained/vol_tl_data/tl_pf_features.npy'),
+        'pf_vectors': np.load('/part-vol-3/timlegge-ParT-trained/vol_tl_data/tl_pf_vectors.npy'),
+        'pf_mask': np.load('/part-vol-3/timlegge-ParT-trained/vol_tl_data/tl_pf_mask.npy'),
+        'labels': np.load('/part-vol-3/timlegge-ParT-trained/vol_tl_data/tl_labels.npy')}
+
+print(f"Data loaded (and saved to .npy if it was not there already):")
+print(f"Feature dimensions:")
+print(f"  QuarkGluon (kinpid): {qg_data['pf_features'].shape[1]} features")
+print(f"  TopLandscape (kin): {tl_data['pf_features'].shape[1]} features")
+
+# access data from local .npys 
+
+qgtrained_modelpath = './save_qg_model/on-qg-run2_best_epoch_state.pt'
+tltrained_modelpath = './save_tl_model/on-tl-run3_best_epoch_state.pt'
+#hls4mltrained_modelpath = '/home/tim_legge/ParT_Interpretability/save_hls4ml_model/on-hls4ml-run2_best_epoch_state.pt'
+#jcktrained_modelpath = './models/ParT_kin.pt'
+
+print('Loading models...')
+
+qg_model, _ = get_model('qg')
+tl_model, _ = get_model('tl')
+
+# QG model loading and inference
+
+# We expect some memory issues when loading full dataset
+# so set up a very basic checkpoint system for saving inference results
+# try this later once we see if all of QG can be inferred through
+
+qg_state_dict = torch.load(qgtrained_modelpath, map_location=torch.device('cpu'))
+qg_model.load_state_dict(qg_state_dict)
+qg_pf_features = qg_data['pf_features'][:]
+qg_pf_vectors = qg_data['pf_vectors'][:]
+qg_pf_mask = qg_data['pf_mask'][:]
+qg_pf_points = qg_data['pf_points'][:]
+qg_labels = qg_data['labels'][:]
+qg_model.eval()
+with torch.no_grad():
+    qg_y_pred= qg_model(torch.from_numpy(qg_pf_points),torch.from_numpy(qg_pf_features),torch.from_numpy(qg_pf_vectors),torch.from_numpy(qg_pf_mask))
+qg_attention = qg_model.get_attention_matrix()
+qg_interaction = qg_model.get_interactionMatrix()
+
+print('QG done!')
+
+# TL model loading and inference
+
+tl_state_dict = torch.load(tltrained_modelpath, map_location=torch.device('cpu'))
+tl_model.load_state_dict(tl_state_dict)
+tl_pf_features = tl_data['pf_features'][:]
+tl_pf_vectors = tl_data['pf_vectors'][:]
+tl_pf_mask = tl_data['pf_mask'][:]
+tl_pf_points = tl_data['pf_points'][:]
+tl_labels = tl_data['labels'][:]
+tl_model.eval()
+with torch.no_grad():
+    tl_y_pred= tl_model(torch.from_numpy(tl_pf_points),torch.from_numpy(tl_pf_features),torch.from_numpy(tl_pf_vectors),torch.from_numpy(tl_pf_mask))
+tl_attention = tl_model.get_attention_matrix()
+tl_interaction = tl_model.get_interactionMatrix()
+
+print('TL done!')
+
+CMS = {
+    # "font.sans-serif": ["TeX Gyre Heros", "Helvetica", "Arial"],
+    "font.family": "sans-serif",
+    "mathtext.fontset": "custom",
+    "mathtext.rm": "TeX Gyre Heros",
+    "mathtext.bf": "TeX Gyre Heros:bold",
+    "mathtext.sf": "TeX Gyre Heros",
+    "mathtext.it": "TeX Gyre Heros:italic",
+    "mathtext.tt": "TeX Gyre Heros",
+    "mathtext.cal": "TeX Gyre Heros",
+    "mathtext.default": "regular",
+    "figure.figsize": (8.0, 8.0),
+    "font.size": 14,
+    #"text.usetex": True,
+    "axes.labelsize": "medium",
+    "axes.unicode_minus": False,
+    "xtick.labelsize": "small",
+    "ytick.labelsize": "small",
+    # Make legends smaller
+    "legend.fontsize": "x-small",  # Adjusted to a smaller size
+    "legend.handlelength": 1.5,
+    "legend.borderpad": 0.5,
+    "xtick.direction": "in",
+    "xtick.major.size": 12,
+    "xtick.minor.size": 6,
+    "xtick.major.pad": 6,
+    "xtick.top": True,
+    "xtick.major.top": True,
+    "xtick.major.bottom": True,
+    "xtick.minor.top": True,
+    "xtick.minor.bottom": True,
+    "xtick.minor.visible": True,
+    "ytick.direction": "in",
+    "ytick.major.size": 12,
+    "ytick.minor.size": 6.0,
+    "ytick.right": True,
+    "ytick.major.left": True,
+    "ytick.major.right": True,
+    "ytick.minor.left": True,
+    "ytick.minor.right": True,
+    "ytick.minor.visible": True,
+    "grid.alpha": 0.8,
+    "grid.linestyle": ":",
+    "axes.linewidth": 2,
+    "savefig.transparent": False,
+}
+plt.style.use(CMS)
+
+print('Plotting attention distributions...')
+print('QG model first...')
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+#running for qg-trained model first
+
+# Assuming attention is already a list or array
+# Flattening the attention array
+flattened_attention = np.stack(qg_attention).flatten()
+
+# Define number of bins for the probability distribution
+num_bins = 20
+
+# Define the bin edges between 0 and 1, using 20 evenly spaced bins
+bin_edges = np.linspace(0, 1, num_bins + 1)
+
+# Function to process data in chunks and compute histogram
+def process_in_chunks(attention_iterator, chunk_size=100000, bin_edges=bin_edges):
+    hist_counts = np.zeros(len(bin_edges) - 1)  # Initialize histogram counts for bins
+
+    # Process each chunk of attention data
+    for chunk in attention_iterator:
+        # Flatten the chunk to ensure it's 1D and processable by np.histogram
+        chunk = np.array(chunk).flatten()
+
+        # Calculate histogram for this chunk
+        hist, _ = np.histogram(chunk, bins=bin_edges)
+
+        # Accumulate the counts
+        hist_counts += hist
+
+    total_data_points = hist_counts.sum()  # Total number of points processed
+    probabilities = hist_counts / total_data_points  # Normalize to get probabilities
+    return probabilities
+
+# Simulate loading a large dataset in chunks (e.g., from a file or other source)
+def attention_generator(attention, chunk_size):
+    """Simulate chunked data loader for large dataset."""
+    for i in range(0, len(attention), chunk_size):
+        yield attention[i:i + chunk_size]
+
+# Process the data in chunks (using a generator)
+probabilities = process_in_chunks(attention_generator(flattened_attention, chunk_size=100000))
+
+print('Histogram computed, now saving...')
+
+np.save('QG_attention_distribution.npy', probabilities)
+
+print('Saved! Now plotting...')
+
+# Manually set the bin centers to have equal bar spacing
+bin_centers = (bin_edges[:-1] + bin_edges[1:]) / 2  # Calculate the centers of each bin
+equal_width = bin_edges[1] - bin_edges[0]  # Set equal width for all bars based on bin spacing
+
+# Create figure and axes
+fig, ax = plt.subplots(figsize=(6, 6), dpi=300)
+
+# Plot bar graph with equal-width bars
+ax.bar(bin_centers, probabilities, width=equal_width, log=False)  # No log scale for clearer visualization
+
+# Set custom x-tick locations and labels (optional)
+#ax.set_xticks(bin_centers, 0.1)
+#ax.set_xticklabels([f'{edge:.2f}' for edge in bin_centers], fontsize=10, fontweight='bold')
+
+# Set x and y axis labels
+ax.set_xlabel('Attention Score', fontsize=14)
+ax.set_ylabel('Probability', fontsize=14)
+plt.yscale('log')
+
+# Add a title
+ax.set_title('QG-trained Attention Distribution', fontsize=16)
+plt.savefig('QG_attentionDist.pdf', bbox_inches="tight")
+
+print('QG done and saved! Now TL model...')
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+#running for tl-trained model second
+
+# Assuming attention is already a list or array
+# Flattening the attention array
+flattened_attention = np.stack(tl_attention).flatten()
+
+# Define number of bins for the probability distribution
+num_bins = 20
+
+# Define the bin edges between 0 and 1, using 20 evenly spaced bins
+bin_edges = np.linspace(0, 1, num_bins + 1)
+
+
+# Process the data in chunks (using a generator)
+probabilities = process_in_chunks(attention_generator(flattened_attention, chunk_size=100000))
+
+print('Histogram computed, now saving...')
+
+np.save('TL_attention_distribution_both_labels.npy', probabilities)
+
+print('Saved! Now plotting...')
+
+# Manually set the bin centers to have equal bar spacing
+bin_centers = (bin_edges[:-1] + bin_edges[1:]) / 2  # Calculate the centers of each bin
+equal_width = bin_edges[1] - bin_edges[0]  # Set equal width for all bars based on bin spacing
+
+# Create figure and axes
+fig, ax = plt.subplots(figsize=(6, 6), dpi=300)
+
+# Plot bar graph with equal-width bars
+ax.bar(bin_centers, probabilities, width=equal_width, log=False)  # No log scale for clearer visualization
+
+# Set custom x-tick locations and labels (optional)
+#ax.set_xticks(bin_centers, 0.1)
+#ax.set_xticklabels([f'{edge:.2f}' for edge in bin_centers], fontsize=10, fontweight='bold')
+
+# Set x and y axis labels
+ax.set_xlabel('Attention Score', fontsize=14)
+ax.set_ylabel('Probability', fontsize=14)
+plt.yscale('log')
+
+# Add a title
+ax.set_title('TL-trained Attention Distribution', fontsize=16)
+plt.savefig('TL_attentionDist_both_labels.pdf', bbox_inches="tight")
