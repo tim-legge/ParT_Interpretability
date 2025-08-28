@@ -1141,7 +1141,7 @@ def load_data(dataset_type='qg', batch_size=300):
                     data = build_features_and_labels_qg(tree)
                     # Truncate to batch_size
                     if data['pf_points'].shape[0] > batch_size:
-                        print(f"Truncating from {data['pf_points'].shape[0]} jets to {batch_size} jets")
+                        #print(f"Truncating from {data['pf_points'].shape[0]} jets to {batch_size} jets")
                         data = {
                             'pf_points': data['pf_points'][:batch_size],
                             'pf_features': data['pf_features'][:batch_size], 
@@ -1157,7 +1157,7 @@ def load_data(dataset_type='qg', batch_size=300):
                     data_1 = build_features_and_labels_qg(tree)
                     # Truncate to batch_size
                     if data['pf_points'].shape[0] > batch_size:
-                        print(f"Truncating from {data['pf_points'].shape[0]} jets to {batch_size} jets")
+                        #print(f"Truncating from {data['pf_points'].shape[0]} jets to {batch_size} jets")
                         data['pf_points'] = np.concatenate(data['pf_points'],data_1['pf_points'][:batch_size])
                         data['pf_features'] = np.concatenate(data['pf_features'],data_1['pf_features'][:batch_size])
                         data['pf_vectors'] = np.concatenate(data['pf_vectors'],data_1['pf_vectors'][:batch_size])
@@ -1193,6 +1193,8 @@ def load_data(dataset_type='qg', batch_size=300):
 print("Loading data for testing...")
 qg_data = load_data('qg', batch_size=None)
 tl_data = load_data('tl', batch_size=None)
+
+print('Loaded data.')
 
 for type, array in qg_data.items():
     np.save(f'./qg_{type}.npy', array)
