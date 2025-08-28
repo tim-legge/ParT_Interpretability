@@ -1195,29 +1195,46 @@ def load_data(dataset_type='qg', batch_size=300):
         raise e
 
 # Create sample data for both models
-print("Loading data for testing...")
-qg_data = load_data('qg', batch_size=None)
-tl_data = load_data('tl', batch_size=None)
 
-print('Loaded data.')
+if not os.path.exists('./tl_labels.npy'):
+    print("Loading data for testing...")
+    qg_data = load_data('qg', batch_size=None)
+    tl_data = load_data('tl', batch_size=None)
 
-for type, array in qg_data.items():
-    np.save(f'./qg_{type}.npy', array)
-for type, array in tl_data.items():
-    np.save(f'./tl_{type}.npy', array)
+    print('Loaded data.')
 
-print(f"Data loaded and saved to .npy:")
+    for type, array in qg_data.items():
+        np.save(f'./qg_{type}.npy', array)
+    for type, array in tl_data.items():
+        np.save(f'./tl_{type}.npy', array)
+
+else:
+    qg_data = {
+        'pf_points': np.load('./qg_pf_points.npy'),
+        'pf_features': np.load('./qg_pf_features.npy'),
+        'pf_vectors': np.load('./qg_pf_vectors.npy'),
+        'pf_mask': np.load('./qg_pf_mask.npy'),
+        'labels': np.load('./qg_labels.npy')}
+    tl_data = {
+        'pf_points': np.load('./tl_pf_points.npy'),
+        'pf_features': np.load('./tl_pf_features.npy'),
+        'pf_vectors': np.load('./tl_pf_vectors.npy'),
+        'pf_mask': np.load('./tl_pf_mask.npy'),
+        'labels': np.load('./tl_labels.npy')}
+
+print(f"Data loaded (and saved to .npy if it was not there already):")
 print(f"Feature dimensions:")
 print(f"  QuarkGluon (kinpid): {qg_data['pf_features'].shape[1]} features")
 print(f"  TopLandscape (kin): {tl_data['pf_features'].shape[1]} features")
 
 # access data from local .npys 
 
-qgtrained_modelpath = '/home/tim_legge/save_qg_model/on-qg-run2_best_epoch_state.pt'
-tltrained_modelpath = '/home/tim_legge/save_tl_model/on-tl-run3_best_epoch_state.pt'
-hls4mltrained_modelpath = '/home/tim_legge/ParT_Interpretability/save_hls4ml_model/on-hls4ml-run2_best_epoch_state.pt'
-jcktrained_modelpath = './models/ParT_kin.pt'
+qgtrained_modelpath = './save_qg_model/on-qg-run2_best_epoch_state.pt'
+tltrained_modelpath = './save_tl_model/on-tl-run3_best_epoch_state.pt'
+#hls4mltrained_modelpath = '/home/tim_legge/ParT_Interpretability/save_hls4ml_model/on-hls4ml-run2_best_epoch_state.pt'
+#jcktrained_modelpath = './models/ParT_kin.pt'
 
+print('Loading models...')
 
 qg_model, _ = get_model('qg')
 tl_model, _ = get_model('tl')
