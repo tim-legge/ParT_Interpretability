@@ -1168,8 +1168,8 @@ def load_data(dataset_type='qg', batch_size=300):
                     data['pf_mask'] = np.concatenate(data['pf_mask'][:],data_1['pf_mask'][:])
                     data['labels'] = np.concatenate(data['labels'][:],data_1['labels'][:])
                 
-                print('QG collected')
-                return data
+            print('QG collected')
+            return data
 
         elif dataset_type == 'tl':
             # Try to load TopLandscape data
