@@ -1330,7 +1330,7 @@ else:
         attention_iter = attention_generator(flattened_attention, chunk_size=100000)
         # Process the data in chunks and compute histogram
         qg_probabilities = process_in_chunks(attention_iter, chunk_size=100000, bin_edges=bin_edges)
-        np.save(f'/part-vol-3/timlegge-ParT-trained/batched_dists/qg_attention_distribution_batch_{qg_dist_counter}.npy', qg_probabilities)
+        np.save(f'/part-vol-3/timlegge-ParT-trained/batched_hists/qg_attention_distribution_batch_{qg_dist_counter}.npy', qg_probabilities)
         print(f"Processed distribution for batch {qg_dist_counter}")
         with open('/part-vol-3/timlegge-ParT-trained/qg_dist_counter.txt', 'w') as f:
             f.write(str(qg_dist_counter+1))
