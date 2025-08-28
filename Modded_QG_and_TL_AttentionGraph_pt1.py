@@ -1257,24 +1257,26 @@ else:
     print('Counter file exists, resuming from last batch')
     with open('/part-vol-3/timlegge-ParT-trained/counter.txt', 'r') as f:
         counter = int(f.read().strip())
-
-print(f"Starting from batch {counter}")
-while counter*batch_to_load < qg_data['pf_points'].shape[0]:
-    qg_model.load_state_dict(qg_state_dict)
-    qg_pf_features = qg_data['pf_features'][counter*batch_to_load:(counter+1)*batch_to_load]
-    qg_pf_vectors = qg_data['pf_vectors'][counter*batch_to_load:(counter+1)*batch_to_load]
-    qg_pf_mask = qg_data['pf_mask'][counter*batch_to_load:(counter+1)*batch_to_load]
-    qg_pf_points = qg_data['pf_points'][counter*batch_to_load:(counter+1)*batch_to_load]
-    qg_labels = qg_data['labels'][counter*batch_to_load:(counter+1)*batch_to_load]
-    qg_model.eval()
-    with torch.no_grad():
-        qg_y_pred = qg_model(torch.from_numpy(qg_pf_points),torch.from_numpy(qg_pf_features),torch.from_numpy(qg_pf_vectors),torch.from_numpy(qg_pf_mask))
-    qg_attention = [tensor.numpy() for tensor in qg_model.get_attention_matrix()]
-    np.save(f'/part-vol-3/timlegge-ParT-trained/batched_hists/qg_hist_batch_{counter}.npy', qg_attention)
-    print(f"Processed batch {counter} - inferred from jets {counter*batch_to_load} to {(counter+1)*batch_to_load}")
-    counter += 1
-    with open('/part-vol-3/timlegge-ParT-trained/counter.txt', 'w') as f:
-        f.write(str(counter))
+if counter >= 50:
+    print('Batches already processed, moving on...')
+else:
+    print(f"Starting from batch {counter}")
+    while counter*batch_to_load < qg_data['pf_points'].shape[0]:
+        qg_model.load_state_dict(qg_state_dict)
+        qg_pf_features = qg_data['pf_features'][counter*batch_to_load:(counter+1)*batch_to_load]
+        qg_pf_vectors = qg_data['pf_vectors'][counter*batch_to_load:(counter+1)*batch_to_load]
+        qg_pf_mask = qg_data['pf_mask'][counter*batch_to_load:(counter+1)*batch_to_load]
+        qg_pf_points = qg_data['pf_points'][counter*batch_to_load:(counter+1)*batch_to_load]
+        qg_labels = qg_data['labels'][counter*batch_to_load:(counter+1)*batch_to_load]
+        qg_model.eval()
+        with torch.no_grad():
+            qg_y_pred = qg_model(torch.from_numpy(qg_pf_points),torch.from_numpy(qg_pf_features),torch.from_numpy(qg_pf_vectors),torch.from_numpy(qg_pf_mask))
+        qg_attention = [tensor.numpy() for tensor in qg_model.get_attention_matrix()]
+        np.save(f'/part-vol-3/timlegge-ParT-trained/batched_hists/qg_hist_batch_{counter}.npy', qg_attention)
+        print(f"Processed batch {counter} - inferred from jets {counter*batch_to_load} to {(counter+1)*batch_to_load}")
+        counter += 1
+        with open('/part-vol-3/timlegge-ParT-trained/counter.txt', 'w') as f:
+            f.write(str(counter))
 
 print('QG done!')
 
