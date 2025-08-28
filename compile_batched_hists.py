@@ -13,5 +13,6 @@ if os.path.exists('/part-vol-3/timlegge-ParT-trained/batched_hists/tl_hist_distr
     f = np.load('/part-vol-3/timlegge-ParT-trained/batched_hists/tl_hist_distribution_batch_0.npy', allow_pickle=True)
     compiled = f
 
+print('This is the shape of one batch:')
 print(compiled.shape)
         
