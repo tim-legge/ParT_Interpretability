@@ -1133,7 +1133,7 @@ def load_data(dataset_type='qg', batch_size=300):
     try:
         if dataset_type == 'qg':
             # Try to load QuarkGluon data 
-            data_path = "./datasets/qg_dataset/QuarkGluon/qg_test_file_0.root"
+            data_path = "/part-vol-3/timlegge-ParT-trained/qg_dataset/QuarkGluon/qg_test_file_0.root"
             if os.path.exists(data_path):
                 print(f"Loading actual QuarkGluon data from {data_path}")
                 with uproot.open(data_path)['tree'] as tree:
@@ -1148,7 +1148,7 @@ def load_data(dataset_type='qg', batch_size=300):
                         'pf_mask': data['pf_mask'][:batch_size],
                         'labels': data['label'][:batch_size]
                         }
-            data_path = "./datasets/qg_dataset/QuarkGluon/qg_test_file_1.root"
+            data_path = "/part-vol-3/timlegge-ParT-trained/qg_dataset/QuarkGluon/qg_test_file_1.root"
             if os.path.exists(data_path):
                 print(f"Loading actual QuarkGluon data from {data_path}")
                 with uproot.open(data_path)['tree'] as tree:
@@ -1172,7 +1172,7 @@ def load_data(dataset_type='qg', batch_size=300):
 
         elif dataset_type == 'tl':
             # Try to load TopLandscape data
-            data_path = "./datasets/tl_dataset/TopLandscape/tl_test_file.root"
+            data_path = "/part-vol-3/timlegge-tl_dataset/TopLandscape/tl_test_file.root"
             if os.path.exists(data_path):
                 print(f"Loading actual TopLandscape data from {data_path}")
                 with uproot.open(data_path)['tree'] as tree:
@@ -1269,7 +1269,7 @@ while counter*batch_to_load < qg_data['pf_points'].shape[0]:
     qg_model.eval()
     with torch.no_grad():
         qg_y_pred= qg_model(torch.from_numpy(qg_pf_points),torch.from_numpy(qg_pf_features),torch.from_numpy(qg_pf_vectors),torch.from_numpy(qg_pf_mask))
-    qg_attention = qg_model.get_attention_matrix()
+    qg_attention = qg_model.get_attention_matrix().numpy()
     np.save(f'/part-vol-3/timlegge-ParT-trained/batched_attns/qg_attention_batch_{counter}.npy', qg_attention)
     counter = counter + 1
     print(f"Processed batch {counter} - inferred from jets {counter*batch_to_load} to {(counter+1)*batch_to_load}")
