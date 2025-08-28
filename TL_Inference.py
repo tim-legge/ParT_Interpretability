@@ -1245,37 +1245,35 @@ tl_model, _ = get_model('tl')
 # We expect some memory issues when loading full dataset
 # so set up a very basic checkpoint/batching system for saving inference results
 
-qg_state_dict = torch.load(qgtrained_modelpath, map_location=torch.device('cpu'))
+tl_state_dict = torch.load(tltrained_modelpath, map_location=torch.device('cpu'))
 
 batch_to_load = 2000
 
-if not os.path.exists('/part-vol-3/timlegge-ParT-trained/counter.txt'):
+if not os.path.exists('/part-vol-3/timlegge-ParT-trained/tl_counter.txt'):
     counter = 0
-    with open('/part-vol-3/timlegge-ParT-trained/counter.txt', 'w') as f:
+    with open('/part-vol-3/timlegge-ParT-trained/tl_counter.txt', 'w') as f:
         f.write(str(counter))
 else:
     print('Counter file exists, resuming from last batch')
-    with open('/part-vol-3/timlegge-ParT-trained/counter.txt', 'r') as f:
+    with open('/part-vol-3/timlegge-ParT-trained/tl_counter.txt', 'r') as f:
         counter = int(f.read().strip())
 
 print(f"Starting from batch {counter}")
-while counter*batch_to_load < qg_data['pf_points'].shape[0]:
-    qg_model.load_state_dict(qg_state_dict)
-    qg_pf_features = qg_data['pf_features'][counter*batch_to_load:(counter+1)*batch_to_load]
-    qg_pf_vectors = qg_data['pf_vectors'][counter*batch_to_load:(counter+1)*batch_to_load]
-    qg_pf_mask = qg_data['pf_mask'][counter*batch_to_load:(counter+1)*batch_to_load]
-    qg_pf_points = qg_data['pf_points'][counter*batch_to_load:(counter+1)*batch_to_load]
-    qg_labels = qg_data['labels'][counter*batch_to_load:(counter+1)*batch_to_load]
-    qg_model.eval()
+while counter*batch_to_load < tl_data['pf_points'].shape[0]:
+    tl_model.load_state_dict(tl_state_dict)
+    tl_pf_features = tl_data['pf_features'][counter*batch_to_load:(counter+1)*batch_to_load]
+    tl_pf_vectors = tl_data['pf_vectors'][counter*batch_to_load:(counter+1)*batch_to_load]
+    tl_pf_mask = tl_data['pf_mask'][counter*batch_to_load:(counter+1)*batch_to_load]
+    tl_pf_points = tl_data['pf_points'][counter*batch_to_load:(counter+1)*batch_to_load]
+    tl_labels = tl_data['labels'][counter*batch_to_load:(counter+1)*batch_to_load]
+    tl_model.eval()
     with torch.no_grad():
-        qg_y_pred= qg_model(torch.from_numpy(qg_pf_points),torch.from_numpy(qg_pf_features),torch.from_numpy(qg_pf_vectors),torch.from_numpy(qg_pf_mask))
-    qg_attention = [tensor.numpy() for tensor in qg_model.get_attention_matrix()]
-    np.save(f'/part-vol-3/timlegge-ParT-trained/batched_attns/qg_attention_batch_{counter}.npy', qg_attention)
+        tl_y_pred= tl_model(torch.from_numpy(tl_pf_points),torch.from_numpy(tl_pf_features),torch.from_numpy(tl_pf_vectors),torch.from_numpy(tl_pf_mask))
+    tl_attention = [tensor.numpy() for tensor in tl_model.get_attention_matrix()]
+    np.save(f'/part-vol-3/timlegge-ParT-trained/batched_attns/tl_attention_batch_{counter}.npy', tl_attention)
     print(f"Processed batch {counter} - inferred from jets {counter*batch_to_load} to {(counter+1)*batch_to_load}")
-    counter += 1
-    with open('/part-vol-3/timlegge-ParT-trained/counter.txt', 'w') as f:
+    with open('/part-vol-3/timlegge-ParT-trained/tl_counter.txt', 'w') as f:
         f.write(str(counter+1))
+    counter += 1
 
-print('QG done!')
-
-# HANDLE TL LATER
+print('TL done!')
