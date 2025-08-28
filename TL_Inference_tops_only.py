@@ -1281,7 +1281,11 @@ else:
             elif tl_labels[jet] == 1: # QCD
                 tl_qcdonly_attention.append([layer[jet] for layer in tl_attention])
         np.save(f'/part-vol-3/timlegge-ParT-trained/batched_attns/tl_topsonly_attention_batch_{counter}.npy', tl_topsonly_attention)
+        print(f'Saved {len(tl_topsonly_attention)} top jets attention for batch {counter}')
         np.save(f'/part-vol-3/timlegge-ParT-trained/batched_attns/tl_qcdonly_attention_batch_{counter}.npy', tl_qcdonly_attention)
+        print(f'Saved {len(tl_qcdonly_attention)} qcd jets attention for batch {counter}')
+        np.save(f'/part-vol-3/timlegge-ParT-trained/batched_attns/tl_run4_attention_batch_{counter}.npy', tl_attention)
+        print(f'Saved full attention for batch {counter}')
         print(f"Processed batch {counter} - inferred from jets {counter*batch_to_load} to {(counter+1)*batch_to_load}")
         with open('/part-vol-3/timlegge-ParT-trained/tl_topsonly_counter.txt', 'w') as f:
             f.write(str(counter+1))
@@ -1317,30 +1321,91 @@ def attention_generator(attention, chunk_size):
         yield attention[i:i + chunk_size]
 
 # Attention distributions - run with similar batching algorithm as above
+# One at a time - first for topsonly
 
 if not os.path.exists('/part-vol-3/timlegge-ParT-trained/tl_topsonly_dist_counter.txt'):
-    tl_dist_counter = 0
+    tl_topsonly_dist_counter = 0
     with open('/part-vol-3/timlegge-ParT-trained/tl_topsonly_dist_counter.txt', 'w') as f:
-        f.write(str(tl_dist_counter))
+        f.write(str(tl_topsonly_dist_counter))
 else:
     print('Distribution counter file exists, resuming from last batch')
     with open('/part-vol-3/timlegge-ParT-trained/tl_topsonly_dist_counter.txt', 'r') as f:
-        tl_dist_counter = int(f.read().strip())
+        tl_topsonly_dist_counter = int(f.read().strip())
 
-if tl_dist_counter >= 51:
+if tl_topsonly_dist_counter >= 51:
     print('Distribution batches already processed, moving on...')
 else:
-    while tl_dist_counter < 51:
-        print(f"Processing distribution batch {tl_dist_counter}")
-        attention = np.load(f'/part-vol-3/timlegge-ParT-trained/batched_attns/tl_topsonly_attention_batch_{tl_dist_counter}.npy', allow_pickle=True)
+    while tl_topsonly_dist_counter < 51:
+        print(f"Processing distribution batch {tl_topsonly_dist_counter}")
+        attention = np.load(f'/part-vol-3/timlegge-ParT-trained/batched_attns/tl_topsonly_attention_batch_{tl_topsonly_dist_counter}.npy', allow_pickle=True)
         # Flatten the list of arrays into a single array
         flattened_attention = np.stack(attention).flatten()
         # Create a generator to yield chunks of data
         attention_iter = attention_generator(flattened_attention, chunk_size=100000)
         # Process the data in chunks and compute histogram
         tl_probabilities = process_in_chunks(attention_iter, chunk_size=100000, bin_edges=bin_edges)
-        np.save(f'/part-vol-3/timlegge-ParT-trained/batched_hists/tl_topsonly_hist_distribution_batch_{tl_dist_counter}.npy', tl_probabilities)
-        print(f"Processed distribution for batch {tl_dist_counter}")
+        np.save(f'/part-vol-3/timlegge-ParT-trained/batched_hists/tl_topsonly_hist_distribution_batch_{tl_topsonly_dist_counter}.npy', tl_probabilities)
+        print(f"Processed distribution for batch {tl_topsonly_dist_counter}")
         with open('/part-vol-3/timlegge-ParT-trained/tl_topsonly_dist_counter.txt', 'w') as f:
-            f.write(str(tl_dist_counter+1))
-        tl_dist_counter += 1
+            f.write(str(tl_topsonly_dist_counter+1))
+        tl_topsonly_dist_counter += 1
+
+# Then for qcdonly
+
+if not os.path.exists('/part-vol-3/timlegge-ParT-trained/tl_qcdonly_dist_counter.txt'):
+    tl_qcdonly_dist_counter = 0
+    with open('/part-vol-3/timlegge-ParT-trained/tl_qcdonly_dist_counter.txt', 'w') as f:
+        f.write(str(tl_qcdonly_dist_counter))
+else:
+    print('Distribution counter file exists, resuming from last batch')
+    with open('/part-vol-3/timlegge-ParT-trained/tl_qcdonly_dist_counter.txt', 'r') as f:
+        tl_qcdonly_dist_counter = int(f.read().strip())
+
+if tl_qcdonly_dist_counter >= 51:
+    print('Distribution batches already processed, moving on...')
+else:
+    while tl_qcdonly_dist_counter < 51:
+        print(f"Processing distribution batch {tl_qcdonly_dist_counter}")
+        attention = np.load(f'/part-vol-3/timlegge-ParT-trained/batched_attns/tl_qcdonly_attention_batch_{tl_qcdonly_dist_counter}.npy', allow_pickle=True)
+        # Flatten the list of arrays into a single array
+        flattened_attention = np.stack(attention).flatten()
+        # Create a generator to yield chunks of data
+        attention_iter = attention_generator(flattened_attention, chunk_size=100000)
+        # Process the data in chunks and compute histogram
+        tl_probabilities = process_in_chunks(attention_iter, chunk_size=100000, bin_edges=bin_edges)
+        np.save(f'/part-vol-3/timlegge-ParT-trained/batched_hists/tl_qcdonly_hist_distribution_batch_{tl_qcdonly_dist_counter}.npy', tl_probabilities)
+        print(f"Processed distribution for batch {tl_qcdonly_dist_counter}")
+        with open('/part-vol-3/timlegge-ParT-trained/tl_qcdonly_dist_counter.txt', 'w') as f:
+            f.write(str(tl_qcdonly_dist_counter+1))
+        tl_qcdonly_dist_counter += 1
+
+# Finally for full run4
+
+if not os.path.exists('/part-vol-3/timlegge-ParT-trained/tl_run4_dist_counter.txt'):
+    tl_run4_dist_counter = 0
+    with open('/part-vol-3/timlegge-ParT-trained/tl_run4_dist_counter.txt', 'w') as f:
+        f.write(str(tl_run4_dist_counter))
+else:
+    print('Distribution counter file exists, resuming from last batch')
+    with open('/part-vol-3/timlegge-ParT-trained/tl_run4_dist_counter.txt', 'r') as f:
+        tl_run4_dist_counter = int(f.read().strip())
+
+if tl_run4_dist_counter >= 51:
+    print('Distribution batches already processed, moving on...')
+else:
+    while tl_run4_dist_counter < 51:
+        print(f"Processing distribution batch {tl_run4_dist_counter}")
+        attention = np.load(f'/part-vol-3/timlegge-ParT-trained/batched_attns/tl_run4_attention_batch_{tl_run4_dist_counter}.npy', allow_pickle=True)
+        # Flatten the list of arrays into a single array
+        flattened_attention = np.stack(attention).flatten()
+        # Create a generator to yield chunks of data
+        attention_iter = attention_generator(flattened_attention, chunk_size=100000)
+        # Process the data in chunks and compute histogram
+        tl_probabilities = process_in_chunks(attention_iter, chunk_size=100000, bin_edges=bin_edges)
+        np.save(f'/part-vol-3/timlegge-ParT-trained/batched_hists/tl_run4_hist_distribution_batch_{tl_run4_dist_counter}.npy', tl_probabilities)
+        print(f"Processed distribution for batch {tl_run4_dist_counter}")
+        with open('/part-vol-3/timlegge-ParT-trained/tl_run4_dist_counter.txt', 'w') as f:
+            f.write(str(tl_run4_dist_counter+1))
+        tl_run4_dist_counter += 1
+
+print('All done!')
