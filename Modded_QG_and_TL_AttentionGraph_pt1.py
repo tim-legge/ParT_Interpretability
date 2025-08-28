@@ -1140,14 +1140,13 @@ def load_data(dataset_type='qg', batch_size=300):
                     print('This part is working - QG')
                     data = build_features_and_labels_qg(tree)
                     # Truncate to batch_size
-                    if data['pf_points'].shape[0] > batch_size:
                         #print(f"Truncating from {data['pf_points'].shape[0]} jets to {batch_size} jets")
-                        data = {
-                            'pf_points': data['pf_points'][:batch_size],
-                            'pf_features': data['pf_features'][:batch_size], 
-                            'pf_vectors': data['pf_vectors'][:batch_size],
-                            'pf_mask': data['pf_mask'][:batch_size],
-                            'labels': data['label'][:batch_size]
+                    data = {
+                        'pf_points': data['pf_points'][:batch_size],
+                        'pf_features': data['pf_features'][:batch_size], 
+                        'pf_vectors': data['pf_vectors'][:batch_size],
+                        'pf_mask': data['pf_mask'][:batch_size],
+                        'labels': data['label'][:batch_size]
                         }
             data_path = "./datasets/qg_dataset/QuarkGluon/qg_test_file_1.root"
             if os.path.exists(data_path):
@@ -1155,14 +1154,13 @@ def load_data(dataset_type='qg', batch_size=300):
                 with uproot.open(data_path)['tree'] as tree:
                     print('This part is working - QG')
                     data_1 = build_features_and_labels_qg(tree)
-                    # Truncate to batch_size
-                    if data['pf_points'].shape[0] > batch_size:
-                        #print(f"Truncating from {data['pf_points'].shape[0]} jets to {batch_size} jets")
-                        data['pf_points'] = np.concatenate(data['pf_points'],data_1['pf_points'][:batch_size])
-                        data['pf_features'] = np.concatenate(data['pf_features'],data_1['pf_features'][:batch_size])
-                        data['pf_vectors'] = np.concatenate(data['pf_vectors'],data_1['pf_vectors'][:batch_size])
-                        data['pf_mask'] = np.concatenate(data['pf_mask'],data_1['pf_mask'][:batch_size])
-                        data['labels'] = np.concatenate(data['labels'],data_1['labels'][:batch_size])
+                    # Truncate to batch_size            
+                    #print(f"Truncating from {data['pf_points'].shape[0]} jets to {batch_size} jets")
+                    data['pf_points'] = np.concatenate(data['pf_points'],data_1['pf_points'][:batch_size])
+                    data['pf_features'] = np.concatenate(data['pf_features'],data_1['pf_features'][:batch_size])
+                    data['pf_vectors'] = np.concatenate(data['pf_vectors'],data_1['pf_vectors'][:batch_size])
+                    data['pf_mask'] = np.concatenate(data['pf_mask'],data_1['pf_mask'][:batch_size])
+                    data['labels'] = np.concatenate(data['labels'],data_1['labels'][:batch_size])
                     return data
 
         elif dataset_type == 'tl':
