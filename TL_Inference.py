@@ -1258,11 +1258,11 @@ else:
     with open('/part-vol-3/timlegge-ParT-trained/tl_counter.txt', 'r') as f:
         counter = int(f.read().strip())
 
-if counter >= 50:
+if counter >= 51:
     print('All batches processed, moving on...')
 else:
     print(f"Starting from batch {counter}")
-    while counter*batch_to_load < tl_data['pf_points'].shape[0]:
+    while counter < 51:
         tl_model.load_state_dict(tl_state_dict)
         tl_pf_features = tl_data['pf_features'][counter*batch_to_load:(counter+1)*batch_to_load]
         tl_pf_vectors = tl_data['pf_vectors'][counter*batch_to_load:(counter+1)*batch_to_load]
@@ -1319,10 +1319,10 @@ else:
     with open('/part-vol-3/timlegge-ParT-trained/tl_dist_counter.txt', 'r') as f:
         tl_dist_counter = int(f.read().strip())
 
-if tl_dist_counter >= 50:
+if tl_dist_counter >= 51:
     print('Distribution batches already processed, moving on...')
 else:
-    while tl_dist_counter < 50:
+    while tl_dist_counter < 51:
         print(f"Processing distribution batch {tl_dist_counter}")
         attention = np.load(f'/part-vol-3/timlegge-ParT-trained/batched_attns/tl_attention_batch_{tl_dist_counter}.npy', allow_pickle=True)
         # Flatten the list of arrays into a single array
