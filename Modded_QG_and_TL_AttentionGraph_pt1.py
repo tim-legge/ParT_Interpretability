@@ -1243,11 +1243,11 @@ tl_model, _ = get_model('tl')
 
 qg_state_dict = torch.load(qgtrained_modelpath, map_location=torch.device('cpu'))
 qg_model.load_state_dict(qg_state_dict)
-qg_pf_features = np.load('./qg_data/qg_pf_features.npy')[:]
-qg_pf_vectors = np.load('./qg_data/qg_pf_vectors.npy')[:]
-qg_pf_mask = np.load('./qg_data/qg_pf_mask.npy')[:]
-qg_pf_points = np.load('./qg_data/qg_pf_points.npy')[:]
-qg_labels = np.load('./qg_data/qg_labels.npy')[:]
+qg_pf_features = qg_data['pf_features'][:]
+qg_pf_vectors = qg_data['pf_vectors'][:]
+qg_pf_mask = qg_data['pf_mask'][:]
+qg_pf_points = qg_data['pf_points'][:]
+qg_labels = qg_data['labels'][:]
 qg_model.eval()
 with torch.no_grad():
     qg_y_pred= qg_model(torch.from_numpy(qg_pf_points),torch.from_numpy(qg_pf_features),torch.from_numpy(qg_pf_vectors),torch.from_numpy(qg_pf_mask))
@@ -1260,11 +1260,11 @@ print('QG done!')
 
 tl_state_dict = torch.load(tltrained_modelpath, map_location=torch.device('cpu'))
 tl_model.load_state_dict(tl_state_dict)
-tl_pf_features = np.load('./tl_data/tl_pf_features.npy')[:]
-tl_pf_vectors = np.load('./tl_data/tl_pf_vectors.npy')[:]
-tl_pf_mask = np.load('./tl_data/tl_pf_mask.npy')[:]
-tl_pf_points = np.load('./tl_data/tl_pf_points.npy')[:]
-tl_labels = np.load('./tl_data/tl_labels.npy')[:]
+tl_pf_features = tl_data['pf_features'][:]
+tl_pf_vectors = tl_data['pf_vectors'][:]
+tl_pf_mask = tl_data['pf_mask'][:]
+tl_pf_points = tl_data['pf_points'][:]
+tl_labels = tl_data['labels'][:]
 tl_model.eval()
 with torch.no_grad():
     tl_y_pred= tl_model(torch.from_numpy(tl_pf_points),torch.from_numpy(tl_pf_features),torch.from_numpy(tl_pf_vectors),torch.from_numpy(tl_pf_mask))
