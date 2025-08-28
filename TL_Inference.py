@@ -1258,22 +1258,81 @@ else:
     with open('/part-vol-3/timlegge-ParT-trained/tl_counter.txt', 'r') as f:
         counter = int(f.read().strip())
 
-print(f"Starting from batch {counter}")
-while counter*batch_to_load < tl_data['pf_points'].shape[0]:
-    tl_model.load_state_dict(tl_state_dict)
-    tl_pf_features = tl_data['pf_features'][counter*batch_to_load:(counter+1)*batch_to_load]
-    tl_pf_vectors = tl_data['pf_vectors'][counter*batch_to_load:(counter+1)*batch_to_load]
-    tl_pf_mask = tl_data['pf_mask'][counter*batch_to_load:(counter+1)*batch_to_load]
-    tl_pf_points = tl_data['pf_points'][counter*batch_to_load:(counter+1)*batch_to_load]
-    tl_labels = tl_data['labels'][counter*batch_to_load:(counter+1)*batch_to_load]
-    tl_model.eval()
-    with torch.no_grad():
-        tl_y_pred= tl_model(torch.from_numpy(tl_pf_points),torch.from_numpy(tl_pf_features),torch.from_numpy(tl_pf_vectors),torch.from_numpy(tl_pf_mask))
-    tl_attention = [tensor.numpy() for tensor in tl_model.get_attention_matrix()]
-    np.save(f'/part-vol-3/timlegge-ParT-trained/batched_attns/tl_attention_batch_{counter}.npy', tl_attention)
-    print(f"Processed batch {counter} - inferred from jets {counter*batch_to_load} to {(counter+1)*batch_to_load}")
-    with open('/part-vol-3/timlegge-ParT-trained/tl_counter.txt', 'w') as f:
-        f.write(str(counter+1))
-    counter += 1
+if counter >= 50:
+    print('All batches processed, moving on...')
+else:
+    print(f"Starting from batch {counter}")
+    while counter*batch_to_load < tl_data['pf_points'].shape[0]:
+        tl_model.load_state_dict(tl_state_dict)
+        tl_pf_features = tl_data['pf_features'][counter*batch_to_load:(counter+1)*batch_to_load]
+        tl_pf_vectors = tl_data['pf_vectors'][counter*batch_to_load:(counter+1)*batch_to_load]
+        tl_pf_mask = tl_data['pf_mask'][counter*batch_to_load:(counter+1)*batch_to_load]
+        tl_pf_points = tl_data['pf_points'][counter*batch_to_load:(counter+1)*batch_to_load]
+        tl_labels = tl_data['labels'][counter*batch_to_load:(counter+1)*batch_to_load]
+        tl_model.eval()
+        with torch.no_grad():
+            tl_y_pred= tl_model(torch.from_numpy(tl_pf_points),torch.from_numpy(tl_pf_features),torch.from_numpy(tl_pf_vectors),torch.from_numpy(tl_pf_mask))
+        tl_attention = [tensor.numpy() for tensor in tl_model.get_attention_matrix()]
+        np.save(f'/part-vol-3/timlegge-ParT-trained/batched_attns/tl_attention_batch_{counter}.npy', tl_attention)
+        print(f"Processed batch {counter} - inferred from jets {counter*batch_to_load} to {(counter+1)*batch_to_load}")
+        with open('/part-vol-3/timlegge-ParT-trained/tl_counter.txt', 'w') as f:
+            f.write(str(counter+1))
+        counter += 1
 
 print('TL done!')
+
+bin_edges = np.linspace(0, 1, 21)
+
+# Function to process data in chunks and compute histogram
+def process_in_chunks(attention_iterator, chunk_size=100000, bin_edges=bin_edges):
+    hist_counts = np.zeros(len(bin_edges) - 1)  # Initialize histogram counts for bins
+
+    # Process each chunk of attention data
+    for chunk in attention_iterator:
+        # Flatten the chunk to ensure it's 1D and processable by np.histogram
+        chunk = np.array(chunk).flatten()
+
+        # Calculate histogram for this chunk
+        hist, _ = np.histogram(chunk, bins=bin_edges)
+
+        # Accumulate the counts
+        hist_counts += hist
+
+    total_data_points = hist_counts.sum()  # Total number of points processed
+    probabilities = hist_counts / total_data_points  # Normalize to get probabilities
+    return probabilities
+
+# Simulate loading a large dataset in chunks (e.g., from a file or other source)
+def attention_generator(attention, chunk_size):
+    """Simulate chunked data loader for large dataset."""
+    for i in range(0, len(attention), chunk_size):
+        yield attention[i:i + chunk_size]
+
+# Attention distributions - run with similar batching algorithm as above
+
+if not os.path.exists('/part-vol-3/timlegge-ParT-trained/tl_dist_counter.txt'):
+    tl_dist_counter = 0
+    with open('/part-vol-3/timlegge-ParT-trained/tl_dist_counter.txt', 'w') as f:
+        f.write(str(tl_dist_counter))
+else:
+    print('Distribution counter file exists, resuming from last batch')
+    with open('/part-vol-3/timlegge-ParT-trained/tl_dist_counter.txt', 'r') as f:
+        tl_dist_counter = int(f.read().strip())
+
+if tl_dist_counter >= 50:
+    print('Distribution batches already processed, moving on...')
+else:
+    while tl_dist_counter < 50:
+        print(f"Processing distribution batch {tl_dist_counter}")
+        attention = np.load(f'/part-vol-3/timlegge-ParT-trained/batched_attns/tl_attention_batch_{tl_dist_counter}.npy', allow_pickle=True)
+        # Flatten the list of arrays into a single array
+        flattened_attention = np.stack(attention).flatten()
+        # Create a generator to yield chunks of data
+        attention_iter = attention_generator(flattened_attention, chunk_size=100000)
+        # Process the data in chunks and compute histogram
+        tl_probabilities = process_in_chunks(attention_iter, chunk_size=100000, bin_edges=bin_edges)
+        np.save(f'/part-vol-3/timlegge-ParT-trained/batched_hists/tl_hist_distribution_batch_{tl_dist_counter}.npy', tl_probabilities)
+        print(f"Processed distribution for batch {tl_dist_counter}")
+        with open('/part-vol-3/timlegge-ParT-trained/tl_dist_counter.txt', 'w') as f:
+            f.write(str(tl_dist_counter+1))
+        tl_dist_counter += 1
