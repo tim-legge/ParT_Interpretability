@@ -1257,11 +1257,11 @@ else:
     print('Counter file exists, resuming from last batch')
     with open('/part-vol-3/timlegge-ParT-trained/counter.txt', 'r') as f:
         counter = int(f.read().strip())
-if counter >= 50:
+if counter >= 51:
     print('Batches already processed, moving on...')
 else:
     print(f"Starting from batch {counter}")
-    while counter < 50:
+    while counter < 51:
         qg_model.load_state_dict(qg_state_dict)
         qg_pf_features = qg_data['pf_features'][counter*batch_to_load:(counter+1)*batch_to_load]
         qg_pf_vectors = qg_data['pf_vectors'][counter*batch_to_load:(counter+1)*batch_to_load]
