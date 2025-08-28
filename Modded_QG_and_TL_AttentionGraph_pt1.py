@@ -1156,11 +1156,11 @@ def load_data(dataset_type='qg', batch_size=300):
                     data_1 = build_features_and_labels_qg(tree)
                     # Truncate to batch_size            
                     #print(f"Truncating from {data['pf_points'].shape[0]} jets to {batch_size} jets")
-                    data['pf_points'] = np.concatenate(data['pf_points'],data_1['pf_points'][:batch_size])
-                    data['pf_features'] = np.concatenate(data['pf_features'],data_1['pf_features'][:batch_size])
-                    data['pf_vectors'] = np.concatenate(data['pf_vectors'],data_1['pf_vectors'][:batch_size])
-                    data['pf_mask'] = np.concatenate(data['pf_mask'],data_1['pf_mask'][:batch_size])
-                    data['labels'] = np.concatenate(data['labels'],data_1['labels'][:batch_size])
+                    data['pf_points'] = np.concatenate(data['pf_points'][:],data_1['pf_points'][:batch_size])
+                    data['pf_features'] = np.concatenate(data['pf_features'][:],data_1['pf_features'][:batch_size])
+                    data['pf_vectors'] = np.concatenate(data['pf_vectors'][:],data_1['pf_vectors'][:batch_size])
+                    data['pf_mask'] = np.concatenate(data['pf_mask'][:],data_1['pf_mask'][:batch_size])
+                    data['labels'] = np.concatenate(data['labels'][:],data_1['labels'][:batch_size])
                     return data
 
         elif dataset_type == 'tl':
