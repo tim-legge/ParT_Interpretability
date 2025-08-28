@@ -170,7 +170,7 @@ def build_features_and_labels_tl(tree, transform_features=True):
     # load arrays from the tree
     a = tree.arrays(filter_name=['part_*', 'jet_pt', 'jet_energy', 'label'])
 
-    # compute new features (same as QG)
+    # compute new features
     a['part_mask'] = ak.ones_like(a['part_energy'])
     a['part_pt'] = np.hypot(a['part_px'], a['part_py'])
     a['part_pt_log'] = np.log(a['part_pt'])
@@ -179,7 +179,7 @@ def build_features_and_labels_tl(tree, transform_features=True):
     a['part_logerel'] = np.log(a['part_energy']/a['jet_energy'])
     a['part_deltaR'] = np.hypot(a['part_deta'], a['part_dphi'])
 
-    # apply standardization based on top_kin.yaml (same as QG)
+    # apply standardization based on top_kin.yaml
     if transform_features:
         a['part_pt_log'] = (a['part_pt_log'] - 1.7) * 0.7
         a['part_e_log'] = (a['part_e_log'] - 2.0) * 0.7
@@ -187,7 +187,7 @@ def build_features_and_labels_tl(tree, transform_features=True):
         a['part_logerel'] = (a['part_logerel'] - (-4.7)) * 0.7
         a['part_deltaR'] = (a['part_deltaR'] - 0.2) * 4.0
 
-    # Feature list for TopLandscape (same kinematic features as QG)
+    # Feature list for TopLandscape
     feature_list = {
         'pf_points': ['part_deta', 'part_dphi'],
         'pf_features': [
@@ -229,7 +229,7 @@ def build_features_and_labels_tl(tree, transform_features=True):
     for k, names in feature_list.items():
         out[k] = np.stack([_pad(a[n], maxlen=128).to_numpy() for n in names], axis=1)
 
-    # Labels for TopLandscape (binary classification) 
+    # binary labels for TopLandscape 
     out['label'] = a['label'].to_numpy().astype('int')
 
     return out
