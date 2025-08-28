@@ -118,6 +118,9 @@ for f in os.listdir('/part-vol-3/timlegge-ParT-trained/batched_hists/'):
         arr = np.load(f'/part-vol-3/timlegge-ParT-trained/batched_hists/{f}', allow_pickle=True)
         compiled += arr
 
+# normalize compiled
+compiled /= compiled.sum()
+
 print('All files loaded, now saving...')
 
 np.save('/part-vol-3/timlegge-ParT-trained/tl_compiled_hist.npy', compiled)
