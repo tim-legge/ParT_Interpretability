@@ -2400,7 +2400,7 @@ for jet in range(len(jck_labels.shape[0])):
 
 # see if leptonic tops exist in selected batch
 
-for jet in range(len(jck_labels[0])):
+for jet in range(len(jck_labels.shape[0])):
     if np.argmax(jck_labels[jet]) == 9:
         print('Leptonic top found in batch!')
         leptonic_top_jet = jet
