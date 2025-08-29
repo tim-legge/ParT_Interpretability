@@ -39,7 +39,7 @@ folder = "/part-vol-3/timlegge-ParT-trained/batched_hists"
 #            all_hist += hist
 
 # File with compiled hists
-file = "/part-vol-3/timlegge-ParT-trained/batched_hists/jc_full_qcdonly_compiled_hist.npy"
+file = "/part-vol-3/timlegge-ParT-trained/jc_full_qcdonly_compiled_hist.npy"
 
 all_hist = np.load(file)
 
@@ -86,7 +86,7 @@ for fname in sorted(os.listdir(folder)):
         else:
             all_hist += hist
 
-file = "/part-vol-3/timlegge-ParT-trained/batched_hists/jc_full_topsonly_compiled_hist.npy"
+file = "/part-vol-3/timlegge-ParT-trained/jc_full_topsonly_compiled_hist.npy"
 
 all_hist = np.load(file)
 
@@ -135,7 +135,7 @@ for fname in sorted(os.listdir(folder)):
         else:
             all_hist += hist
 
-file = "/part-vol-3/timlegge-ParT-trained/batched_hists/jc_kin_topsonly_compiled_hist.npy"
+file = "/part-vol-3/timlegge-ParT-trained/jc_kin_topsonly_compiled_hist.npy"
 
 all_hist = np.load(file)
 
@@ -184,7 +184,7 @@ for fname in sorted(os.listdir(folder)):
         else:
             all_hist += hist
 
-file = "/part-vol-3/timlegge-ParT-trained/batched_hists/jc_kin_qcdonly_compiled_hist.npy"
+file = "/part-vol-3/timlegge-ParT-trained/jc_kin_qcdonly_compiled_hist.npy"
 
 all_hist = np.load(file)
 
@@ -233,7 +233,7 @@ for fname in sorted(os.listdir(folder)):
         else:
             all_hist += hist
 
-file = "/part-vol-3/timlegge-ParT-trained/batched_hists/tl_topsonly_compiled_hist.npy"
+file = "/part-vol-3/timlegge-ParT-trained/tl_topsonly_compiled_hist.npy"
 
 all_hist = np.load(file)
 
