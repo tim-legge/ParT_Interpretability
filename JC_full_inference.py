@@ -1438,9 +1438,8 @@ def load_data(dataset_type='qg', batch_size=300):
                     print('This part is working - JCK')
                     data = build_features_and_labels_jck(tree)
                     # Truncate to batch_size
-                    if data['pf_points'].shape[0] > batch_size:
-                        print(f"Truncating from {data['pf_points'].shape[0]} jets to {batch_size} jets")
-                        data = {
+                    #print(f"Truncating from {data['pf_points'].shape[0]} jets to {batch_size} jets")
+                    data = {
                             'pf_points': data['pf_points'][:batch_size],
                             'pf_features': data['pf_features'][:batch_size],
                             'pf_vectors': data['pf_vectors'][:batch_size],
@@ -1456,11 +1455,8 @@ def load_data(dataset_type='qg', batch_size=300):
                 print(f"Loading actual JetClass data from {data_path}")
                 with uproot.open(data_path)['tree'] as tree:
                     print('This part is working - JCK')
-                    data = build_features_and_labels_jck_pid(tree)
-                    # Truncate to batch_size
-                    if data['pf_points'].shape[0] > batch_size:
-                        print(f"Truncating from {data['pf_points'].shape[0]} jets to {batch_size} jets")
-                        data = {
+                    data = build_features_and_labels_jck_pid(tree)        
+                    data = {
                             'pf_points': data['pf_points'][:batch_size],
                             'pf_features': data['pf_features'][:batch_size],
                             'pf_vectors': data['pf_vectors'][:batch_size],
@@ -1476,10 +1472,7 @@ def load_data(dataset_type='qg', batch_size=300):
                 with uproot.open(data_path)['tree'] as tree:
                     print('This part is working - JCK')
                     data = build_features_and_labels(tree)
-                    # Truncate to batch_size
-                    if data['pf_points'].shape[0] > batch_size:
-                        print(f"Truncating from {data['pf_points'].shape[0]} jets to {batch_size} jets")
-                        data = {
+                    data = {
                             'pf_points': data['pf_points'][:batch_size],
                             'pf_features': data['pf_features'][:batch_size],
                             'pf_vectors': data['pf_vectors'][:batch_size],
