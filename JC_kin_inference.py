@@ -1634,6 +1634,13 @@ else:
         print(f"Processing distribution batch {jc_kin_topsonly_dist_counter}")
         attention = np.load(f'/part-vol-3/timlegge-ParT-trained/batched_attns/jc_kin_topsonly_attention_batch_{jc_kin_topsonly_dist_counter}.npy', allow_pickle=True)
         # Flatten the list of arrays into a single array
+        # first check if attention is empty
+        if len(attention) == 0:
+            print(f"No Top jets found in batch {jc_kin_topsonly_dist_counter}, skipping...")
+            with open('/part-vol-3/timlegge-ParT-trained/jc_kin_topsonly_dist_counter.txt', 'w') as f:
+                f.write(str(jc_kin_topsonly_dist_counter+1))
+            jc_kin_topsonly_dist_counter += 1
+            continue
         flattened_attention = np.stack(attention).flatten()
         # Create a generator to yield chunks of data
         attention_iter = attention_generator(flattened_attention, chunk_size=100000)
@@ -1645,7 +1652,7 @@ else:
             f.write(str(jc_kin_topsonly_dist_counter+1))
         jc_kin_topsonly_dist_counter += 1
 
-print('JetClass_full topsonly plotting done!')
+print('JetClass_kin topsonly plotting done!')
 
 # Then for qcdonly
 
@@ -1665,6 +1672,13 @@ else:
         print(f"Processing distribution batch {jc_kin_qcdonly_dist_counter}")
         attention = np.load(f'/part-vol-3/timlegge-ParT-trained/batched_attns/jc_kin_qcdonly_attention_batch_{jc_kin_qcdonly_dist_counter}.npy', allow_pickle=True)
         # Flatten the list of arrays into a single array
+        # first check if attention is empty
+        if len(attention) == 0:
+            print(f"No QCD jets found in batch {jc_kin_qcdonly_dist_counter}, skipping...")
+            with open('/part-vol-3/timlegge-ParT-trained/jc_kin_qcdonly_dist_counter.txt', 'w') as f:
+                f.write(str(jc_kin_qcdonly_dist_counter+1))
+            jc_kin_qcdonly_dist_counter += 1
+            continue
         flattened_attention = np.stack(attention).flatten()
         # Create a generator to yield chunks of data
         attention_iter = attention_generator(flattened_attention, chunk_size=100000)
