@@ -2659,7 +2659,7 @@ def plot_attention_with_particles(attention_head, jet, deta_all, dphi_all, pt_al
     ax.set_ylabel(r'$\Delta \phi$')
 
     # Add title with layer and head information
-    ax.set_title(f'Layer {layer_number + 1} - Head {head_number + 1}')
+    ax.set_title(f'JetClass Full: Layer {layer_number + 1} - Head {head_number + 1}')
     #ax.set_title('Untrained Model')
 
     #ax.set_xlim(-0.4, 0.7)
@@ -2918,7 +2918,7 @@ def jck_plot_attention_with_particles_and_ids(attention_head, jet, deta_all, dph
     ax.set_ylabel(r'$\Delta \phi$')
 
     # Add title with layer and head information
-    ax.set_title(f'Layer {layer_number + 1} - Head {head_number + 1}')
+    ax.set_title(f'JetClass Kin: Layer {layer_number + 1} - Head {head_number + 1}')
     #ax.set_title('Untrained Model')
 
     #ax.set_xlim(-0.4, 0.7)
