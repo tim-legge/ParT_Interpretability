@@ -33,6 +33,33 @@ import numpy as np
 from tqdm import tqdm
 from torch._torch_docs import reproducibility_notes, sparse_support_notes, tf32_notes
 
+def _clip(a, min_value, max_value):
+    assert isinstance(a, ak.Array), "expected awkward array"
+    main_list = []
+    for i in range(len(a)):
+        sublist = ak.to_list(a[i])
+        sublist = np.clip(sublist, min_value, max_value)
+        main_list.append(sublist)
+    return ak.from_iter(main_list)
+
+def _pad(a, maxlen=128, value=0, dtype='float32'):
+        if isinstance(a, np.ndarray) and a.ndim >= 2 and a.shape[1] == maxlen:
+            return a
+        elif isinstance(a, ak.Array):
+            if a.ndim == 1:
+                a = ak.unflatten(a, 1)
+            a = ak.fill_none(ak.pad_none(a, maxlen, clip=True), value)
+            return ak.values_astype(a, dtype)
+        else:
+            x = (np.ones((len(a), maxlen)) * value).astype(dtype)
+            for idx, s in enumerate(a):
+                if not len(s):
+                    continue
+                trunc = s[:maxlen].astype(dtype)
+                x[idx, :len(trunc)] = trunc
+            return x
+
+
 def build_features_and_labels(tree, transform_features=True):
 
     # load arrays from the tree
@@ -611,7 +638,7 @@ def load_data(dataset_type='qg', batch_size=300):
                     return data
         elif dataset_type == 'jck':
             # Try to load JetClass data
-            data_path = './JetClass_example_100k.root'
+            data_path = '/part-vol-3/timlegge-ParT-trained/JetClass_example_100k.root'
             if os.path.exists(data_path):
                 print(f"Loading actual JetClass data from {data_path}")
                 with uproot.open(data_path)['tree'] as tree:
@@ -631,7 +658,7 @@ def load_data(dataset_type='qg', batch_size=300):
 
         elif dataset_type == 'jck_pid':
             # Try to load JetClass data w/ PIDs
-            data_path = './JetClass_example_100k.root'
+            data_path = '/part-vol-3/timlegge-ParT-trained/JetClass_example_100k.root'
             if os.path.exists(data_path):
                 print(f"Loading actual JetClass data from {data_path}")
                 with uproot.open(data_path)['tree'] as tree:
@@ -650,7 +677,7 @@ def load_data(dataset_type='qg', batch_size=300):
                     return data
         elif dataset_type == 'jc_full':
             # Try to load JetClass data w/ full features
-            data_path = './JetClass_example_100k.root'
+            data_path = '/part-vol-3/timlegge-ParT-trained/JetClass_example_100k.root'
             if os.path.exists(data_path):
                 print(f"Loading actual JetClass data from {data_path}")
                 with uproot.open(data_path)['tree'] as tree:
@@ -676,7 +703,7 @@ def load_data(dataset_type='qg', batch_size=300):
 #hls4ml_data = load_data('hls4ml', batch_size=2000)
 #jck_data = load_data('jck', batch_size=2000)
 #jck_pid_data = load_data('jck_pid', batch_size=2000)
-jc_full_data = load_data('jc_full', batch_size=2000)
+jc_full_data = load_data('jc_full', batch_size=500)
 
 #print(f"TL sample data shapes:")
 #for k, v in tl_data.items():
@@ -687,6 +714,8 @@ jc_full_data = load_data('jc_full', batch_size=2000)
 #print(f"  TopLandscape (kin): {tl_data['pf_features'].shape[1]} features")
 
 print('Downloaded full JC dataset!')
+
+
 
 np.save('./jc_full_pf_points', jc_full_data['pf_points'])
 np.save('./jc_full_pf_features', jc_full_data['pf_features'])
