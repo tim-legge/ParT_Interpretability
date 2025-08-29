@@ -1504,12 +1504,12 @@ if os.path.getsize('/part-vol-3/timlegge-ParT-trained/vol_jc_full_data/jc_full_p
 
 
 else:
-    jc_kin_data = {
-        'pf_points': np.load('/part-vol-3/timlegge-ParT-trained/vol_jc_kin_data/jc_kin_pf_points.npy'),
-        'pf_features': np.load('/part-vol-3/timlegge-ParT-trained/vol_jc_kin_data/jc_kin_pf_features.npy'),
-        'pf_vectors': np.load('/part-vol-3/timlegge-ParT-trained/vol_jc_kin_data/jc_kin_pf_vectors.npy'),
-        'pf_mask': np.load('/part-vol-3/timlegge-ParT-trained/vol_jc_kin_data/jc_kin_pf_mask.npy'),
-        'labels': np.load('/part-vol-3/timlegge-ParT-trained/vol_jc_kin_data/jc_kin_labels.npy')}
+    #jc_kin_data = {
+    #    'pf_points': np.load('/part-vol-3/timlegge-ParT-trained/vol_jc_kin_data/jc_kin_pf_points.npy'),
+    #    'pf_features': np.load('/part-vol-3/timlegge-ParT-trained/vol_jc_kin_data/jc_kin_pf_features.npy'),
+    #    'pf_vectors': np.load('/part-vol-3/timlegge-ParT-trained/vol_jc_kin_data/jc_kin_pf_vectors.npy'),
+    #    'pf_mask': np.load('/part-vol-3/timlegge-ParT-trained/vol_jc_kin_data/jc_kin_pf_mask.npy'),
+    #    'labels': np.load('/part-vol-3/timlegge-ParT-trained/vol_jc_kin_data/jc_kin_labels.npy')}
     jc_full_data = {
         'pf_points': np.load('/part-vol-3/timlegge-ParT-trained/vol_jc_full_data/jc_full_pf_points.npy'),
         'pf_features': np.load('/part-vol-3/timlegge-ParT-trained/vol_jc_full_data/jc_full_pf_features.npy'),
@@ -1519,19 +1519,19 @@ else:
 
 print(f"Data loaded (and saved to .npy if it was not there already):")
 print(f"Feature dimensions:")
-print(f"  JetClass (kin): {jc_kin_data['pf_features'].shape[1]} features")
+#print(f"  JetClass (kin): {jc_kin_data['pf_features'].shape[1]} features")
 print(f"  JetClass (full): {jc_full_data['pf_features'].shape[1]} features")
 
 # access data from local .npys 
 
-jc_kintrained_modelpath = './models/ParT_kin.pt'
+#jc_kintrained_modelpath = './models/ParT_kin.pt'
 jc_fulltrained_modelpath = './models/ParT_full.pt'
 #hls4mltrained_modelpath = '/home/tim_legge/ParT_Interpretability/save_hls4ml_model/on-hls4ml-run2_best_epoch_state.pt'
 #jcktrained_modelpath = './models/ParT_kin.pt'
 
 print('Loading models...')
 
-jc_kin_model, _ = get_model('jck')
+#jc_kin_model, _ = get_model('jck')
 jc_full_model, _ = get_model('jc_full')
 
 # QG model loading and inference

@@ -1521,7 +1521,7 @@ else:
 print(f"Data loaded (and saved to .npy if it was not there already):")
 print(f"Feature dimensions:")
 print(f"  JetClass (kin): {jc_kin_data['pf_features'].shape[1]} features")
-print(f"  JetClass (full): {jc_full_data['pf_features'].shape[1]} features")
+#print(f"  JetClass (full): {jc_full_data['pf_features'].shape[1]} features")
 
 # access data from local .npys 
 
