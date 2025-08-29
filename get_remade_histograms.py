@@ -129,7 +129,7 @@ else:
     counts = probabilities
     bins = bin_edges
 
-    ax.hist(bins[:-1], bins, weights=counts, edgecolor="black")
+    ax.hist(bins[:-1], bins, weights=counts)
     ax.set_xlabel("Attention Score", fontsize=fontsize)
     ax.set_ylabel("Probability", fontsize=fontsize)
 
@@ -177,7 +177,7 @@ else:
     counts = probabilities
     bins = bin_edges
 
-    ax.hist(bins[:-1], bins, weights=counts, edgecolor="black")
+    ax.hist(bins[:-1], bins, weights=counts)
     ax.set_xlabel("Attention Score", fontsize=fontsize)
     ax.set_ylabel("Probability", fontsize=fontsize)
 
