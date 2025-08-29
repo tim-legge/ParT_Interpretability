@@ -1488,6 +1488,7 @@ def load_data(dataset_type='qg', batch_size=300):
 
 if not os.path.exists('/part-vol-3/timlegge-ParT-trained/vol_jc_kin_data/'):
     os.mkdir('/part-vol-3/timlegge-ParT-trained/vol_jc_kin_data/')
+    
     #os.mkdir('/part-vol-3/timlegge-ParT-trained/vol_jc_full_data/')
 
     print("Loading data for testing...")
@@ -1497,7 +1498,8 @@ if not os.path.exists('/part-vol-3/timlegge-ParT-trained/vol_jc_kin_data/'):
     print('Loaded data.')
 
     for type, array in jc_kin_data.items():
-        np.save(f'/part-vol-3/timlegge-ParT-trained/vol_jc_kin_data/jc_kin_{type}.npy', array)
+        with open(f'/part-vol-3/timlegge-ParT-trained/vol_jc_kin_data/jc_kin_{type}.npy', 'wb') as f:
+            np.save(f, array)
     #for type, array in jc_full_data.items():
     #    np.save(f'/part-vol-3/timlegge-ParT-trained/vol_jc_full_data/jc_full_{type}.npy', array)
 
