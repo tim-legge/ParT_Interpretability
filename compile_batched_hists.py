@@ -3,6 +3,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import os
+import mplhep as hep
+plt.style.use(hep.style.ROOT)
 
 CMS = {
     # "font.sans-serif": ["TeX Gyre Heros", "Helvetica", "Arial"],
@@ -50,7 +52,7 @@ CMS = {
     "axes.linewidth": 2,
     "savefig.transparent": False,
 }
-plt.style.use(CMS)
+#plt.style.use(CMS)
 
 # Load QG files from /batched_hists
 
