@@ -2390,7 +2390,7 @@ hadronic_top_exists = False
 leptonic_top_exists = False
 
 # see if hadronic tops exist in selected batch
-for jet in range(len(jck_labels.shape[0])):
+for jet in range(jck_labels.shape[0]):
     if np.argmax(jck_labels[jet]) == 8:
         print('Hadronic top found in batch!')
         hadronic_top_jet = jet
@@ -2400,7 +2400,7 @@ for jet in range(len(jck_labels.shape[0])):
 
 # see if leptonic tops exist in selected batch
 
-for jet in range(len(jck_labels.shape[0])):
+for jet in range(jck_labels.shape[0]):
     if np.argmax(jck_labels[jet]) == 9:
         print('Leptonic top found in batch!')
         leptonic_top_jet = jet
