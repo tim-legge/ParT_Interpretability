@@ -1513,8 +1513,8 @@ else:
     jc_full_data = {
         'pf_points': np.load('/part-vol-3/timlegge-ParT-trained/vol_jc_full_data/jc_full_pf_points.npy'),
         'pf_features': np.load('/part-vol-3/timlegge-ParT-trained/vol_jc_full_data/jc_full_pf_features.npy'),
-        'pf_vectors': np.load('/part-vol-3/timlegge-ParT-trained/vol_jc_full_data/jc_full_vectors.npy'),
-        'pf_mask': np.load('/part-vol-3/timlegge-ParT-trained/vol_jc_full_data/jc_full_mask.npy'),
+        'pf_vectors': np.load('/part-vol-3/timlegge-ParT-trained/vol_jc_full_data/jc_full_pf_vectors.npy'),
+        'pf_mask': np.load('/part-vol-3/timlegge-ParT-trained/vol_jc_full_data/jc_full_pf_mask.npy'),
         'labels': np.load('/part-vol-3/timlegge-ParT-trained/vol_jc_full_data/jc_full_labels.npy')}
 
 print(f"Data loaded (and saved to .npy if it was not there already):")
