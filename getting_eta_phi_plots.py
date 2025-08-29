@@ -2346,7 +2346,7 @@ import sys
 
 start_jet = sys.argv[1]
 start_jet = int(start_jet)
-howmanyjets = 1000
+howmanyjets = 1
 
 qgtrained_modelpath = '/home/tim_legge/save_qg_model/on-qg-run2_best_epoch_state.pt'
 tltrained_modelpath = './save_tl_model/on-tl-run4_best_epoch_state.pt'
