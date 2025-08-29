@@ -33,6 +33,10 @@ import numpy as np
 from tqdm import tqdm
 from torch._torch_docs import reproducibility_notes, sparse_support_notes, tf32_notes
 
+import matplotlib.pyplot as plt
+import mplhep as hep
+plt.style.use(hep.style.ROOT)
+
 class MultiheadAttention(nn.Module):
     r"""Allows the model to jointly attend to information from different representation subspaces.
 
