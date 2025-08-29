@@ -161,8 +161,8 @@ else:
 
     # Plot in your preferred format
     fig, ax = plt.subplots(figsize=(8, 6), dpi=300)
-    #ax.bar(bin_centers, probabilities, width=equal_width, log=False, edgecolor="black")
-    ax.bar(probabilities, bins=num_bins, edgecolor="black", log=False)
+    ax.bar(bin_centers, probabilities, width=equal_width, log=False, edgecolor="black")
+    #ax.bar(probabilities, bins=num_bins, edgecolor="black", log=False)
     ax.set_xlabel("Attention Score", fontsize=fontsize)
     ax.set_ylabel("Probability", fontsize=fontsize)
 
