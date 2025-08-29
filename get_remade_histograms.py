@@ -76,7 +76,7 @@ else:
     # Plot in your preferred format
     fig, ax = plt.subplots(figsize=(6, 6), dpi=300)
     #ax.bar(bin_centers, probabilities, width=equal_width, log=False, edgecolor="black")
-    ax.hist(probabilities)
+    ax.hist(probabilities, bins=num_bins, edgecolor="black", log=True)
     ax.set_xlabel("Attention Score", fontsize=fontsize)
     ax.set_ylabel("Probability", fontsize=fontsize)
     plt.yscale("log")
@@ -119,7 +119,7 @@ else:
     # Plot in your preferred format
     fig, ax = plt.subplots(figsize=(8, 6), dpi=300)
     #ax.bar(bin_centers, probabilities, width=equal_width, log=False, edgecolor="black")
-    ax.hist(probabilities, bins=bin_edges, edgecolor="black", log=False)
+    ax.hist(probabilities, bins=num_bins, edgecolor="black", log=False)
     ax.set_xlabel("Attention Score", fontsize=fontsize)
     ax.set_ylabel("Probability", fontsize=fontsize)
 
@@ -162,7 +162,7 @@ else:
     # Plot in your preferred format
     fig, ax = plt.subplots(figsize=(8, 6), dpi=300)
     #ax.bar(bin_centers, probabilities, width=equal_width, log=False, edgecolor="black")
-    ax.hist(probabilities, bins=bin_edges, edgecolor="black", log=False)
+    ax.hist(probabilities, bins=num_bins, edgecolor="black", log=False)
     ax.set_xlabel("Attention Score", fontsize=fontsize)
     ax.set_ylabel("Probability", fontsize=fontsize)
 
@@ -206,7 +206,7 @@ else:
     # Plot in your preferred format
     fig, ax = plt.subplots(figsize=(8, 6), dpi=300)
     #ax.bar(bin_centers, probabilities, width=equal_width, log=False, edgecolor="black")
-    ax.hist(probabilities, bins=bin_edges, edgecolor="black", log=False)
+    ax.hist(probabilities, bins=num_bins, edgecolor="black", log=False)
     ax.set_xlabel("Attention Score", fontsize=fontsize)
     ax.set_ylabel("Probability", fontsize=fontsize)
     plt.yscale("log")
