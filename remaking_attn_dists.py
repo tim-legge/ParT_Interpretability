@@ -28,15 +28,20 @@ import matplotlib.pyplot as plt
 folder = "/part-vol-3/timlegge-ParT-trained/batched_hists"
 
 # Aggregate all histograms
-all_hist = None
-for fname in sorted(os.listdir(folder)):
-    if fname.startswith("jc_full_qcdonly_hist_distribution_batch_") and fname.endswith(".npy"):
-        fpath = os.path.join(folder, fname)
-        hist = np.load(fpath)
-        if all_hist is None:
-            all_hist = hist.astype(np.float64)
-        else:
-            all_hist += hist
+#all_hist = None
+#for fname in sorted(os.listdir(folder)):
+#    if fname.startswith("jc_full_qcdonly_hist_distribution_batch_") and fname.endswith(".npy"):
+#        fpath = os.path.join(folder, fname)
+#        hist = np.load(fpath)
+#        if all_hist is None:
+#            all_hist = hist.astype(np.float64)
+#        else:
+#            all_hist += hist
+
+# File with compiled hists
+file = "/part-vol-3/timlegge-ParT-trained/batched_hists/jc_full_qcdonly_compiled_hist.npy"
+
+all_hist = np.load(file)
 
 if all_hist is None:
     print("No histograms found.")
@@ -81,6 +86,10 @@ for fname in sorted(os.listdir(folder)):
         else:
             all_hist += hist
 
+file = "/part-vol-3/timlegge-ParT-trained/batched_hists/jc_full_topsonly_compiled_hist.npy"
+
+all_hist = np.load(file)
+
 if all_hist is None:
     print("No histograms found.")
 else:
@@ -96,7 +105,7 @@ else:
     # Plot in your preferred format
     fig, ax = plt.subplots(figsize=(8, 6), dpi=300)
     #ax.bar(bin_centers, probabilities, width=equal_width, log=False, edgecolor="black")
-    ax.hist(probabilities, bins=bin_edges, edgecolor="black", log=False)
+    ax.hist(probabilities, bins=bin_edges, edgecolor="black", log=True)
     ax.set_xlabel("Attention Score", fontsize=fontsize)
     ax.set_ylabel("Probability", fontsize=fontsize)
 
@@ -126,6 +135,10 @@ for fname in sorted(os.listdir(folder)):
         else:
             all_hist += hist
 
+file = "/part-vol-3/timlegge-ParT-trained/batched_hists/jc_kin_topsonly_compiled_hist.npy"
+
+all_hist = np.load(file)
+
 if all_hist is None:
     print("No histograms found.")
 else:
@@ -140,8 +153,8 @@ else:
 
     # Plot in your preferred format
     fig, ax = plt.subplots(figsize=(8, 6), dpi=300)
-    #ax.bar(bin_centers, probabilities, width=equal_width, log=False, edgecolor="black")
-    ax.hist(probabilities, bins=bin_edges, edgecolor="black", log=False)
+    #ax.bar(bin_centers, probabilities, width=equal_width, log=True, edgecolor="black")
+    ax.hist(probabilities, bins=bin_edges, edgecolor="black", log=True)
     ax.set_xlabel("Attention Score", fontsize=fontsize)
     ax.set_ylabel("Probability", fontsize=fontsize)
 
@@ -171,6 +184,10 @@ for fname in sorted(os.listdir(folder)):
         else:
             all_hist += hist
 
+file = "/part-vol-3/timlegge-ParT-trained/batched_hists/jc_kin_qcdonly_compiled_hist.npy"
+
+all_hist = np.load(file)
+
 if all_hist is None:
     print("No histograms found.")
 else:
@@ -186,7 +203,7 @@ else:
     # Plot in your preferred format
     fig, ax = plt.subplots(figsize=(8, 6), dpi=300)
     #ax.bar(bin_centers, probabilities, width=equal_width, log=False, edgecolor="black")
-    ax.hist(probabilities, bins=bin_edges, edgecolor="black", log=False)
+    ax.hist(probabilities, bins=bin_edges, edgecolor="black", log=True)
     ax.set_xlabel("Attention Score", fontsize=fontsize)
     ax.set_ylabel("Probability", fontsize=fontsize)
 
@@ -216,6 +233,10 @@ for fname in sorted(os.listdir(folder)):
         else:
             all_hist += hist
 
+file = "/part-vol-3/timlegge-ParT-trained/batched_hists/tl_topsonly_compiled_hist.npy"
+
+all_hist = np.load(file)
+
 if all_hist is None:
     print("No histograms found.")
 else:
@@ -231,7 +252,7 @@ else:
     # Plot in your preferred format
     fig, ax = plt.subplots(figsize=(8, 6), dpi=300)
     #ax.bar(bin_centers, probabilities, width=equal_width, log=False, edgecolor="black")
-    ax.hist(probabilities, bins=bin_edges, edgecolor="black", log=False)
+    ax.hist(probabilities, bins=bin_edges, edgecolor="black", log=True)
     ax.set_xlabel("Attention Score", fontsize=fontsize)
     ax.set_ylabel("Probability", fontsize=fontsize)
 
