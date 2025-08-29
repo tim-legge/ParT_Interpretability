@@ -2642,7 +2642,7 @@ def plot_attention_with_particles(attention_head, jet, deta_all, dphi_all, pt_al
     legend1 = ax.legend(handles=[
         plt.Line2D([0], [0], marker='o', color='w', label=f'Subjet {int(subjet)}', markerfacecolor=colormap(subjet / len(unique_subjets) * 0.7), markersize=10)
         for subjet in unique_subjets
-    ], loc='upper right', title="Subjets")
+    ], loc='best', fontsize=12, title="Subjets")
 
     # Add the particle shape legend
     #legend2 = ax.legend(handles=[
@@ -2901,17 +2901,17 @@ def jck_plot_attention_with_particles_and_ids(attention_head, jet, deta_all, dph
     legend1 = ax.legend(handles=[
         plt.Line2D([0], [0], marker='o', color='w', label=f'Subjet {int(subjet)}', markerfacecolor=colormap(subjet / len(unique_subjets) * 0.7), markersize=10)
         for subjet in unique_subjets
-    ], loc='upper right', title="Subjets")
+    ], loc='best', fontsize=12, title="Subjets")
 
     # Add the particle shape legend
-    legend2 = ax.legend(handles=[
-        plt.Line2D([0], [0], marker=group['marker'], color='w', label=label, markerfacecolor='black', markersize=10)
-        for label, group in zip(['Charged Hadron', 'Neutral Hadron', 'Photon', 'Electron', 'Muon'], particle_groups.values())
-    ], loc='upper left', title="Particle Shapes")
+    #legend2 = ax.legend(handles=[
+    #    plt.Line2D([0], [0], marker=group['marker'], color='w', label=label, markerfacecolor='black', markersize=10)
+    #    for label, group in zip(['Charged Hadron', 'Neutral Hadron', 'Photon', 'Electron', 'Muon'], particle_groups.values())
+    #], loc='upper left', title="Particle Shapes")
 
     # Add all legends to the plot
     ax.add_artist(legend1)
-    ax.add_artist(legend2)
+    #ax.add_artist(legend2)
 
     # Set axis labels without bold styling
     ax.set_xlabel(r'$\Delta \eta$')
