@@ -40,7 +40,7 @@ bin_centers = (bin_edges[:-1] + bin_edges[1:]) / 2  # Calculate the centers of e
 equal_width = bin_edges[1] - bin_edges[0]  # Set equal width for all bars based on bin spacing
 
 # Create figure and axes
-fig, ax = plt.subplots(figsize=(6, 6), dpi=300)
+fig, ax = plt.subplots(figsize=(8, 6), dpi=300)
 
 # Plot bar graph with equal-width bars
 ax.bar(bin_centers, compiled, width=equal_width, log=False)  # No log scale for clearer visualization
@@ -92,7 +92,7 @@ bin_centers = (bin_edges[:-1] + bin_edges[1:]) / 2  # Calculate the centers of e
 equal_width = bin_edges[1] - bin_edges[0]  # Set equal width for all bars based on bin spacing
 
 # Create figure and axes
-fig, ax = plt.subplots(figsize=(6, 6), dpi=300)
+fig, ax = plt.subplots(figsize=(8, 6), dpi=300)
 
 # Plot bar graph with equal-width bars
 ax.bar(bin_centers, compiled, width=equal_width, log=False)  # No log scale for clearer visualization
@@ -144,7 +144,7 @@ bin_centers = (bin_edges[:-1] + bin_edges[1:]) / 2  # Calculate the centers of e
 equal_width = bin_edges[1] - bin_edges[0]  # Set equal width for all bars based on bin spacing
 
 # Create figure and axes
-fig, ax = plt.subplots(figsize=(6, 6), dpi=300)
+fig, ax = plt.subplots(figsize=(8, 6), dpi=300)
 
 # Plot bar graph with equal-width bars
 ax.bar(bin_centers, compiled, width=equal_width, log=False)  # No log scale for clearer visualization
@@ -196,7 +196,7 @@ bin_centers = (bin_edges[:-1] + bin_edges[1:]) / 2  # Calculate the centers of e
 equal_width = bin_edges[1] - bin_edges[0]  # Set equal width for all bars based on bin spacing
 
 # Create figure and axes
-fig, ax = plt.subplots(figsize=(6, 6), dpi=300)
+fig, ax = plt.subplots(figsize=(8, 6), dpi=300)
 
 # Plot bar graph with equal-width bars
 ax.bar(bin_centers, compiled, width=equal_width, log=False)  # No log scale for clearer visualization
@@ -248,7 +248,7 @@ bin_centers = (bin_edges[:-1] + bin_edges[1:]) / 2  # Calculate the centers of e
 equal_width = bin_edges[1] - bin_edges[0]  # Set equal width for all bars based on bin spacing
 
 # Create figure and axes
-fig, ax = plt.subplots(figsize=(6, 6), dpi=300)
+fig, ax = plt.subplots(figsize=(8, 6), dpi=300)
 
 # Plot bar graph with equal-width bars
 ax.bar(bin_centers, compiled, width=equal_width, log=False)  # No log scale for clearer visualization
@@ -300,7 +300,7 @@ bin_centers = (bin_edges[:-1] + bin_edges[1:]) / 2  # Calculate the centers of e
 equal_width = bin_edges[1] - bin_edges[0]  # Set equal width for all bars based on bin spacing
 
 # Create figure and axes
-fig, ax = plt.subplots(figsize=(6, 6), dpi=300)
+fig, ax = plt.subplots(figsize=(8, 6), dpi=300)
 
 # Plot bar graph with equal-width bars
 ax.bar(bin_centers, compiled, width=equal_width, log=False)  # No log scale for clearer visualization
@@ -352,7 +352,7 @@ bin_centers = (bin_edges[:-1] + bin_edges[1:]) / 2  # Calculate the centers of e
 equal_width = bin_edges[1] - bin_edges[0]  # Set equal width for all bars based on bin spacing
 
 # Create figure and axes
-fig, ax = plt.subplots(figsize=(6, 6), dpi=300)
+fig, ax = plt.subplots(figsize=(8, 6), dpi=300)
 
 # Plot bar graph with equal-width bars
 ax.bar(bin_centers, compiled, width=equal_width, log=False)  # No log scale for clearer visualization
@@ -404,7 +404,7 @@ bin_centers = (bin_edges[:-1] + bin_edges[1:]) / 2  # Calculate the centers of e
 equal_width = bin_edges[1] - bin_edges[0]  # Set equal width for all bars based on bin spacing
 
 # Create figure and axes
-fig, ax = plt.subplots(figsize=(6, 6), dpi=300)
+fig, ax = plt.subplots(figsize=(8, 6), dpi=300)
 
 # Plot bar graph with equal-width bars
 ax.bar(bin_centers, compiled, width=equal_width, log=False)  # No log scale for clearer visualization
