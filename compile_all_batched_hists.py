@@ -263,7 +263,7 @@ ax.set_ylabel('Probability', fontsize=14)
 plt.yscale('log')
 
 # Add a title
-ax.set_title(r'JC Kinematic $t\rightarrowbqq\prime$ Attention Distribution', fontsize=16)
+ax.set_title(r'JC Kinematic $t\rightarrow bqq \prime$ Attention Distribution', fontsize=16)
 plt.savefig('Compiled_JC_kin_topsonly_attentionDist.pdf', bbox_inches="tight")
 
 print('JetClass kin top-only plot saved!')
@@ -367,7 +367,7 @@ ax.set_ylabel('Probability', fontsize=14)
 plt.yscale('log')
 
 # Add a title
-ax.set_title(r'JC Full $t\rightarrowbqq\prime$ Attention Distribution', fontsize=16)
+ax.set_title(r'JC Full $t\rightarrow bqq\prime$ Attention Distribution', fontsize=16)
 plt.savefig('Compiled_JC_full_topsonly_attentionDist.pdf', bbox_inches="tight")
 
 print('JetClass kin top-only plot saved!')
