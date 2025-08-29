@@ -78,7 +78,7 @@ else:
     #ax.bar(bin_centers, probabilities, width=equal_width, log=False, edgecolor="black")
     #ax.hist(probabilities, bins=num_bins, edgecolor="black", log=True)
 
-    counts = all_hist
+    counts = probabilities
     bins = bin_edges
 
     ax.hist(bins[:-1], bins, weights=counts)
@@ -126,7 +126,7 @@ else:
     #ax.bar(bin_centers, probabilities, width=equal_width, log=False, edgecolor="black")
     #ax.hist(probabilities, bins=num_bins, edgecolor="black", log=False)
 
-    counts = all_hist
+    counts = probabilities
     bins = bin_edges
 
     ax.hist(bins[:-1], bins, weights=counts)
@@ -173,7 +173,7 @@ else:
     fig, ax = plt.subplots(figsize=(8, 6), dpi=300)
     #ax.bar(bin_centers, probabilities, width=equal_width, log=False, edgecolor="black")
     #ax.bar(probabilities, bins=num_bins, edgecolor="black", log=False)
-    counts = all_hist
+    counts = probabilities
     bins = bin_edges
 
     ax.hist(bins[:-1], bins, weights=counts)
@@ -221,7 +221,7 @@ else:
     fig, ax = plt.subplots(figsize=(8, 6), dpi=300)
     #ax.bar(bin_centers, probabilities, width=equal_width, log=False, edgecolor="black")
     #ax.hist(probabilities, bins=num_bins, edgecolor="black", log=False)
-    counts = all_hist
+    counts = probabilities
     bins = bin_edges
 
     ax.hist(bins[:-1], bins, weights=counts)
