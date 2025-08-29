@@ -2395,13 +2395,13 @@ hadronic_top_exists = False
 leptonic_top_exists = False
 
 # see if hadronic tops exist in selected batch
-for jet in range(jck_labels.shape[0]):
-    if np.argmax(jck_labels[jet]) == 8:
-        print('Hadronic top found in batch!')
-        hadronic_top_jet = jet
-        hadronic_top_exists = True
-        print(f'Jet index: {hadronic_top_jet}')
-        break
+#for jet in range(jck_labels.shape[0]):
+#    if np.argmax(jck_labels[jet]) == 8:
+#        print('Hadronic top found in batch!')
+#        hadronic_top_jet = jet
+#        hadronic_top_exists = True
+#        print(f'Jet index: {hadronic_top_jet}')
+#        break
 
 # see if leptonic tops exist in selected batch
 
@@ -2413,7 +2413,8 @@ for jet in range(jck_labels.shape[0]):
         print(f'Jet index: {leptonic_top_jet}')
         break
 
-assert hadronic_top_exists or leptonic_top_exists, "No tops found in selected batch!"
+#assert hadronic_top_exists or leptonic_top_exists, "No tops found in selected batch!"
+assert leptonic_top_exists, "No tops found in selected batch!"
 
 jc_kin_padding = jc_kin_hooks.cut_padding(jc_kin_hooks.pre_softmax_attentions, jck_pf_mask)
 #jc_kin_pre_softmax_inter = jc_kin_hooks.cut_padding(jc_kin_hooks.pre_softmax_interactions, jck_pf_mask)
@@ -2941,10 +2942,10 @@ def jck_plot_attention_with_particles_and_ids(attention_head, jet, deta_all, dph
 
 # Example usage based on your context (assuming pf_features, pf_mask, and attention are already defined)
 
-if hadronic_top_exists:
-    jet = hadronic_top_jet
-    Decay = 'TopHadronic'
-elif leptonic_top_exists:
+#if hadronic_top_exists:
+#    jet = hadronic_top_jet
+#    Decay = 'TopHadronic'
+if leptonic_top_exists:
     jet = leptonic_top_jet
     Decay = 'TopLeptonic'
 else:
@@ -2968,9 +2969,9 @@ e = jck_pf_vectors[jet][3][0:num]
 
 # Get the subjets using the get_subjets function
 
-if hadronic_top_exists:
-    N_SUBJETS = 3
-elif leptonic_top_exists:
+#if hadronic_top_exists:
+#    N_SUBJETS = 3
+if leptonic_top_exists:
     N_SUBJETS = 2
 
 subjets, subjet_vectors = get_subjets(px, py, pz, e, N_SUBJETS=N_SUBJETS, JET_ALGO="kt")
@@ -3027,9 +3028,9 @@ e = jc_full_pf_vectors[jet][3][0:num]
 
 # Get the subjets using the get_subjets function
 
-if hadronic_top_exists:
-    N_SUBJETS = 3
-elif leptonic_top_exists:
+#if hadronic_top_exists:
+#    N_SUBJETS = 3
+if leptonic_top_exists:
     N_SUBJETS = 2
 
 subjets, subjet_vectors = get_subjets(px, py, pz, e, N_SUBJETS=N_SUBJETS, JET_ALGO="kt")
