@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import mplhep as hep
 import numpy as np
-plt.style.use(hep.style.ROOT)
+#plt.style.use(hep.style.ROOT)
 
 fontsize = 20
 
