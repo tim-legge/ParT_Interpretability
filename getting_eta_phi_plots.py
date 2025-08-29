@@ -43,6 +43,11 @@ from torch.utils.data import IterableDataset, DataLoader
 import numpy as np
 from tqdm import tqdm
 from torch._torch_docs import reproducibility_notes, sparse_support_notes, tf32_notes
+import mplhep as hep
+import matplotlib.pyplot as plt
+
+
+plt.style.use(hep.style.ROOT)
 
 class MultiheadAttention(nn.Module):
     r"""Allows the model to jointly attend to information from different representation subspaces.
@@ -2672,7 +2677,7 @@ def plot_attention_with_particles(attention_head, jet, deta_all, dphi_all, pt_al
 
     # Save the figure instead of showing it
     print(f"Saving figure to {output_filename}...")
-    #plt.savefig(output_filename, bbox_inches='tight')
+    plt.savefig(output_filename, bbox_inches='tight')
     print("Figure saved.")
 
 def jck_plot_attention_with_particles(attention_head, jet, deta_all, dphi_all, pt_all, subjets_all, 
