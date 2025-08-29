@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import mplhep as hep
 import numpy as np
-#plt.style.use(hep.style.ROOT)
+plt.style.use(hep.style.ROOT)
 
 fontsize = 20
 
@@ -76,7 +76,12 @@ else:
     # Plot in your preferred format
     fig, ax = plt.subplots(figsize=(6, 6), dpi=300)
     #ax.bar(bin_centers, probabilities, width=equal_width, log=False, edgecolor="black")
-    ax.hist(probabilities, bins=num_bins, edgecolor="black", log=True)
+    #ax.hist(probabilities, bins=num_bins, edgecolor="black", log=True)
+
+    counts = all_hist
+    bins = bin_edges
+
+    ax.hist(bins[:-1], bins, weights=counts)
     ax.set_xlabel("Attention Score", fontsize=fontsize)
     ax.set_ylabel("Probability", fontsize=fontsize)
     plt.yscale("log")
@@ -119,7 +124,12 @@ else:
     # Plot in your preferred format
     fig, ax = plt.subplots(figsize=(8, 6), dpi=300)
     #ax.bar(bin_centers, probabilities, width=equal_width, log=False, edgecolor="black")
-    ax.hist(probabilities, bins=num_bins, edgecolor="black", log=False)
+    #ax.hist(probabilities, bins=num_bins, edgecolor="black", log=False)
+
+    counts = all_hist
+    bins = bin_edges
+
+    ax.hist(bins[:-1], bins, weights=counts)
     ax.set_xlabel("Attention Score", fontsize=fontsize)
     ax.set_ylabel("Probability", fontsize=fontsize)
 
@@ -161,8 +171,12 @@ else:
 
     # Plot in your preferred format
     fig, ax = plt.subplots(figsize=(8, 6), dpi=300)
-    ax.bar(bin_centers, probabilities, width=equal_width, log=False, edgecolor="black")
+    #ax.bar(bin_centers, probabilities, width=equal_width, log=False, edgecolor="black")
     #ax.bar(probabilities, bins=num_bins, edgecolor="black", log=False)
+    counts = all_hist
+    bins = bin_edges
+
+    ax.hist(bins[:-1], bins, weights=counts)
     ax.set_xlabel("Attention Score", fontsize=fontsize)
     ax.set_ylabel("Probability", fontsize=fontsize)
 
@@ -206,7 +220,11 @@ else:
     # Plot in your preferred format
     fig, ax = plt.subplots(figsize=(8, 6), dpi=300)
     #ax.bar(bin_centers, probabilities, width=equal_width, log=False, edgecolor="black")
-    ax.hist(probabilities, bins=num_bins, edgecolor="black", log=False)
+    #ax.hist(probabilities, bins=num_bins, edgecolor="black", log=False)
+    counts = all_hist
+    bins = bin_edges
+
+    ax.hist(bins[:-1], bins, weights=counts)
     ax.set_xlabel("Attention Score", fontsize=fontsize)
     ax.set_ylabel("Probability", fontsize=fontsize)
     plt.yscale("log")
