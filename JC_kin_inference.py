@@ -1491,7 +1491,7 @@ if os.path.getsize('/part-vol-3/timlegge-ParT-trained/vol_jc_kin_data/jc_kin_pf_
     #os.mkdir('/part-vol-3/timlegge-ParT-trained/vol_jc_full_data/')
 
     print("Loading data for testing...")
-    jc_kin_data = load_data('jc_kin', batch_size=None)
+    jc_kin_data = load_data('jck', batch_size=None)
     #jc_full_data = load_data('jc_full', batch_size=None)
 
     print('Loaded data.')
