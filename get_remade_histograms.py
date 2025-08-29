@@ -3,7 +3,7 @@ import mplhep as hep
 import numpy as np
 plt.style.use(hep.style.ROOT)
 
-fontsize = 20
+fontsize = 26
 
 hist = np.load('/part-vol-3/timlegge-ParT-trained/batched_hists/jc_full_qcdonly_hist_distribution_batch_40.npy')
 
@@ -81,7 +81,7 @@ else:
     counts = probabilities
     bins = bin_edges
 
-    ax.hist(bins[:-1], bins, weights=counts)
+    ax.hist(bins[:-1], bins, weights=counts, edgecolor='black')
     ax.set_xlabel("Attention Score", fontsize=fontsize)
     ax.set_ylabel("Probability", fontsize=fontsize)
     plt.yscale("log")
@@ -129,7 +129,7 @@ else:
     counts = probabilities
     bins = bin_edges
 
-    ax.hist(bins[:-1], bins, weights=counts)
+    ax.hist(bins[:-1], bins, weights=counts, edgecolor="black")
     ax.set_xlabel("Attention Score", fontsize=fontsize)
     ax.set_ylabel("Probability", fontsize=fontsize)
 
@@ -176,7 +176,7 @@ else:
     counts = probabilities
     bins = bin_edges
 
-    ax.hist(bins[:-1], bins, weights=counts)
+    ax.hist(bins[:-1], bins, weights=counts, edgecolor='black')
     ax.set_xlabel("Attention Score", fontsize=fontsize)
     ax.set_ylabel("Probability", fontsize=fontsize)
 
@@ -224,7 +224,7 @@ else:
     counts = probabilities
     bins = bin_edges
 
-    ax.hist(bins[:-1], bins, weights=counts)
+    ax.hist(bins[:-1], bins, weights=counts, edgecolor='black')
     ax.set_xlabel("Attention Score", fontsize=fontsize)
     ax.set_ylabel("Probability", fontsize=fontsize)
     plt.yscale("log")
