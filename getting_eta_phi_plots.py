@@ -2072,13 +2072,13 @@ class Pre_Softmax_Hook:
         print('Getting pre_softmax attention...')
 
         # handle batching - we will divide 1st dimension by the number such that it will comport with num_heads
-        print(f'Got shape:{output[1].shape}')
+        #print(f'Got shape:{output[1].shape}')
         output_hooked = output[1]
         output_split = output_hooked.view(output_hooked.shape[0]//self.num_heads, self.num_heads, output_hooked.shape[1], output_hooked.shape[2])
         output_unsqueezed = output_split.unsqueeze(dim=0)
     
-        print('Split the output into heads.\nNew Tensor Shapes:')
-        print(f'{output_split[0].shape}')
+        #print('Split the output into heads.\nNew Tensor Shapes:')
+        #print(f'{output_split[0].shape}')
 
         # set correct number of particles for cat
 
@@ -2090,16 +2090,16 @@ class Pre_Softmax_Hook:
         #self.sorted_attentions = self.sort(self.pre_softmax_attentions)
 
     def get_pre_softmax_interaction(self, module, input, output):
-        print('Getting pre-softmax interaction...')
+        #print('Getting pre-softmax interaction...')
 
         # handle batching - we will divide 1st dimension by the number such that it will comport with num_heads
-        print(f'Got shape:{output[2].shape}')
+        #print(f'Got shape:{output[2].shape}')
         output_hooked = output[2]
         output_split = output_hooked.view(output_hooked.shape[0]//self.num_heads, self.num_heads, output_hooked.shape[1], output_hooked.shape[2])
         output_unsqueezed = output_split.unsqueeze(dim=0)
     
-        print('Split the output into heads.\nNew Tensor Shapes:')
-        print(f'{output_split[0].shape}')
+        #print('Split the output into heads.\nNew Tensor Shapes:')
+        #print(f'{output_split[0].shape}')
 
         # set correct number of particles for cat
 
@@ -2390,7 +2390,7 @@ hadronic_top_exists = False
 leptonic_top_exists = False
 
 # see if hadronic tops exist in selected batch
-for jet, label in jck_labels:
+for jet in range(len(jck_labels.shape[0])):
     if np.argmax(jck_labels[jet]) == 8:
         print('Hadronic top found in batch!')
         hadronic_top_jet = jet
@@ -2400,7 +2400,7 @@ for jet, label in jck_labels:
 
 # see if leptonic tops exist in selected batch
 
-for jet in jck_labels:
+for jet in range(len(jck_labels[0])):
     if np.argmax(jck_labels[jet]) == 9:
         print('Leptonic top found in batch!')
         leptonic_top_jet = jet
