@@ -2368,7 +2368,7 @@ print('TL done!')
 # --- Shuffle all arrays with the same permutation ---
 #n = jck_pf_points.shape[0]
 rng = np.random.default_rng()
-perm = rng.permutation(n)
+#perm = rng.permutation(n)
 
 #jck_pf_features = jck_pf_features[perm]
 #jck_pf_vectors  = jck_pf_vectors[perm]
