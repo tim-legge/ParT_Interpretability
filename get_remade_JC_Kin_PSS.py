@@ -2454,14 +2454,14 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # ---- Define bins: 0–1, 1–10, 10–100, 100–1000, 1000–10000, 10000+ ----
-bin_edges = [0, 1, 10, 100, 1000, 10000, np.inf]
+bin_edges = [0, 1, 10, 100, 1000, 10000, 100000, 1000000, np.inf]
 
 # ---- Histogram with probability normalization ----
 counts, edges = np.histogram(ratio, bins=bin_edges)
 probabilities = counts / counts.sum()
 
 # ---- Labels (must be length 6 to match bins-1) ----
-labels = ["0–1", "1–10", "10–100", "100–1k", "1k–10k", "10k+"]
+labels = ["0–1", "1–10", "10–100", "100–1k", "1k–10k", "10k-100k", "100k-1000k", "1000k+"]
 
 # ---- Plot ----
 fig, ax = plt.subplots(figsize=(8,6), dpi=300)
