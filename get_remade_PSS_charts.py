@@ -2496,7 +2496,7 @@ fig, ax = plt.subplots(figsize=(8,6), dpi=300)
 x = np.arange(len(probabilities))
 ax.bar(x, probabilities)  # color optional
 
-#ax.set_xticks(x)(x)
+ax.set_xticks(x)
 ax.set_xticklabels(labels, rotation=30, ha="right")
 
 ax.set_ylabel("Probability")
@@ -2534,7 +2534,7 @@ fig, ax = plt.subplots(figsize=(8, 6), dpi=300)
 x = np.arange(len(probabilities))
 ax.bar(x, probabilities)
 
-#ax.set_xticks(x)(x)
+ax.set_xticks(x)
 ax.set_xticklabels(labels, rotation=30, ha="right")
 
 ax.set_ylabel("Probability")
@@ -2568,7 +2568,7 @@ fig, ax = plt.subplots(figsize=(8, 6), dpi=300)
 x = np.arange(len(probabilities))
 ax.bar(x, probabilities)
 
-#ax.set_xticks(x)(x)
+ax.set_xticks(x)
 ax.set_xticklabels(labels, rotation=30, ha="right")
 
 ax.set_ylabel("Probability")
@@ -2602,7 +2602,7 @@ fig, ax = plt.subplots(figsize=(8, 6), dpi=300)
 x = np.arange(len(probabilities))
 ax.bar(x, probabilities)
 
-#ax.set_xticks(x)
+ax.set_xticks(x)
 ax.set_xticklabels(labels, rotation=30, ha="right")
 
 ax.set_ylabel("Probability")
