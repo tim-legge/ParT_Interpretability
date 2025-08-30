@@ -2442,35 +2442,6 @@ ratio = attn_abs[mask] / inter_abs[mask]
 num_bins = 200
 weights = np.ones_like(ratio) / ratio.size  # bars sum to 1 across bins
 
-fig, ax = plt.subplots(figsize=(8, 6), dpi=300)
-
-n, bins, patches = ax.hist(
-    ratio,
-    bins=num_bins,
-    weights=weights,
-    histtype='step',
-    label='|Attention| / |Interaction|'
-)
-
-ax.set_xlabel('Magnitude Ratio: |Attention| / |Interaction|',labelpad=20)
-ax.set_ylabel('Probability')
-
-# Optional scales (leave X in linear; keep Matplotlib’s offset text like "1e11")
-#ax.set_xscale('log')  # uncomment if the ratio is very spread out
-ax.set_yscale('log', nonpositive='clip')
-plt.xlim(0,4e10)
-ax.yaxis.set_major_locator(LogLocator(base=10.0))                # major at each power of 10
-ax.yaxis.set_major_formatter(LogFormatterMathtext())  
-positive = n[n > 0]
-if positive.size:
-    ymin = 10.0 ** np.floor(np.log10(positive.min()))
-    ax.set_ylim(ymin, 1.0)
-else:
-    ax.set_ylim(1e-6, 1.0)  # fallback if everyhing is zero
-
-ax.set_title('Jet Class Kinematic Model: Magnitude Ratio of Attention to Interaction', fontsize=12)
-ax.legend(frameon=False, loc='upper left')
-
 # ---- Save ----
 #out_path = '/part-vol-3/weaver-core/parTaaron/InterpPlots/JCK_AttnInter_MagnitudeRatio.pdf'
 #os.makedirs(os.path.dirname(out_path), exist_ok=True)
@@ -2540,35 +2511,6 @@ ratio = attn_abs[mask] / inter_abs[mask]
 num_bins = 200
 weights = np.ones_like(ratio) / ratio.size  # bars sum to 1 across bins
 
-fig, ax = plt.subplots(figsize=(8, 6), dpi=300)
-
-n, bins, patches = ax.hist(
-    ratio,
-    bins=num_bins,
-    weights=weights,
-    histtype='step',
-    label='|Attention| / |Interaction|'
-)
-
-ax.set_xlabel('Magnitude Ratio: |Attention| / |Interaction|',labelpad=20)
-ax.set_ylabel('Probability')
-
-# Optional scales (leave X in linear; keep Matplotlib’s offset text like "1e11")
-#ax.set_xscale('log')  # uncomment if the ratio is very spread out
-ax.set_yscale('log', nonpositive='clip')
-plt.xlim(0,4e10)
-ax.yaxis.set_major_locator(LogLocator(base=10.0))                # major at each power of 10
-ax.yaxis.set_major_formatter(LogFormatterMathtext())  
-positive = n[n > 0]
-if positive.size:
-    ymin = 10.0 ** np.floor(np.log10(positive.min()))
-    ax.set_ylim(ymin, 1.0)
-else:
-    ax.set_ylim(1e-6, 1.0)  # fallback if everyhing is zero
-
-#ax.set_title('Jet Class Model: Magnitude Ratio of Attention to Interaction', fontsize=12)
-#ax.legend(frameon=False, loc='upper left')
-
 # ---- Save ----
 #out_path = '/part-vol-3/weaver-core/parTaaron/InterpPlots/JC_AttnInter_MagnitudeRatio.pdf'
 #os.makedirs(os.path.dirname(out_path), exist_ok=True)
@@ -2636,39 +2578,6 @@ ratio = attn_abs[mask] / inter_abs[mask]
 # ---- Plot ----
 num_bins = 10
 weights = np.ones_like(ratio) / ratio.size  # bars sum to 1 across bins
-
-
-fig, ax = plt.subplots(figsize=(8, 6), dpi=300)
-
-n, bins, patches = ax.hist(
-    ratio,
-    bins=num_bins,
-    weights=weights,
-    histtype='step',
-    label='|Attention| / |Interaction|'
-)
-
-ax.set_xlabel('Magnitude Ratio: |Attention| / |Interaction|', labelpad=20)
-ax.set_ylabel('Probability')
-
-# Optional scales (leave X in linear; keep Matplotlib’s offset text like "1e11")
-ax.set_xscale('log')  # uncomment if the ratio is very spread out
-#ax.set_yscale('log', nonpositive='clip')
-ax.yaxis.set_major_locator(LogLocator(base=10.0),)                # major at each power of 10
-ax.yaxis.set_major_formatter(LogFormatterMathtext())  
-positive = n[n > 0]
-if positive.size:
-    ymin = 10.0 ** np.floor(np.log10(positive.min()))
-    ax.set_ylim(ymin, 1.0)
-else:
-    ax.set_ylim(1e-6, 1.0)  # fallback if everything is zero
-
-plt.xlim(0,3e7)
-#ax.set_xscale('log')   # <- uncomment if tail is heavy / wide
-ax.set_yscale('log')   # <- optional if you want to see small probabilities
-
-ax.set_title('TL Model: Magnitude Ratio of Attention to Interaction', fontsize=10)
-ax.add_artist(plt.legend(frameon=False, loc='upper left', fontsize=8))
 
 # ---- Save (renamed path) ----
 #out_path = '/part-vol-3/weaver-core/parTaaron/InterpPlots/TL_AttnInter_MagnitudeRatio.pdf'
