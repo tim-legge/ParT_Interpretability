@@ -2496,11 +2496,11 @@ fig, ax = plt.subplots(figsize=(8,6), dpi=300)
 x = np.arange(len(probabilities))
 ax.bar(x, probabilities)  # color optional
 
-ax.set_xticks(x)
+#ax.set_xticks(x)(x)
 ax.set_xticklabels(labels, rotation=30, ha="right")
 
 ax.set_ylabel("Probability")
-ax.set_xlabel("Relative Magnitude of Attention/Interaction Scores")
+ax.set_xlabel("Magnitude of Attn. Scores/Inter. Scores")
 #ax.set_title("JetClass Kinetmatic Probability Distribution of Attention/Interaction Ratio", fontsize=12)
 ax.margins(y=0.05)  # small headroom for annotations
 
@@ -2534,11 +2534,11 @@ fig, ax = plt.subplots(figsize=(8, 6), dpi=300)
 x = np.arange(len(probabilities))
 ax.bar(x, probabilities)
 
-ax.set_xticks(x)
+#ax.set_xticks(x)(x)
 ax.set_xticklabels(labels, rotation=30, ha="right")
 
 ax.set_ylabel("Probability")
-ax.set_xlabel("Relative Magnitude of Attention/Interaction Scores")
+ax.set_xlabel("Magnitude of Attn. Scores/Inter. Scores")
 #ax.set_title("JetClass Probability Distribution of Attention/Interaction Ratio", fontsize=12)
 ax.margins(y=0.05)  # small headroom for annotations
 
@@ -2568,11 +2568,11 @@ fig, ax = plt.subplots(figsize=(8, 6), dpi=300)
 x = np.arange(len(probabilities))
 ax.bar(x, probabilities)
 
-ax.set_xticks(x)
+#ax.set_xticks(x)(x)
 ax.set_xticklabels(labels, rotation=30, ha="right")
 
 ax.set_ylabel("Probability")
-ax.set_xlabel("Relative Magnitude of Attention/Interaction Scores")
+ax.set_xlabel("Magnitude of Attn. Scores/Inter. Scores")
 #ax.set_title("Top Landscape Probability Distribution of Attention/Interaction Ratio", fontsize=12)
 ax.margins(y=0.05)  # small headroom for annotations
 
@@ -2602,11 +2602,11 @@ fig, ax = plt.subplots(figsize=(8, 6), dpi=300)
 x = np.arange(len(probabilities))
 ax.bar(x, probabilities)
 
-ax.set_xticks(x)
+#ax.set_xticks(x)
 ax.set_xticklabels(labels, rotation=30, ha="right")
 
 ax.set_ylabel("Probability")
-ax.set_xlabel("Relative Magnitude of Attention/Interaction Scores")
+ax.set_xlabel("Magnitude of Attn. Scores/Inter. Scores")
 #ax.set_title("Quark-Gluon Probability Distribution of Attention/Interaction Ratio", fontsize=12)
 ax.margins(y=0.05)  # small headroom for annotations
 
