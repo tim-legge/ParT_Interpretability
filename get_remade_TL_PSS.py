@@ -2608,7 +2608,7 @@ ax.set_xticks(x)
 ax.set_xticklabels(labels, rotation=30, ha="right")
 
 ax.set_ylabel("Probability")
-ax.set_xlabel("Magnitude of Attn. Scores/Inter. Scores")
+ax.set_xlabel("Magnitude of Attn. Score/Inter. Score")
 #ax.set_title("Top Landscape Probability Distribution of Attention/Interaction Ratio", fontsize=12)
 ax.margins(y=0.05)  # small headroom for annotations
 
