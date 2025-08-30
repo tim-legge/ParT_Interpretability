@@ -2519,6 +2519,67 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 
+# ---- Data (assumes jc_kin_hooks exists) ----
+flat_jc_attn = jc_full_hooks.pre_softmax_attentions.numpy().flatten()
+flat_jc_inter = jc_full_hooks.pre_softmax_interactions.numpy().flatten()
+
+# Remove NaN/±inf to avoid histogram errors
+flat_jc_attn = flat_jc_attn[np.isfinite(flat_jc_attn)]
+flat_jc_inter = flat_jc_inter[np.isfinite(flat_jc_inter)]
+
+# ---- Align & compute magnitude ratio |attn| / |inter| ----
+min_len = min(len(flat_jc_attn), len(flat_jc_inter))
+attn_abs  = np.abs(flat_jc_attn[:min_len])
+inter_abs = np.abs(flat_jc_inter[:min_len])
+
+# Avoid divide-by-zero and non-finite values
+mask = (inter_abs > 0) & np.isfinite(attn_abs) & np.isfinite(inter_abs)
+ratio = attn_abs[mask] / inter_abs[mask]
+
+# ---- Plot (probability per bin) ----
+num_bins = 200
+weights = np.ones_like(ratio) / ratio.size  # bars sum to 1 across bins
+
+fig, ax = plt.subplots(figsize=(8, 6), dpi=300)
+
+n, bins, patches = ax.hist(
+    ratio,
+    bins=num_bins,
+    weights=weights,
+    histtype='step',
+    label='|Attention| / |Interaction|'
+)
+
+ax.set_xlabel('Magnitude Ratio: |Attention| / |Interaction|',labelpad=20)
+ax.set_ylabel('Probability')
+
+# Optional scales (leave X in linear; keep Matplotlib’s offset text like "1e11")
+#ax.set_xscale('log')  # uncomment if the ratio is very spread out
+ax.set_yscale('log', nonpositive='clip')
+plt.xlim(0,4e10)
+ax.yaxis.set_major_locator(LogLocator(base=10.0))                # major at each power of 10
+ax.yaxis.set_major_formatter(LogFormatterMathtext())  
+positive = n[n > 0]
+if positive.size:
+    ymin = 10.0 ** np.floor(np.log10(positive.min()))
+    ax.set_ylim(ymin, 1.0)
+else:
+    ax.set_ylim(1e-6, 1.0)  # fallback if everyhing is zero
+
+#ax.set_title('Jet Class Model: Magnitude Ratio of Attention to Interaction', fontsize=12)
+#ax.legend(frameon=False, loc='upper left')
+
+# ---- Save ----
+#out_path = '/part-vol-3/weaver-core/parTaaron/InterpPlots/JC_AttnInter_MagnitudeRatio.pdf'
+#os.makedirs(os.path.dirname(out_path), exist_ok=True)
+#plt.savefig(out_path, bbox_inches="tight")
+#plt.show()
+
+
+import os
+import numpy as np
+import matplotlib.pyplot as plt
+
 # ---- Define bins: 0–1, 1–10, 10–100, 100–1000, 1000–10000, 10000–100000, 100000+ ----
 bin_edges = [0, 1, 10, 100, 1000, 10000, 100000, 1000000, np.inf]
 
@@ -2550,6 +2611,71 @@ ax.margins(y=0.05)  # small headroom for annotations
 plt.tight_layout()
 
 out_path = './JC_AttnBar.pdf'
+
+import os
+import numpy as np
+import matplotlib.pyplot as plt
+
+# ---- Data ----
+flat_tl_attn = tl_hooks.pre_softmax_attentions.numpy().flatten()
+flat_tl_inter = tl_hooks.pre_softmax_interactions.numpy().flatten()
+
+# Remove NaN/±inf
+flat_tl_attn = flat_tl_attn[np.isfinite(flat_tl_attn)]
+flat_tl_inter = flat_tl_inter[np.isfinite(flat_tl_inter)]
+
+# ---- Align & compute magnitude ratio |attn| / |inter| ----
+min_len = min(len(flat_tl_attn), len(flat_tl_inter))
+attn_abs  = np.abs(flat_tl_attn[:min_len])
+inter_abs = np.abs(flat_tl_inter[:min_len])
+
+# Avoid divide-by-zero and non-finite values
+mask = (inter_abs > 0) & np.isfinite(attn_abs) & np.isfinite(inter_abs)
+ratio = attn_abs[mask] / inter_abs[mask]
+
+# ---- Plot ----
+num_bins = 10
+weights = np.ones_like(ratio) / ratio.size  # bars sum to 1 across bins
+
+
+fig, ax = plt.subplots(figsize=(8, 6), dpi=300)
+
+n, bins, patches = ax.hist(
+    ratio,
+    bins=num_bins,
+    weights=weights,
+    histtype='step',
+    label='|Attention| / |Interaction|'
+)
+
+ax.set_xlabel('Magnitude Ratio: |Attention| / |Interaction|', labelpad=20)
+ax.set_ylabel('Probability')
+
+# Optional scales (leave X in linear; keep Matplotlib’s offset text like "1e11")
+ax.set_xscale('log')  # uncomment if the ratio is very spread out
+#ax.set_yscale('log', nonpositive='clip')
+ax.yaxis.set_major_locator(LogLocator(base=10.0),)                # major at each power of 10
+ax.yaxis.set_major_formatter(LogFormatterMathtext())  
+positive = n[n > 0]
+if positive.size:
+    ymin = 10.0 ** np.floor(np.log10(positive.min()))
+    ax.set_ylim(ymin, 1.0)
+else:
+    ax.set_ylim(1e-6, 1.0)  # fallback if everything is zero
+
+plt.xlim(0,3e7)
+#ax.set_xscale('log')   # <- uncomment if tail is heavy / wide
+ax.set_yscale('log')   # <- optional if you want to see small probabilities
+
+ax.set_title('TL Model: Magnitude Ratio of Attention to Interaction', fontsize=10)
+ax.add_artist(plt.legend(frameon=False, loc='upper left', fontsize=8))
+
+# ---- Save (renamed path) ----
+#out_path = '/part-vol-3/weaver-core/parTaaron/InterpPlots/TL_AttnInter_MagnitudeRatio.pdf'
+#os.makedirs(os.path.dirname(out_path), exist_ok=True)
+#plt.savefig(out_path, bbox_inches="tight")
+#plt.show()
+
 #os.makedirs(os.path.dirname(out_path), exist_ok=True)
 plt.savefig(out_path, bbox_inches="tight")
 plt.show()
@@ -2584,40 +2710,6 @@ ax.margins(y=0.05)  # small headroom for annotations
 plt.tight_layout()
 
 out_path = './TL_AttnBar.pdf'
-#os.makedirs(os.path.dirname(out_path), exist_ok=True)
-plt.savefig(out_path, bbox_inches="tight")
-plt.show()
-
-bin_edges = [0, 1, 10, 100, 1000, 10000, 100000, 1000000, np.inf]
-
-# ---- Histogram with probability normalization ----
-counts, edges = np.histogram(ratio, bins=bin_edges)
-probabilities = counts / counts.sum()
-
-# ---- Labels (must be length bins-1 = 7) ----
-labels = ["0–1", "1–10", "10–100", "100–1k", "1k–10k", "10k–100k", "100k - 1000k", "1000k+"]
-
-# ---- Plot ----
-fig, ax = plt.subplots(figsize=(8, 6), dpi=300)
-x = np.arange(len(probabilities))
-ax.bar(x, probabilities)
-
-ax.set_xticks(x)
-ax.set_xticklabels(labels, rotation=30, ha="right")
-
-ax.set_ylabel("Probability")
-ax.set_xlabel("Magnitude of Attn. Scores/Inter. Scores")
-#ax.set_title("Quark-Gluon Probability Distribution of Attention/Interaction Ratio", fontsize=12)
-ax.margins(y=0.05)  # small headroom for annotations
-
-# Annotate probabilities
-#for i, p in enumerate(probabilities):
-#    if p > 0:
-#        ax.text(i, p, f"{p:.3f}", ha="center", va="bottom", fontsize=8)
-
-plt.tight_layout()
-
-out_path = './QG_AttnBar.pdf'
 #os.makedirs(os.path.dirname(out_path), exist_ok=True)
 plt.savefig(out_path, bbox_inches="tight")
 plt.show()
