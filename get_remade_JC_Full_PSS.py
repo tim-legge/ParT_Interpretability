@@ -2488,4 +2488,6 @@ ax.margins(y=0.05)  # small headroom for annotations
 plt.tight_layout()
 
 out_path = './JC_AttnBar.pdf'
+plt.savefig(out_path, bbox_inches="tight")
+plt.show()
 print('JC Full finished!')
