@@ -2505,9 +2505,9 @@ ax.set_xlabel("Magnitude of Attn. Scores/Inter. Scores")
 ax.margins(y=0.05)  # small headroom for annotations
 
 # Annotate probabilities
-for i, p in enumerate(probabilities):
-    if p > 0:
-        ax.text(i, p, f"{p:.3f}", ha="center", va="bottom", fontsize=8)
+#for i, p in enumerate(probabilities):
+#    if p > 0:
+#        ax.text(i, p, f"{p:.3f}", ha="center", va="bottom", fontsize=8)
 
 plt.tight_layout()
 out_path = './JCK_AttnBar.pdf'
@@ -2543,9 +2543,9 @@ ax.set_xlabel("Magnitude of Attn. Scores/Inter. Scores")
 ax.margins(y=0.05)  # small headroom for annotations
 
 # Annotate probabilities
-for i, p in enumerate(probabilities):
-    if p > 0:
-        ax.text(i, p, f"{p:.3f}", ha="center", va="bottom", fontsize=8)
+#for i, p in enumerate(probabilities):
+#    if p > 0:
+#        ax.text(i, p, f"{p:.3f}", ha="center", va="bottom", fontsize=8)
 
 plt.tight_layout()
 
@@ -2577,9 +2577,9 @@ ax.set_xlabel("Magnitude of Attn. Scores/Inter. Scores")
 ax.margins(y=0.05)  # small headroom for annotations
 
 # Annotate probabilities
-for i, p in enumerate(probabilities):
-    if p > 0:
-        ax.text(i, p, f"{p:.3f}", ha="center", va="bottom", fontsize=8)
+#for i, p in enumerate(probabilities):
+#    if p > 0:
+#        ax.text(i, p, f"{p:.3f}", ha="center", va="bottom", fontsize=8)
 
 plt.tight_layout()
 
@@ -2611,9 +2611,9 @@ ax.set_xlabel("Magnitude of Attn. Scores/Inter. Scores")
 ax.margins(y=0.05)  # small headroom for annotations
 
 # Annotate probabilities
-for i, p in enumerate(probabilities):
-    if p > 0:
-        ax.text(i, p, f"{p:.3f}", ha="center", va="bottom", fontsize=8)
+#for i, p in enumerate(probabilities):
+#    if p > 0:
+#        ax.text(i, p, f"{p:.3f}", ha="center", va="bottom", fontsize=8)
 
 plt.tight_layout()
 
