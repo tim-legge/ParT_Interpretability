@@ -63,8 +63,8 @@ $CMD \
     "/part-vol-3/weaver-core/particle-transformer/datasets/JetClass/Pythia/train_100M/TTBar_*.root" \
     "/part-vol-3/weaver-core/particle-transformer/datasets/JetClass/Pythia/train_100M/ZJetsToNuNu_*.root" \
     --data-val \ 
-    "/part-vol-3/weaver-core/particle-transformer/datasets/JetClass/Pythia/val_5M/TTBar*.root" \
-    "/part-vol-3/weaver-core/particle-transformer/datasets/JetClass/Pythia/val_5M/ZJetsToNuNu*.root" \
+    "/part-vol-3/weaver-core/particle-transformer/datasets/JetClass/Pythia/val_5M/TTBar_*.root" \
+    "/part-vol-3/weaver-core/particle-transformer/datasets/JetClass/Pythia/val_5M/ZJetsToNuNu_*.root" \
     --data-test \
     "/part-vol-3/weaver-core/particle-transformer/datasets/JetClass/Pythia/test_20M/TTBar_*.root" \
     "/part-vol-3/weaver-core/particle-transformer/datasets/JetClass/Pythia/test_20M/ZJetsToNuNu_*.root" \
