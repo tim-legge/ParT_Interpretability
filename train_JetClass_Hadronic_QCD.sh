@@ -59,8 +59,8 @@ fi
 SAMPLE_TYPE=Pythia
 
 $CMD \
-    --data-train "TTBar:/part-vol-3/weaver-core/particle_transformer/datasets/JetClass/Pythia/train_100M/TTBar_*[0-9]*.root" \
-    "ZJetsToNuNu:/part-vol-3/weaver-core/particle_transformer/datasets/JetClass/Pythia/train_100M/ZJetsToNuNu_*[0-9]*.root" \
+    --data-train "TTBar:/part-vol-3/weaver-core/particle_transformer/datasets/JetClass/Pythia/train_100M/TTBar_[0-9].root" \
+    "ZJetsToNuNu:/part-vol-3/weaver-core/particle_transformer/datasets/JetClass/Pythia/train_100M/ZJetsToNuNu_[0-9].root" \
     --data-val "TTBar:/part-vol-3/weaver-core/particle_transformer/datasets/JetClass/Pythia/val_5M/TTBar_120.root" \
     "ZJetsToNuNu:/part-vol-3/weaver-core/particle_transformer/datasets/JetClass/Pythia/val_5M/ZJetsToNuNu_120.root" \
     --data-test \
