@@ -649,3 +649,14 @@ for k, v in tl_data.items():
 print(f"\nFeature dimensions:")
 print(f"  QuarkGluon (kinpid): {qg_data['pf_features'].shape[1]} features")
 print(f"  TopLandscape (kin): {tl_data['pf_features'].shape[1]} features")
+
+for type, array in qg_data.items():
+    np.save(f'./qg_{type}.npy', array)
+for type, array in tl_data.items():
+    np.save(f'./tl_{type}.npy', array)
+for type, array in hls4ml_data.items():
+    np.save(f'./hls4ml_{type}.npy', array)
+for type, array in jck_data.items():
+    np.save(f'./jc_kin_{type}.npy', array)
+for type, array in jck_pid_data.items():
+    np.save(f'./jc_kinpid_{type}.npy', array)

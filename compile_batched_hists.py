@@ -63,7 +63,7 @@ num_files = 50
 
 if os.path.exists('/part-vol-3/timlegge-ParT-trained/batched_hists/qg_attention_distribution_batch_0.npy'):
     print('QG Files detected')
-    compiled = np.zeros_like(np.load('/part-vol-3/timlegge-ParT-trained/batched_hists/tl_hist_distribution_batch_0.npy', allow_pickle=True))
+    compiled = np.zeros_like(np.load('/part-vol-3/timlegge-ParT-trained/batched_hists/qg_attention_distribution_batch_0.npy', allow_pickle=True))
 
 for f in os.listdir('/part-vol-3/timlegge-ParT-trained/batched_hists/'):
     if stem in f:
@@ -108,14 +108,14 @@ plt.savefig('Compiled_QG_attentionDist.pdf', bbox_inches="tight")
 
 print('QG plot saved! Now for TL...')
 
-# Load TL files from /batched_hists
+# Load topsonly TL files from /batched_hists
 
-stem = 'tl_hist_distribution_batch_'
+stem = 'tl_topsonly_hist_distribution_batch_'
 num_files = 50
 
-if os.path.exists('/part-vol-3/timlegge-ParT-trained/batched_hists/tl_hist_distribution_batch_0.npy'):
+if os.path.exists('/part-vol-3/timlegge-ParT-trained/batched_hists/tl_topsonly_hist_distribution_batch_0.npy'):
     print('TL Files detected')
-    compiled = np.zeros_like(np.load('/part-vol-3/timlegge-ParT-trained/batched_hists/tl_hist_distribution_batch_0.npy', allow_pickle=True))
+    compiled = np.zeros_like(np.load('/part-vol-3/timlegge-ParT-trained/batched_hists/tl_topsonly_hist_distribution_batch_0.npy', allow_pickle=True))
 
 for f in os.listdir('/part-vol-3/timlegge-ParT-trained/batched_hists/'):
     if stem in f:
@@ -128,7 +128,7 @@ compiled /= compiled.sum()
 
 print('All files loaded, now saving...')
 
-np.save('/part-vol-3/timlegge-ParT-trained/tl_compiled_hist.npy', compiled)
+np.save('/part-vol-3/timlegge-ParT-trained/tl_topsonly_compiled_hist.npy', compiled)
 
 print('Saved! Now plotting...')
 
@@ -155,7 +155,7 @@ ax.set_ylabel('Probability', fontsize=14)
 plt.yscale('log')
 
 # Add a title
-ax.set_title('TL-trained Attention Distribution', fontsize=16)
+ax.set_title('TL  Attention Distribution', fontsize=16)
 plt.savefig('Compiled_TL_attentionDist.pdf', bbox_inches="tight")
 
 print('TL plot saved! All done.')

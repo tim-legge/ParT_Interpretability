@@ -569,7 +569,7 @@ def build_features_and_labels_jck_pid(tree, transform_features=True):
 
 # loading function
 
-def load_data(dataset_type='qg', batch_size=300):
+def load_data(dataset_type='qg', start_index=None, batch_size=300):
     """
     Load data from 
     

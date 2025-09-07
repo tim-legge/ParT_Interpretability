@@ -40,7 +40,7 @@ class MultiheadAttention(nn.Module):
     bias_v: Optional[torch.Tensor]
 
     def __init__(self, embed_dim, num_heads, dropout=0., bias=True, add_bias_kv=False, add_zero_attn=False,
-                 kdim=None, vdim=None, batch_first=False, device=None, dtype=None) -> None:
+                 kdim=None, vdim=None, batch_first=False, device=None, dtype=None, return_pre_softmax=False) -> None:
         if embed_dim <= 0 or num_heads <= 0:
             raise ValueError(
                 f"embed_dim and num_heads must be greater than 0,"
@@ -56,6 +56,7 @@ class MultiheadAttention(nn.Module):
         self.num_heads = num_heads
         self.dropout = dropout
         self.batch_first = batch_first
+        self.return_pre_softmax = return_pre_softmax
         self.head_dim = embed_dim // num_heads
         assert self.head_dim * num_heads == self.embed_dim, "embed_dim must be divisible by num_heads"
 
@@ -250,7 +251,9 @@ class MultiheadAttention(nn.Module):
                     use_separate_proj_weight=True,
                     q_proj_weight=self.q_proj_weight, k_proj_weight=self.k_proj_weight,
                     v_proj_weight=self.v_proj_weight,
-                    average_attn_weights=average_attn_weights)
+                    average_attn_weights=average_attn_weights,
+                    return_pre_softmax=self.return_pre_softmax
+                )
             else:
                 attn_output, attn_output_weights = multi_head_attention_forward(
                     query, key, value, self.embed_dim, self.num_heads,
@@ -261,7 +264,8 @@ class MultiheadAttention(nn.Module):
                     key_padding_mask=key_padding_mask,
                     need_weights=need_weights,
                     attn_mask=attn_mask,
-                    average_attn_weights=average_attn_weights)
+                    average_attn_weights=average_attn_weights,
+                    return_pre_softmax=self.return_pre_softmax)
             if self.batch_first and is_batched:
                 return attn_output.transpose(1, 0), attn_output_weights
             else:
@@ -342,6 +346,7 @@ def multi_head_attention_forward(
     static_v: Optional[Tensor] = None,
     average_attn_weights: bool = True,
     is_causal: bool = False,
+    return_pre_softmax: bool = False,
 ) -> Tuple[Tensor, Optional[Tensor]]:
     tens_ops = (
         query,
@@ -383,6 +388,7 @@ def multi_head_attention_forward(
             static_k=static_k,
             static_v=static_v,
             average_attn_weights=average_attn_weights,
+            return_pre_softmax=return_pre_softmax,
         )
 
     is_batched = _mha_shape_check(
@@ -608,11 +614,13 @@ def multi_head_attention_forward(
         ), "FIXME: is_causal not implemented for need_weights"
 
         if attn_mask is not None:
+            pre_softmax_interaction = attn_mask
+            pre_softmax_attention = torch.bmm(q_scaled, k.transpose(-2, -1))
             attn_output_weights = torch.baddbmm(
                 attn_mask, q_scaled, k.transpose(-2, -1)
             )
         else:
-            attn_output_weights = torch.bmm(q_scaled, k.transpose(-2, -1))
+            attn_output_weights = pre_softmax_attention = torch.bmm(q_scaled, k.transpose(-2, -1))
         attn_output_weights = softmax(attn_output_weights, dim=-1)
         if dropout_p > 0.0:
             attn_output_weights = dropout(attn_output_weights, p=dropout_p)
@@ -634,7 +642,10 @@ def multi_head_attention_forward(
             # squeeze the output if input was unbatched
             attn_output = attn_output.squeeze(1)
             attn_output_weights = attn_output_weights.squeeze(0)
-        return attn_output, attn_output_weights
+        if return_pre_softmax:
+            return attn_output, attn_output_weights, pre_softmax_attention, pre_softmax_interaction
+        else:
+            return attn_output, attn_output_weights, None
     else:
         # attn_mask can be either (L,S) or (N*num_heads, L, S)
         # if attn_mask's shape is (1, L, S) we need to unsqueeze to (1, 1, L, S)
@@ -1300,19 +1311,20 @@ class Block(nn.Module):
     def __init__(self, embed_dim=128, num_heads=8, ffn_ratio=4,
                  dropout=0.1, attn_dropout=0.1, activation_dropout=0.1,
                  add_bias_kv=False, activation='gelu',
-                 scale_fc=True, scale_attn=True, scale_heads=True, scale_resids=True):
+                 scale_fc=True, scale_attn=True, scale_heads=True, scale_resids=True, return_pre_softmax=False):
         super().__init__()
 
         self.embed_dim = embed_dim
         self.num_heads = num_heads
         self.head_dim = embed_dim // num_heads
         self.ffn_dim = embed_dim * ffn_ratio
+        self.return_pre_softmax = return_pre_softmax
 
         self.pre_attn_norm = nn.LayerNorm(embed_dim)
         self.attn = MultiheadAttention(
             embed_dim,
             num_heads,
-
+            return_pre_softmax=self.return_pre_softmax,
             add_bias_kv=add_bias_kv,
         )
         self.post_attn_norm = nn.LayerNorm(embed_dim) if scale_attn else None
@@ -1349,12 +1361,21 @@ class Block(nn.Module):
             residual = x_cls
             u = torch.cat((x_cls, x), dim=0)  # (seq_len+1, batch, embed_dim)
             u = self.pre_attn_norm(u)
-            x = self.attn(x_cls, u, u, key_padding_mask=padding_mask)[0]  # (1, batch, embed_dim)
+            x, _, pre_softmax_attention, pre_softmax_interaction = self.attn(x_cls, u, u, key_padding_mask=padding_mask, 
+                                                                                     return_pre_softmax=self.return_pre_softmax
+                                                                            )  # (1, batch, embed_dim)
+            pre_softmax_attention.detach()
+            pre_softmax_interaction.detach()
+
         else:
             residual = x
             x = self.pre_attn_norm(x)
-            x = self.attn(x, x, x, key_padding_mask=padding_mask,
-                          attn_mask=attn_mask)[0]  # (seq_len, batch, embed_dim)
+            x, _, pre_softmax_attention, pre_softmax_interaction = self.attn(x, x, x, key_padding_mask=padding_mask,
+                                                                            attn_mask=attn_mask, return_pre_softmax=self.return_pre_softmax
+                                                                            )  # (seq_len, batch, embed_dim)
+            pre_softmax_attention.detach()
+            pre_softmax_interaction.detach()
+        
 
         if self.c_attn is not None:
             tgt_len = x.size(0)
@@ -1379,7 +1400,10 @@ class Block(nn.Module):
             residual = torch.mul(self.w_resid, residual)
         x += residual
 
-        return x
+        if self.return_pre_softmax:
+            return {'output': x, 'pre_softmax_attention': pre_softmax_attention, 'pre_softmax_interaction': pre_softmax_interaction}
+        else:
+            return {'output': x}
 
 
 class ParticleTransformer(nn.Module):
@@ -1405,18 +1429,29 @@ class ParticleTransformer(nn.Module):
                  trim=True,
                  for_inference=False,
                  use_amp=False,
+                 return_pre_softmax=False,
                  **kwargs) -> None:
         super().__init__(**kwargs)
 
         self.trimmer = SequenceTrimmer(enabled=trim and not for_inference)
         self.for_inference = for_inference
         self.use_amp = use_amp
+        self.return_pre_softmax = return_pre_softmax
+
+        # init the collected pre_softmax matrices for later torch.cat()
+
+        #if self.return_pre_softmax:
+        #    self.pre_softmax_attention = torch.empty(0, dtype=torch.float32)
+        #    self.pre_softmax_interaction = torch.empty(0, dtype=torch.float32)
+        #    self.cls_pre_softmax_attention = torch.empty(0, dtype=torch.float32)
+        #    self.cls_pre_softmax_interaction = torch.empty(0, dtype=torch.float32)
 
         embed_dim = embed_dims[-1] if len(embed_dims) > 0 else input_dim
         default_cfg = dict(embed_dim=embed_dim, num_heads=num_heads, ffn_ratio=4,
                            dropout=0.1, attn_dropout=0.1, activation_dropout=0.1,
                            add_bias_kv=False, activation=activation,
-                           scale_fc=True, scale_attn=True, scale_heads=True, scale_resids=True)
+                           scale_fc=True, scale_attn=True, scale_heads=True, scale_resids=True, return_pre_softmax=self.return_pre_softmax
+                           )
 
         cfg_block = copy.deepcopy(default_cfg)
         if block_params is not None:
@@ -1480,7 +1515,16 @@ class ParticleTransformer(nn.Module):
 
             # transform
             for block in self.blocks:
-                x = block(x, x_cls=None, padding_mask=padding_mask, attn_mask=attn_mask)
+                #if self.return_pre_softmax:
+                    #x, pre_softmax_attention_vals, pre_softmax_interaction_vals = block(x, x_cls=None, padding_mask=padding_mask, 
+                    #                                                          attn_mask=attn_mask, return_pre_softmax=self.return_pre_softmax)['output']
+                    #pre_softmax_attention_vals = pre_softmax_attention_vals.unsqueeze(0)  # (N, num_heads, P, P)
+                    #pre_softmax_interaction_vals = pre_softmax_interaction_vals.unsqueeze(0)  # (N, num_heads, P, P)
+
+                    #self.pre_softmax_attention = torch.cat((self.pre_softmax_attention, pre_softmax_attention_vals), dim=0)
+                    #self.pre_softmax_interaction = torch.cat((self.pre_softmax_interaction, pre_softmax_interaction_vals), dim=0)
+                #else:
+                x = block(x, x_cls=None, padding_mask=padding_mask, attn_mask=attn_mask, return_pre_softmax=self.return_pre_softmax)['output']
 
             # extract class token
             cls_tokens = self.cls_token.expand(1, x.size(1), -1)  # (1, N, C)
@@ -1496,7 +1540,10 @@ class ParticleTransformer(nn.Module):
             if self.for_inference:
                 output = torch.softmax(output, dim=1)
             # print('output:\n', output)
-            return output
+            if self.return_pre_softmax:
+                return output#, self.pre_softmax_attention, self.pre_softmax_interaction
+            else:
+                return output
 
 
 class ParticleTransformerTagger(nn.Module):
@@ -1667,15 +1714,47 @@ class ParticleTransformerWrapper(torch.nn.Module):
     def __init__(self, **kwargs) -> None:
         super().__init__()
         self.mod = ParticleTransformer(**kwargs)
+        self.kwargs = kwargs
 
     @torch.jit.ignore
     def no_weight_decay(self):
         return {'mod.cls_token', }
 
     def forward(self, points, features, lorentz_vectors, mask):
+        #if 'return_pre_softmax' in self.kwargs.keys() and self.kwargs['return_pre_softmax'] == True :
+        #    output, pre_softmax_attention, pre_softmax_interaction = self.mod(features, v=lorentz_vectors, mask=mask)
+        #    return output, pre_softmax_attention, pre_softmax_interaction
+        #else:
         output = self.mod(features, v=lorentz_vectors, mask=mask)
-
         return output
+
+# Define Forward Hook to grab pre-softmax w/o altering outputs of forward() for ParticleTransformer
+
+class Pre_Softmax_Hook(nn.Module):
+    def __init__(self, model, layer_name='Block'):
+        self.model = model
+
+        for name, module in self.model.named_modules():
+            if layer_name in name:
+                # register forward hook functions
+                module.register_forward_hook(lambda *args, **kwargs: Pre_Softmax_Hook.get_pre_softmax_attention(self, *args, **kwargs))
+                module.register_forward_hook(lambda *args, **kwargs: Pre_Softmax_Hook.get_pre_softmax_interaction(self, *args, **kwargs))
+    
+        self.pre_softmax_attentions = torch.empty(0, dtype=torch.float32)
+        self.pre_softmax_interactions = torch.empty(0, dtype=torch.float32)
+
+    # hooks will grab from the outputs of Block
+    # meaning we don't need to modify forward methods for anything else
+    # although ParticleTransformer needed a slight adaptation 
+    # to the dict formatting of Block's output
+
+    def get_pre_softmax_attention(self, module, input, output):
+        output['pre_softmax_attention'] = output['pre_softmax_attention'].unsqueeze(dim=0)
+        self.pre_softmax_attentions = torch.cat((self.pre_softmax_attentions, output['pre_softmax_attention']), dim=0)
+
+    def get_pre_softmax_interaction(self, module, input, output):
+        output['pre_softmax_interaction'] = output['pre_softmax_interaction'].unsqueeze(dim=0)
+        self.pre_softmax_interactions = torch.cat((self.pre_softmax_interactions, output['pre_softmax_interaction']), dim=0)
 
 
 def get_model(**kwargs):
@@ -1698,6 +1777,7 @@ def get_model(**kwargs):
         # misc
         trim=True,
         for_inference=False,
+        return_pre_softmax=True, # this model will collect attention and softmax matrices before softmax is applied
     )
     cfg.update(**kwargs)
     _logger.info('Model config: %s' % str(cfg))
