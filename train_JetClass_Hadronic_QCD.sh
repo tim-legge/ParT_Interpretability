@@ -60,14 +60,14 @@ SAMPLE_TYPE=Pythia
 
 $CMD \
     --data-train \
-    "TTBar:/part-vol-3/weaver-core/particle-transformer/datasets/JetClass/Pythia/train_100M/TTBar_*.root" \
-    "ZJetsToNuNu:/part-vol-3/weaver-core/particle-transformer/datasets/JetClass/Pythia/train_100M/ZJetsToNuNu_*.root" \
+    "/part-vol-3/weaver-core/particle-transformer/datasets/JetClass/Pythia/train_100M/TTBar_*.root" \
+    "/part-vol-3/weaver-core/particle-transformer/datasets/JetClass/Pythia/train_100M/ZJetsToNuNu_*.root" \
     --data-val \ 
-    "TTBar:/part-vol-3/weaver-core/particle-transformer/datasets/JetClass/Pythia/val_5M/TTBar*.root" \
-    "ZJetsToNuNu:/part-vol-3/weaver-core/particle-transformer/datasets/JetClass/Pythia/val_5M/ZJetsToNuNu*.root" \
+    "/part-vol-3/weaver-core/particle-transformer/datasets/JetClass/Pythia/val_5M/TTBar*.root" \
+    "/part-vol-3/weaver-core/particle-transformer/datasets/JetClass/Pythia/val_5M/ZJetsToNuNu*.root" \
     --data-test \
-    "TTBar:/part-vol-3/weaver-core/particle-transformer/datasets/JetClass/Pythia/test_20M/TTBar_*.root" \
-    "ZJetsToNuNu:/part-vol-3/weaver-core/particle-transformer/datasets/JetClass/Pythia/test_20M/ZJetsToNuNu_*.root" \
+    "/part-vol-3/weaver-core/particle-transformer/datasets/JetClass/Pythia/test_20M/TTBar_*.root" \
+    "/part-vol-3/weaver-core/particle-transformer/datasets/JetClass/Pythia/test_20M/ZJetsToNuNu_*.root" \
     --data-config data/JetClass/JetClass_${FEATURE_TYPE}.yaml --network-config $modelopts \
     --model-prefix training/JetClass/${SAMPLE_TYPE}/${FEATURE_TYPE}/${model}/{auto}${suffix}/net \
     $dataopts $batchopts \
