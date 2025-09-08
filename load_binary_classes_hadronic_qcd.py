@@ -742,6 +742,9 @@ def load_data(dataset_type='qg', start_index=None, batch_size=300):
                         'pf_mask': hadronic_data['pf_mask'][:batch_size],
                         'labels': hadronic_data['label'][:batch_size]
                         }
+            else:
+                print(f"Hadronic Top data file not found at {data_path}")
+                return None
             data_path = '/part-vol-3/weaver-core/particle_transformer/datasets/JetClass/Pythia/test_20M/ZJetsToNuNu_100.root'
             if os.path.exists(data_path):
                 print(f"Loading QCD data from {data_path}")
@@ -755,7 +758,7 @@ def load_data(dataset_type='qg', start_index=None, batch_size=300):
                         'pf_mask': qcd_data['pf_mask'][:batch_size],
                         'labels': qcd_data['label'][:batch_size]
                         }
-                    print(f"Hadronic data features shape: {hadronic_data['pf_points'].shape}\nQCD data features shape: {qcd_data['pf_points'].shape}")
+                    print(f"Hadronic data features shape: {hadronic_data['pf_features'].shape}\nQCD data features shape: {qcd_data['pf_features'].shape}")
                     data = {
                         'pf_points': [],
                         'pf_features': [], 
@@ -784,7 +787,10 @@ def load_data(dataset_type='qg', start_index=None, batch_size=300):
                         data['pf_vectors'] = np.concatenate((data['pf_vectors'][:],qcd_data['pf_vectors'][start_idx:end_idx]))
                         data['pf_mask'] = np.concatenate((data['pf_mask'][:],qcd_data['pf_mask'][start_idx:end_idx]))
                         data['labels'] = np.concatenate((data['labels'][:],qcd_data['labels'][start_idx:end_idx]))         
-            
+            else:
+                print(f"QCD data file not found at {data_path}")
+                return None
+            print(f"Final combined data features shape: {data['pf_features'].shape}")
             return data
         elif dataset_type == 'jck_pid':
             # Try to load JetClass data w/ PIDs
