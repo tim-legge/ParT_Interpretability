@@ -765,12 +765,18 @@ def load_data(dataset_type='qg', start_index=None, batch_size=300):
                     for num_segs in range(hadronic_data['labels'].shape[0]//10):
                         start_idx = num_segs * 10
                         end_idx = start_idx + 10
-
-                        data['pf_points'] = np.concatenate((data['pf_points'][:],hadronic_data['pf_points'][start_idx:end_idx]))
-                        data['pf_features'] = np.concatenate((data['pf_features'][:],hadronic_data['pf_features'][start_idx:end_idx]))
-                        data['pf_vectors'] = np.concatenate((data['pf_vectors'][:],hadronic_data['pf_vectors'][start_idx:end_idx]))
-                        data['pf_mask'] = np.concatenate((data['pf_mask'][:],hadronic_data['pf_mask'][start_idx:end_idx]))
-                        data['labels'] = np.concatenate((data['labels'][:],hadronic_data['labels'][start_idx:end_idx]))
+                        if num_segs == 0:
+                            data['pf_points'] = hadronic_data['pf_points'][start_idx:end_idx]
+                            data['pf_features'] = hadronic_data['pf_features'][start_idx:end_idx]
+                            data['pf_vectors'] = hadronic_data['pf_vectors'][start_idx:end_idx]
+                            data['pf_mask'] = hadronic_data['pf_mask'][start_idx:end_idx]
+                            data['labels'] = hadronic_data['labels'][start_idx:end_idx]
+                        else:
+                            data['pf_points'] = np.concatenate((data['pf_points'][:],hadronic_data['pf_points'][start_idx:end_idx]))
+                            data['pf_features'] = np.concatenate((data['pf_features'][:],hadronic_data['pf_features'][start_idx:end_idx]))
+                            data['pf_vectors'] = np.concatenate((data['pf_vectors'][:],hadronic_data['pf_vectors'][start_idx:end_idx]))
+                            data['pf_mask'] = np.concatenate((data['pf_mask'][:],hadronic_data['pf_mask'][start_idx:end_idx]))
+                            data['labels'] = np.concatenate((data['labels'][:],hadronic_data['labels'][start_idx:end_idx]))
 
                         data['pf_points'] = np.concatenate((data['pf_points'][:],qcd_data['pf_points'][start_idx:end_idx]))
                         data['pf_features'] = np.concatenate((data['pf_features'][:],qcd_data['pf_features'][start_idx:end_idx]))
