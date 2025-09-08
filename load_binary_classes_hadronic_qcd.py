@@ -847,7 +847,7 @@ print('Downloaded full JC dataset!')
 
 
 
-np.save('./jck_hadronic_qcd_pf_points', jck_hadronic_qcd_data['pf_points'])
+np.save('./jc_hadronic_qcd_pf_points', jck_hadronic_qcd_data['pf_points'])
 np.save('./jc_hadornic_qcd_pf_features', jck_hadronic_qcd_data['pf_features'])
 np.save('./jc_hadronic_qcd_pf_vectors', jck_hadronic_qcd_data['pf_vectors'])
 np.save('./jc_hadronic_qcd_pf_mask', jck_hadronic_qcd_data['pf_mask'])
