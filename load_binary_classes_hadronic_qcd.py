@@ -819,7 +819,8 @@ def load_data(dataset_type='qg', start_index=None, batch_size=300):
 #hls4ml_data = load_data('hls4ml', batch_size=2000)
 #jck_data = load_data('jck', batch_size=2000)
 #jck_pid_data = load_data('jck_pid', batch_size=2000)
-jc_full_data = load_data('jc_full', batch_size=500)
+#jc_full_data = load_data('jc_full', batch_size=500)
+jck_hadronic_qcd_data = load_data('jck_hadronic_qcd', batch_size=500)
 
 #print(f"TL sample data shapes:")
 #for k, v in tl_data.items():
@@ -833,10 +834,10 @@ print('Downloaded full JC dataset!')
 
 
 
-np.save('./jc_full_pf_points', jc_full_data['pf_points'])
-np.save('./jc_full_pf_features', jc_full_data['pf_features'])
-np.save('./jc_full_pf_vectors', jc_full_data['pf_vectors'])
-np.save('./jc_full_pf_mask', jc_full_data['pf_mask'])
-np.save('./jc_full_labels', jc_full_data['labels'])
+np.save('./jck_hadronic_qcd_pf_points', jck_hadronic_qcd_data['pf_points'])
+np.save('./jc_hadornic_qcd_pf_features', jck_hadronic_qcd_data['pf_features'])
+np.save('./jc_hadronic_qcd_pf_vectors', jck_hadronic_qcd_data['pf_vectors'])
+np.save('./jc_hadronic_qcd_pf_mask', jck_hadronic_qcd_data['pf_mask'])
+np.save('./jc_hadronic_qcd_labels', jck_hadronic_qcd_data['labels'])
 
 print('Saved full JC dataset arrays!')
