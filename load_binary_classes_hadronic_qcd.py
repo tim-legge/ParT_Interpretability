@@ -736,11 +736,11 @@ def load_data(dataset_type='qg', start_index=None, batch_size=300):
                     # Truncate to batch_size
                         #print(f"Truncating from {data['pf_points'].shape[0]} jets to {batch_size} jets")
                     hadronic_data = {
-                        'pf_points': data['pf_points'][:batch_size],
-                        'pf_features': data['pf_features'][:batch_size], 
-                        'pf_vectors': data['pf_vectors'][:batch_size],
-                        'pf_mask': data['pf_mask'][:batch_size],
-                        'labels': data['label'][:batch_size]
+                        'pf_points': hadronic_data['pf_points'][:batch_size],
+                        'pf_features': hadronic_data['pf_features'][:batch_size], 
+                        'pf_vectors': hadronic_data['pf_vectors'][:batch_size],
+                        'pf_mask': hadronic_data['pf_mask'][:batch_size],
+                        'labels': hadronic_data['label'][:batch_size]
                         }
             data_path = '/part-vol-3/weaver-core/particle_transformer/datasets/JetClass/Pythia/test_20M/ZJetsToNuNu_100.root'
             if os.path.exists(data_path):
@@ -748,6 +748,13 @@ def load_data(dataset_type='qg', start_index=None, batch_size=300):
                 with uproot.open(data_path)['tree'] as tree:
                     print('This part is working - QG')
                     qcd_data = build_features_and_labels_binary_jck(tree)
+                    qcd_data = {
+                        'pf_points': qcd_data['pf_points'][:batch_size],
+                        'pf_features': qcd_data['pf_features'][:batch_size], 
+                        'pf_vectors': qcd_data['pf_vectors'][:batch_size],
+                        'pf_mask': qcd_data['pf_mask'][:batch_size],
+                        'labels': qcd_data['label'][:batch_size]
+                        }
                     data = {
                         'pf_points': [],
                         'pf_features': [], 
