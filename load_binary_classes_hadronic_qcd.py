@@ -727,7 +727,7 @@ def load_data(dataset_type='qg', start_index=None, batch_size=300):
                         }
                     return data
         elif dataset_type == 'jck_hadronic_qcd':
-            data_path = '/part-vol-3/weaver-core/particle-transformer/datasets/JetClass/Pythia/test_20M/TTBar_100.root'
+            data_path = '/part-vol-3/weaver-core/particle_transformer/datasets/JetClass/Pythia/test_20M/TTBar_100.root'
             if os.path.exists(data_path):
                 print(f"Loading actual QuarkGluon data from {data_path}")
                 with uproot.open(data_path)['tree'] as tree:
@@ -742,7 +742,7 @@ def load_data(dataset_type='qg', start_index=None, batch_size=300):
                         'pf_mask': data['pf_mask'][:batch_size],
                         'labels': data['label'][:batch_size]
                         }
-            data_path = '/part-vol-3/weaver-core/particle-transformer/datasets/JetClass/Pythia/test_20M/ZJetsToNuNu_100.root'
+            data_path = '/part-vol-3/weaver-core/particle_transformer/datasets/JetClass/Pythia/test_20M/ZJetsToNuNu_100.root'
             if os.path.exists(data_path):
                 print(f"Loading actual QuarkGluon data from {data_path}")
                 with uproot.open(data_path)['tree'] as tree:
