@@ -854,10 +854,17 @@ print('Downloaded full JC dataset!')
 
 
 
-np.save('./jc_hadronic_qcd_pf_points', jck_hadronic_qcd_data['pf_points'])
-np.save('./jc_hadornic_qcd_pf_features', jck_hadronic_qcd_data['pf_features'])
-np.save('./jc_hadronic_qcd_pf_vectors', jck_hadronic_qcd_data['pf_vectors'])
-np.save('./jc_hadronic_qcd_pf_mask', jck_hadronic_qcd_data['pf_mask'])
-np.save('./jc_hadronic_qcd_labels', jck_hadronic_qcd_data['labels'])
+np.save('./jc_hadronic_qcd_pf_points', jck_hadronic_qcd_data['pf_points'][:])
+np.save('./jc_hadornic_qcd_pf_features', jck_hadronic_qcd_data['pf_features'][:])
+np.save('./jc_hadronic_qcd_pf_vectors', jck_hadronic_qcd_data['pf_vectors'][:])
+np.save('./jc_hadronic_qcd_pf_mask', jck_hadronic_qcd_data['pf_mask'][:])
+np.save('./jc_hadronic_qcd_labels', jck_hadronic_qcd_data['labels'][:])
+
+print('Checking dimensions of saved arrays:')
+print(f"  pf_points: {jck_hadronic_qcd_data['pf_points'][:].shape}")
+print(f"  pf_features: {jck_hadronic_qcd_data['pf_features'][:].shape}")
+print(f"  pf_vectors: {jck_hadronic_qcd_data['pf_vectors'][:].shape}")
+print(f"  pf_mask: {jck_hadronic_qcd_data['pf_mask'][:].shape}")
+print(f"  labels: {jck_hadronic_qcd_data['labels'][:].shape}")
 
 print('Saved full JC dataset arrays!')
