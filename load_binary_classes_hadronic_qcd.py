@@ -729,9 +729,9 @@ def load_data(dataset_type='qg', start_index=None, batch_size=300):
         elif dataset_type == 'jck_hadronic_qcd':
             data_path = '/part-vol-3/weaver-core/particle_transformer/datasets/JetClass/Pythia/test_20M/TTBar_100.root'
             if os.path.exists(data_path):
-                print(f"Loading actual QuarkGluon data from {data_path}")
+                print(f"Loading Hadronic Top data from {data_path}")
                 with uproot.open(data_path)['tree'] as tree:
-                    print('This part is working - QG')
+                    print('This part is working - Hadronic Top')
                     hadronic_data = build_features_and_labels_binary_jck(tree)
                     # Truncate to batch_size
                         #print(f"Truncating from {data['pf_points'].shape[0]} jets to {batch_size} jets")
@@ -744,9 +744,9 @@ def load_data(dataset_type='qg', start_index=None, batch_size=300):
                         }
             data_path = '/part-vol-3/weaver-core/particle_transformer/datasets/JetClass/Pythia/test_20M/ZJetsToNuNu_100.root'
             if os.path.exists(data_path):
-                print(f"Loading actual QuarkGluon data from {data_path}")
+                print(f"Loading QCD data from {data_path}")
                 with uproot.open(data_path)['tree'] as tree:
-                    print('This part is working - QG')
+                    print('This part is working - QCD')
                     qcd_data = build_features_and_labels_binary_jck(tree)
                     qcd_data = {
                         'pf_points': qcd_data['pf_points'][:batch_size],
@@ -755,6 +755,7 @@ def load_data(dataset_type='qg', start_index=None, batch_size=300):
                         'pf_mask': qcd_data['pf_mask'][:batch_size],
                         'labels': qcd_data['label'][:batch_size]
                         }
+                    print(f"Hadronic data features shape: {hadronic_data['pf_points'].shape}\nQCD data features shape: {qcd_data['pf_points'].shape}")
                     data = {
                         'pf_points': [],
                         'pf_features': [], 
