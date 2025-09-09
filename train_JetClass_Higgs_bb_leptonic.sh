@@ -46,7 +46,7 @@ else
     exit 1
 fi
 
-# "kin", "kinpid", "full", "kin_Hadronic_QCD"
+# "kin", "kinpid", "full", "kin_Hadronic_QCD", "kin_Higgs_bb_leptonic"
 FEATURE_TYPE=$2
 [[ -z ${FEATURE_TYPE} ]] && FEATURE_TYPE="full"
 
@@ -61,15 +61,15 @@ SAMPLE_TYPE=Pythia
 $CMD \
     --data-train "TTBar:/part-vol-3/weaver-core/particle_transformer/datasets/JetClass/Pythia/train_100M/HToBB_00[0-1].root" \
     "ZJetsToNuNu:/part-vol-3/weaver-core/particle_transformer/datasets/JetClass/Pythia/train_100M/HToWW2Q1L_00[0-1].root" \
-    --data-val "TTBar:/part-vol-3/weaver-core/particle_transformer/datasets/JetClass/Pythia/val_5M/HToBB_120.root" \
-    "ZJetsToNuNu:/part-vol-3/weaver-core/particle_transformer/datasets/JetClass/Pythia/val_5M/HToWW2Q1L_120.root" \
+    --data-val "TTBar:/part-vol-3/weaver-core/particle_transformer/datasets/JetClass/Pythia/val_5M/HToBB_12[0-1].root" \
+    "ZJetsToNuNu:/part-vol-3/weaver-core/particle_transformer/datasets/JetClass/Pythia/val_5M/HToWW2Q1L_12[0-1].root" \
     --data-test \
     "/part-vol-3/weaver-core/particle_transformer/datasets/JetClass/Pythia/test_20M/HToBB_100.root" \
     "/part-vol-3/weaver-core/particle_transformer/datasets/JetClass/Pythia/test_20M/HToWW2Q1L_100.root" \
     --data-config data/JetClass/JetClass_${FEATURE_TYPE}.yaml --network-config $modelopts \
     --model-prefix training/JetClass/${SAMPLE_TYPE}/${FEATURE_TYPE}/${model}/{auto}${suffix}/net \
     $dataopts $batchopts \
-    --samples-per-epoch ${samples_per_epoch} --samples-per-epoch-val ${samples_per_epoch_val} --num-epochs $epochs --gpus 0 \
+    --batch-size 64 --steps-per-epoch 18750 --steps-per-epoch 2500 --num-epochs $epochs --gpus 0 \
     --optimizer ranger --log logs/JetClass_${SAMPLE_TYPE}_${FEATURE_TYPE}_${model}_{auto}${suffix}.log --predict-output pred.root \
     --tensorboard JetClass_${SAMPLE_TYPE}_${FEATURE_TYPE}_${model}${suffix} \
     "${@:3}"
