@@ -898,7 +898,7 @@ def load_data(dataset_type='qg', start_index=None, batch_size=300):
                         'pf_mask': [],
                         'labels': []
                     }
-                    for num_segs in range(hadronic_data['labels'].shape[0]//10):
+                    for num_segs in range(batch_size//10):
                         start_idx = num_segs * 10
                         end_idx = start_idx + 10
                         if num_segs == 0:
