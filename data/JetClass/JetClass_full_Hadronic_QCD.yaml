@@ -12,6 +12,8 @@ new_variables:
    part_logptrel: np.log(part_pt/jet_pt)
    part_logerel: np.log(part_energy/jet_energy)
    part_deltaR: np.hypot(part_deta, part_dphi)
+   part_d0: np.tanh(part_d0val)
+   part_dz: np.tanh(part_dzval)
 
 preprocess:
   ### method: [manual, auto] - whether to use manually specified parameters for variable standardization
