@@ -46,11 +46,11 @@ else
     exit 1
 fi
 
-# "kin", "kinpid", "full", "kin_Hadronic_QCD"
+# "kin", "kinpid", "full", "kin_Hadronic_QCD", "full_Hadronic_QCD"
 FEATURE_TYPE=$2
 [[ -z ${FEATURE_TYPE} ]] && FEATURE_TYPE="full"
 
-if ! [[ "${FEATURE_TYPE}" =~ ^(full|kin|kinpid|kin_Hadronic_QCD)$ ]]; then
+if ! [[ "${FEATURE_TYPE}" =~ ^(full|kin|kinpid|kin_Hadronic_QCD|full_Hadronic_QCD)$ ]]; then
     echo "Invalid feature type ${FEATURE_TYPE}!"
     exit 1
 fi
