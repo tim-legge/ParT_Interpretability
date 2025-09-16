@@ -102,7 +102,7 @@ def build_features_and_labels_tl(tree, transform_features=True):
 
     return out
 
-def get_toplandscape_features(dir_path='/part-vol-3/timlegge-ParT-trained/tl_dataset/',
+def get_tl_features(dir_path='/part-vol-3/timlegge-ParT-trained/tl_dataset/',
                           counter_path='/part-vol-3/timlegge-ParT-trained/collect_tl_features_counter.txt', tree_name='tree', batch_size=2000):
     assert os.path.exists(dir_path), f"Directory {dir_path} does not exist."
     print("Creating a counter file outside of the directory if it doesn't exist.")
@@ -117,7 +117,7 @@ def get_toplandscape_features(dir_path='/part-vol-3/timlegge-ParT-trained/tl_dat
             continue
         if i==0:
             print("Reading first file in the directory:", file)
-        if file.endswith('.root'):
+        if file.endswith('.root') and 'train' in file:
             file_path = os.path.join(dir_path, file)
             with uproot.open(file_path) as f:
                 tree = f[tree_name]
@@ -130,11 +130,11 @@ def get_toplandscape_features(dir_path='/part-vol-3/timlegge-ParT-trained/tl_dat
                             'labels': data['label'][:batch_size]
                         }
                 for key, item in data.items():
-                    np.save(f"./data_from_train/{key}_{i}.npy", data[key])           
+                    np.save(f"./data_from_tl_train/{key}_{i}.npy", data[key])           
             counter += 1
             with open(counter_path, "w") as f:
                 f.write(str(counter))
             print(f"Processed file {i+1}: {file}")
     print("All files have been processed.")
 if __name__ == "__main__":
-    get_jetclass_features()
+    get_tl_features()
