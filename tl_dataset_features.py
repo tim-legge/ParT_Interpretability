@@ -116,7 +116,7 @@ def get_tl_features(dir_path='/part-vol-3/timlegge-ParT-trained/tl_dataset/TopLa
         print("Reading file in directory:", file)
         if file.endswith('.root') and 'train' in file:
             file_path = os.path.join(dir_path, file)
-            while counter < 2500:
+            while counter < 500:
                 print(f"Processing segment {counter} from file {file}")
                 with uproot.open(file_path) as f:
                     tree = f[tree_name]
