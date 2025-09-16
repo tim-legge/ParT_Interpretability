@@ -112,29 +112,28 @@ def get_tl_features(dir_path='/part-vol-3/timlegge-ParT-trained/tl_dataset/TopLa
     with open(counter_path, "r") as f:
             counter = int(f.read())
     print(f'Beginning on file number {counter}')
-    for i, file in enumerate(sorted(os.listdir(dir_path))):
-        if i==0:
-            print("Reading first file in the directory:", file)
-        while counter < 2500:
-            if file.endswith('.root') and 'train' in file:
-                file_path = os.path.join(dir_path, file)
-                while True:
-                    with uproot.open(file_path) as f:
-                        tree = f[tree_name]
-                        data = build_features_and_labels_tl(tree)
-                        data = {
-                                'pf_points': data['pf_points'][batch_size*counter:batch_size*(counter+1)],
-                                'pf_features': data['pf_features'][batch_size*counter:batch_size*(counter+1)],
-                                'pf_vectors': data['pf_vectors'][batch_size*counter:batch_size*(counter+1)],
-                                'pf_mask': data['pf_mask'][batch_size*counter:batch_size*(counter+1)],
-                                'labels': data['label'][batch_size*counter:batch_size*(counter+1)]
+    for i, file in enumerate(sorted(os.listdir(dir_path))):    
+        print("Reading file in directory:", file)
+        if file.endswith('.root') and 'train' in file:
+            file_path = os.path.join(dir_path, file)
+            while counter < 2500:
+                print(f"Processing segment {counter} from file {file}")
+                with uproot.open(file_path) as f:
+                    tree = f[tree_name]
+                    data = build_features_and_labels_tl(tree)
+                    data = {
+                            'pf_points': data['pf_points'][batch_size*counter:batch_size*(counter+1)],
+                            'pf_features': data['pf_features'][batch_size*counter:batch_size*(counter+1)],
+                            'pf_vectors': data['pf_vectors'][batch_size*counter:batch_size*(counter+1)],
+                            'pf_mask': data['pf_mask'][batch_size*counter:batch_size*(counter+1)],
+                            'labels': data['label'][batch_size*counter:batch_size*(counter+1)]
                             }
-                        for key, item in data.items():
-                            np.save(f"/part-vol-3/timlegge-ParT-trained/data_from_tl_train/{key}_{counter}.npy", data[key])
-                    counter += 1
-                    with open(counter_path, "w") as f:
-                        f.write(str(counter))
-                    print(f"Processed segment {counter-1}, updated counter to {counter}")      
+                    for key, item in data.items():
+                        np.save(f"/part-vol-3/timlegge-ParT-trained/data_from_tl_train/{key}_{counter}.npy", data[key])
+                counter += 1
+                with open(counter_path, "w") as f:
+                    f.write(str(counter))
+                print(f"Processed segment {counter-1}, updated counter to {counter}")      
     print("All files have been processed.")
 if __name__ == "__main__":
     get_tl_features()
