@@ -117,18 +117,23 @@ def get_tl_features(dir_path='/part-vol-3/timlegge-ParT-trained/tl_dataset/TopLa
             print("Reading first file in the directory:", file)
         if file.endswith('.root') and 'train' in file:
             file_path = os.path.join(dir_path, file)
-            with uproot.open(file_path) as f:
-                tree = f[tree_name]
-                data = build_features_and_labels_tl(tree)
-                data = {
-                            'pf_points': data['pf_points'][:batch_size],
-                            'pf_features': data['pf_features'][:batch_size],
-                            'pf_vectors': data['pf_vectors'][:batch_size],
-                            'pf_mask': data['pf_mask'][:batch_size],
-                            'labels': data['label'][:batch_size]
+            while True:
+                with uproot.open(file_path) as f:
+                    tree = f[tree_name]
+                    data = build_features_and_labels_tl(tree)
+                    data = {
+                            'pf_points': data['pf_points'][batch_size*counter:batch_size*(counter+1)],
+                            'pf_features': data['pf_features'][batch_size*counter:batch_size*(counter+1)],
+                            'pf_vectors': data['pf_vectors'][batch_size*counter:batch_size*(counter+1)],
+                            'pf_mask': data['pf_mask'][batch_size*counter:batch_size*(counter+1)],
+                            'labels': data['label'][batch_size*counter:batch_size*(counter+1)]
                         }
-                for key, item in data.items():
-                    np.save(f"./data_from_tl_train/{key}_{i}.npy", data[key])           
+                    for key, item in data.items():
+                        np.save(f"./data_from_tl_train/{key}_{i}.npy", data[key])
+                counter += 1
+                with open(counter_path, "w") as f:
+                    f.write(str(counter))
+                print(f"Processed segment {i}, updated counter to {counter}")      
     print("All files have been processed.")
 if __name__ == "__main__":
     get_tl_features()
