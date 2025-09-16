@@ -113,8 +113,6 @@ def get_tl_features(dir_path='/part-vol-3/timlegge-ParT-trained/tl_dataset/',
             counter = int(f.read())
     print(f'Beginning on file number {counter}')
     for i, file in enumerate(sorted(os.listdir(dir_path))):
-        if i < counter:
-            continue
         if i==0:
             print("Reading first file in the directory:", file)
         if file.endswith('.root') and 'train' in file:
@@ -131,10 +129,6 @@ def get_tl_features(dir_path='/part-vol-3/timlegge-ParT-trained/tl_dataset/',
                         }
                 for key, item in data.items():
                     np.save(f"./data_from_tl_train/{key}_{i}.npy", data[key])           
-            counter += 1
-            with open(counter_path, "w") as f:
-                f.write(str(counter))
-            print(f"Processed file {i+1}: {file}")
     print("All files have been processed.")
 if __name__ == "__main__":
     get_tl_features()
