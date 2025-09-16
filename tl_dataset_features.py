@@ -102,7 +102,7 @@ def build_features_and_labels_tl(tree, transform_features=True):
 
     return out
 
-def get_tl_features(dir_path='/part-vol-3/timlegge-ParT-trained/tl_dataset/',
+def get_tl_features(dir_path='/part-vol-3/timlegge-ParT-trained/tl_dataset/TopLandscape/',
                           counter_path='/part-vol-3/timlegge-ParT-trained/collect_tl_features_counter.txt', tree_name='tree', batch_size=2000):
     assert os.path.exists(dir_path), f"Directory {dir_path} does not exist."
     print("Creating a counter file outside of the directory if it doesn't exist.")
