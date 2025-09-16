@@ -105,7 +105,7 @@ def get_jetclass_features(dir_path='/part-vol-3/weaver-core/particle_transformer
         with open(counter_path, "w") as f:
             f.write("0")
     with open(counter_path, "r") as f:
-            counter = int(f.read().strip())
+            counter = int(f.read())
     print(f'Beginning on file number {counter}')
     for i, file in enumerate(sorted(os.listdir(dir_path))):
         if i < counter:
