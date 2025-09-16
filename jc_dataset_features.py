@@ -102,7 +102,7 @@ def get_jetclass_features(dir_path='/part-vol-3/weaver-core/particle_transformer
     assert os.path.exists(dir_path), f"Directory {dir_path} does not exist."
     print("Creating a counter file outside of the directory if it doesn't exist.")
     if not os.path.exists(counter_path):
-        with open(dir_path+"/collect_features_counter.txt", "w") as f:
+        with open(counter_path, "w") as f:
             f.write("0")
     with open(counter_path, "r") as f:
             counter = int(f.read().strip())
@@ -132,5 +132,5 @@ def get_jetclass_features(dir_path='/part-vol-3/weaver-core/particle_transformer
                 f.write(str(counter))
             print(f"Processed file {i+1}: {file}")
     print("All files have been processed.")
-
-get_jetclass_features()
+if __name__ == "__main__":
+    get_jetclass_features()
