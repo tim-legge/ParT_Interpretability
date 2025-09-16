@@ -7,4 +7,4 @@ import os
 #merge_root("/datasets/qg_dataset/QuarkGluon/qg_test_file.root",
 #           ["./datasets/qg_dataset/QuarkGluon/qg_test_file_0.root", "./datasets/qg_dataset/QuarkGluon/qg_test_file_1.root"], progress_bar=True, force=True)
 
-parquet_to_root("./datasets/tl_dataset/TopLandscape/tl_train_file.root", "./datasets/tl_dataset/TopLandscape/train_file.parquet", name="tree", force=True)
+parquet_to_root("/part-vol-3/timlegge-ParT-trained/tl_dataset/TopLandscape/tl_train_file.root", "/part-vol-3/timlegge-ParT-trained/tl_dataset/TopLandscape/train_file.parquet", name="tree", force=True)
