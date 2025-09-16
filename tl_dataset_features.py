@@ -129,7 +129,7 @@ def get_tl_features(dir_path='/part-vol-3/timlegge-ParT-trained/tl_dataset/TopLa
                             'labels': data['label'][batch_size*counter:batch_size*(counter+1)]
                         }
                     for key, item in data.items():
-                        np.save(f"./data_from_tl_train/{key}_{i}.npy", data[key])
+                        np.save(f"/part-vol-3/timlegge-ParT-trained/data_from_tl_train/{key}_{i}.npy", data[key])
                 counter += 1
                 with open(counter_path, "w") as f:
                     f.write(str(counter))
