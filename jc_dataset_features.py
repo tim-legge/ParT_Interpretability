@@ -3,22 +3,7 @@
 import numpy as np
 import awkward as ak
 import uproot
-import vector
-vector.register_awkward()
 import os
-import shutil
-import zipfile
-import tarfile
-import urllib
-import requests
-from tqdm import tqdm
-import torch
-#from weaver.nn.model.ParticleTransformer import ParticleTransformer
-#from weaver.utils.logger import _logger
-import torch.optim as optim
-#from EfficientParticleTransformer import EfficientParticleTransformer
-import matplotlib.pyplot as plt
-from matplotlib.collections import LineCollection
 from TL_Inference_tops_only import build_features_and_labels_tl
 from JC_full_inference import _clip, _pad, build_features_and_labels
 
