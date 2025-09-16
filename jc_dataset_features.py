@@ -51,7 +51,7 @@ def get_jetclass_features(dir_path='/part-vol-3/weaver-core/particle_transformer
                         }
                 for key, item in data.items():
                     data[key] = data[key].to_numpy()
-                    np.save(counter_path + f"../{key}_{i}.npy", data[key])           
+                    np.save(counter_path + f"./data_from_train/{key}_{i}.npy", data[key])           
             counter += 1
             with open(counter_path, "w") as f:
                 f.write(str(counter))
