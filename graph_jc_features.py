@@ -117,7 +117,7 @@ def compile_histograms(data_dir, output_dir, feats_dict=None, vecs_dict=None, la
         print(f"Starting histogram collection from batch {hist_counter}")
         feats_hists = None
         vecs_hists = None
-        for feat_file, mask_file, label_file, vec_file in zip(feature_files, mask_files, label_files, vector_files)[hist_counter*20:(hist_counter+1)*20]:
+        for feat_file, mask_file, label_file, vec_file in list(zip(feature_files, mask_files, label_files, vector_files))[hist_counter*20:(hist_counter+1)*20]:
             feats = np.load(os.path.join(data_dir, feat_file))
             masks = np.load(os.path.join(data_dir, mask_file))
             labels = np.load(os.path.join(data_dir, label_file))
