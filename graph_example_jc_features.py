@@ -117,51 +117,22 @@ print("Features, vectors, and masks loaded.")
 
 masked_feats, masked_vecs = mask_out(features, vectors, masks)
 
-feats_dict = {
-    'part_pt_log': [],
-    'part_e_log': [],
-    'part_log_ptrel': [],
-    'part_log_erel': [],
-    'part_deltaR': [],
-    'part_charge': [],
-    'part_isChargedHadron': [],
-    'part_isNeutralHadron': [],
-    'part_isPhoton': [],
-    'part_isElectron': [],
-    'part_isMuon': [],
-    'part_d0': [],
-    'part_d0err': [],
-    'part_dz': [],
-    'part_dzerr': [],
-    'part_deta': [],
-    'part_dphi': [],
-}
+for key, item in features.items():
+    item = masked_feats[key]
 
-vecs_dict = {
-    'part_px': [],
-    'part_py': [],
-    'part_pz': [],
-    'part_energy': [],
-}
-
-for jet in masked_feats[:]:
-    for idx, key in enumerate(feats_dict.keys()):
-        feats_dict[key].extend(jet[idx])
-
-for jet in masked_vecs[:]:
-    for idx, key in enumerate(vecs_dict.keys()):
-        vecs_dict[key].extend(jet[idx])
+for key, item in vectors.items():
+    item = masked_vecs[key] 
 
 print("Features and vectors sorted.")
 
 # before plotting, get maximum and minimum values for each feature
 feat_ranges = {}
-for key in feats_dict.keys():
-    feat_ranges[key] = (np.min(feats_dict[key]), np.max(feats_dict[key]))
+for key in features.keys():
+    feat_ranges[key] = (np.min(features[key]), np.max(features[key]))
 
 vec_ranges = {}
-for key in vecs_dict.keys():
-    vec_ranges[key] = (np.min(vecs_dict[key]), np.max(vecs_dict[key]))
+for key in vectors.keys():
+    vec_ranges[key] = (np.min(vectors[key]), np.max(vectors[key]))
 
 if os.path.exists(stem+'ranges.txt'):
     with open(stem+'ranges.txt', 'w') as f:
@@ -175,8 +146,19 @@ if os.path.exists(stem+'ranges.txt'):
 print("Feature and vector ranges saved.")
 
 # now plot histograms for each feature
-for key, values in feats_dict.items():
+for key, values in features.items():
     hist, bin_edges = np.histogram(values, bins=50, range=feat_ranges[key])
+    fig, ax = plt.subplots()
+    ax.step(bin_edges, hist, where='pre')
+    ax.set_title(f'{key} distribution - JetClass 100k Sample')
+    ax.set_xlabel(key)
+    ax.set_ylabel('Counts')
+    plt.savefig(stem+f'{key}_hist.png')
+    plt.close()
+
+# for each vector
+for key, values in vectors.items():
+    hist, bin_edges = np.histogram(values, bins=50, range=vec_ranges[key])
     fig, ax = plt.subplots()
     ax.step(bin_edges, hist, where='pre')
     ax.set_title(f'{key} distribution - JetClass 100k Sample')
