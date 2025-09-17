@@ -116,7 +116,8 @@ with uproot.open(datapath) as f:
 print("Features, vectors, and masks loaded.")
 
 print(masks[0])
-print(np.sum(masks[0]))
+num_particles = [np.sum(mask[i].astype('int')) for i in range(mask.shape[0])]
+print(num_particles[:10])
 
 masked_feats, masked_vecs = mask_out(features, vectors, masks)
 
