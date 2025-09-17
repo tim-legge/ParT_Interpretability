@@ -121,6 +121,10 @@ print(num_particles[:10])
 
 masked_feats, masked_vecs = mask_out(features, vectors, masks)
 
+print(f"Shapes of first 10 items in masked_feats and masked_vecs:")
+for i in range(10):
+    print(f"masked_feats[{i}]: {masked_feats[i].shape}, masked_vecs[{i}]: {masked_vecs[i].shape}")
+
 feats_dict = {
     'part_pt_log': [],
     'part_e_log': [],
