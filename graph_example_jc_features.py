@@ -183,7 +183,7 @@ print("Feature and vector ranges saved.")
 for key, values in feats_dict.items():
     hist, bin_edges = np.histogram(values, bins=50, range=feat_ranges[key])
     fig, ax = plt.subplots()
-    ax.step(bin_edges, hist, where='pre')
+    ax.step(bin_edges[:-1], hist, where='pre')
     ax.set_title(f'{key} distribution - JetClass 100k Sample')
     ax.set_xlabel(key)
     ax.set_ylabel('Counts')
