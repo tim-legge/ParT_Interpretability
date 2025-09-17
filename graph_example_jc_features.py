@@ -109,19 +109,47 @@ datapath = '/part-vol-3/timlegge-ParT-trained/JetClass_example_100k.root'
 with uproot.open(datapath) as f:
     tree = f['tree']
     data = build_features_and_labels(tree)
-    features = data['pf_features'][1000:2000]
-    vectors = data['pf_vectors'][1000:2000]
-    masks = data['pf_mask'][1000:2000]
+    features = data['pf_features'][:2000]
+    vectors = data['pf_vectors'][:2000]
+    masks = data['pf_mask'][:2000]
 
 print("Features, vectors, and masks loaded.")
 
 masked_feats, masked_vecs = mask_out(features, vectors, masks)
 
-for key, item in features.items():
-    item = masked_feats[key]
+feats_dict = {
+    'part_pt_log': [],
+    'part_e_log': [],
+    'part_log_ptrel': [],
+    'part_log_erel': [],
+    'part_deltaR': [],
+    'part_charge': [],
+    'part_isChargedHadron': [],
+    'part_isNeutralHadron': [],
+    'part_isPhoton': [],
+    'part_isElectron': [],
+    'part_isMuon': [],
+    'part_d0': [],
+    'part_d0err': [],
+    'part_dz': [],
+    'part_dzerr': [],
+    'part_deta': [],
+    'part_dphi': [],
+}
 
-for key, item in vectors.items():
-    item = masked_vecs[key] 
+vecs_dict = {
+    'part_px': [],
+    'part_py': [],
+    'part_pz': [],
+    'part_energy': [],
+}
+for jet in masked_feats:
+    for idx, key in enumerate(feats_dict.keys()):
+        feats_dict[key].extend(jet[idx])
+
+for jet in masked_vecs:
+    for idx, key in enumerate(vecs_dict.keys()):
+        vecs_dict[key].extend(jet[idx])
 
 print("Features and vectors sorted.")
 
