@@ -155,12 +155,12 @@ print("Features and vectors sorted.")
 
 # before plotting, get maximum and minimum values for each feature
 feat_ranges = {}
-for key in features.keys():
-    feat_ranges[key] = (np.min(features[key]), np.max(features[key]))
+for key in feats_dict.keys():
+    feat_ranges[key] = (np.min(feats_dict[key]), np.max(feats_dict[key]))
 
 vec_ranges = {}
-for key in vectors.keys():
-    vec_ranges[key] = (np.min(vectors[key]), np.max(vectors[key]))
+for key in vecs_dict.keys():
+    vec_ranges[key] = (np.min(vecs_dict[key]), np.max(vecs_dict[key]))
 
 if os.path.exists(stem+'ranges.txt'):
     with open(stem+'ranges.txt', 'w') as f:
@@ -174,7 +174,7 @@ if os.path.exists(stem+'ranges.txt'):
 print("Feature and vector ranges saved.")
 
 # now plot histograms for each feature
-for key, values in features.items():
+for key, values in feats_dict.items():
     hist, bin_edges = np.histogram(values, bins=50, range=feat_ranges[key])
     fig, ax = plt.subplots()
     ax.step(bin_edges, hist, where='pre')
@@ -185,7 +185,7 @@ for key, values in features.items():
     plt.close()
 
 # for each vector
-for key, values in vectors.items():
+for key, values in vecs_dict.items():
     hist, bin_edges = np.histogram(values, bins=50, range=vec_ranges[key])
     fig, ax = plt.subplots()
     ax.step(bin_edges, hist, where='pre')
