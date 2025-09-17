@@ -187,6 +187,7 @@ for key, values in feats_dict.items():
     ax.set_title(f'{key} distribution - JetClass 100k Sample')
     ax.set_xlabel(key)
     ax.set_ylabel('Counts')
+    ax.set_yscale('log')
     plt.savefig(stem+f'{key}_hist.png')
     plt.close()
 
@@ -198,6 +199,7 @@ for key, values in vecs_dict.items():
     ax.set_title(f'{key} distribution - JetClass 100k Sample')
     ax.set_xlabel(key)
     ax.set_ylabel('Counts')
+    ax.set_yscale('log')
     plt.savefig(stem+f'{key}_hist.png')
     plt.close()
 

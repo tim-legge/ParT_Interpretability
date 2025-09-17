@@ -1,0 +1,24 @@
+Feature Ranges:
+part_pt_log: min=-2.134411096572876, max=3.040863275527954
+part_e_log: min=-1.8602837324142456, max=3.294551372528076
+part_log_ptrel: min=-2.1356332302093506, max=2.842426061630249
+part_log_erel: min=-1.846114993095398, max=2.8198094367980957
+part_deltaR: min=-0.7944933772087097, max=9.278985023498535
+part_charge: min=-1.0, max=1.0
+part_isChargedHadron: min=0.0, max=1.0
+part_isNeutralHadron: min=0.0, max=1.0
+part_isPhoton: min=0.0, max=1.0
+part_isElectron: min=0.0, max=1.0
+part_isMuon: min=0.0, max=1.0
+part_d0: min=-1.0, max=1.0
+part_d0err: min=0.0, max=0.6046000123023987
+part_dz: min=-1.0, max=1.0
+part_dzerr: min=0.0, max=1.0
+part_deta: min=-2.513540744781494, max=2.1361238956451416
+part_dphi: min=-0.78526771068573, max=0.7780249714851379
+
+Vector Ranges:
+part_px: min=-410.8054504394531, max=341.4132080078125
+part_py: min=-281.3826599121094, max=281.97003173828125
+part_pz: min=-541.4693603515625, max=768.4527587890625
+part_energy: min=0.0, max=817.7051391601562
