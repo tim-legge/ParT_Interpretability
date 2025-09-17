@@ -71,8 +71,8 @@ def build_features_and_labels(tree, transform_features=True):
 
     return out
 
-if not os.path.exists('/part-vol-3/timlegge-ParT-trained/example_jc_feat_dists/'):
-    os.makedirs('/part-vol-3/timlegge-ParT-trained/example_jc_feat_dists/')
+#if not os.path.exists('/part-vol-3/timlegge-ParT-trained/example_jc_feat_dists/'):
+#    os.makedirs('/part-vol-3/timlegge-ParT-trained/example_jc_feat_dists/')
 
 datapath = '/part-vol-3/timlegge-ParT-trained/JetClass_example_100k.root'
 with uproot.open(datapath) as f:
@@ -81,6 +81,8 @@ with uproot.open(datapath) as f:
     features = data['pf_features'][:10000]
     vectors = data['pf_vectors'][:10000]
     masks = data['pf_mask'][:10000]
+
+print("Features, vectors, and masks loaded.")
 
 masked_feats, masked_vecs = mask_out(features, vectors, masks)
 
@@ -118,6 +120,8 @@ for jet in masked_vecs:
     for idx, key in enumerate(vecs_dict.keys()):
         vecs_dict[key].extend(jet[idx])
 
+print("Features and vectors sorted.")
+
 # before plotting, get maximum and minimum values for each feature
 feat_ranges = {}
 for key in feats_dict.keys():
@@ -136,6 +140,8 @@ if os.path.exists(stem+'ranges.txt'):
         for key, (min_val, max_val) in vec_ranges.items():
             f.write(f"{key}: min={min_val}, max={max_val}\n")
 
+print("Feature and vector ranges saved.")
+
 # now plot histograms for each feature
 for key, values in feats_dict.items():
     hist, bin_edges = np.histogram(values, bins=50, range=feat_ranges[key])
@@ -146,3 +152,5 @@ for key, values in feats_dict.items():
     ax.set_ylabel('Counts')
     plt.savefig(stem+f'{key}_hist.png')
     plt.close()
+
+print("Feature distributions saved.")
