@@ -10,14 +10,14 @@ stem = '/part-vol-3/timlegge-ParT-trained/example_jc_feat_dists/'
 def _clip(a, min_value, max_value):
     assert isinstance(a, ak.Array), "expected awkward array"
     main_list = []
-    print("This line is ok - #4")
+    #print("This line is ok - #4")
     for i in range(len(a)):
-        if np.random.rand() < 0.01:
-            print(f"This line is ok - #7, i={i}")
+        #if np.random.rand() < 0.01:
+        #    print(f"This line is ok - #7, i={i}")
         sublist = ak.to_list(a[i])
         sublist = np.clip(sublist, min_value, max_value)
         main_list.append(sublist)
-    print("This line is ok - #9")
+    #print("This line is ok - #9")
     return ak.from_iter(main_list)
 
 def _pad(a, maxlen=128, value=0, dtype='float32'):
@@ -143,11 +143,11 @@ vecs_dict = {
     'part_energy': [],
 }
 
-for jet in masked_feats:
+for jet in masked_feats[:]:
     for idx, key in enumerate(feats_dict.keys()):
         feats_dict[key].extend(jet[idx])
 
-for jet in masked_vecs:
+for jet in masked_vecs[:]:
     for idx, key in enumerate(vecs_dict.keys()):
         vecs_dict[key].extend(jet[idx])
 
