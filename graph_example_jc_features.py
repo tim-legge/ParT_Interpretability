@@ -153,7 +153,11 @@ for jet_idx, jet in enumerate(masked_feats):
     for idx, key in enumerate(feats_dict.keys()):
         if idx >= 13 and np.random.rand() < 0.01:
             print(f'jet_idx: {jet_idx}, idx: {idx}, key: {key}')
-        feats_dict[feats_idx_map[idx]].extend(masked_feats[jet_idx][idx].flatten().tolist())
+        try:
+            feats_dict[feats_idx_map[idx]].extend(masked_feats[jet_idx][idx].flatten().tolist())
+        except IndexError as e:
+            print(f"IndexError for jet_idx {jet_idx}, idx {idx}, key {key}: {e}")
+            continue
 
 for jet in masked_vecs:
      for idx, key in enumerate(vecs_dict.keys()):
