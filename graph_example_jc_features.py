@@ -154,7 +154,9 @@ for jet_idx, jet in enumerate(masked_feats):
         if idx >= 13 and np.random.rand() < 0.01:
             print(f'jet_idx: {jet_idx}, idx: {idx}, key: {key}')
         try:
-            feats_dict[feats_idx_map[idx]].extend(masked_feats[jet_idx][idx].flatten().tolist())
+            feats_dict[key].extend(masked_feats[jet_idx][idx].flatten().tolist())
+            # we need to check that padding is actually being removed
+            print(f'Num of particles: {len(masked_feats[jet_idx][idx])} for jet_idx {jet_idx}, idx {idx}, key {key}')
         except IndexError as e:
             print(f"IndexError for jet_idx {jet_idx}, idx {idx}, key {key}: {e}")
             continue
@@ -162,7 +164,7 @@ for jet_idx, jet in enumerate(masked_feats):
 for jet_idx, jet in enumerate(masked_vecs):
      for idx, key in enumerate(vecs_dict.keys()):
         try:
-            vecs_dict[vecs_idx_map[idx]].extend(masked_feats[jet_idx][idx].flatten().tolist())
+            vecs_dict[key].extend(masked_feats[jet_idx][idx].flatten().tolist())
         except IndexError as e:
             print(f"IndexError for jet_idx {jet_idx}, idx {idx}, key {key}: {e}")
             continue
