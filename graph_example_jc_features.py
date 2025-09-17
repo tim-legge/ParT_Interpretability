@@ -149,13 +149,13 @@ print(f'vecs_idx_map: {vecs_idx_map}')
 
 print(len(masked_feats), len(masked_vecs))
 
-for idx, feature in enumerate(masked_feats):
-    feats_dict[feats_idx_map[str(idx)]].extend(feature.flatten().tolist())
+for jet in masked_feats:
+     for idx, key in enumerate(feats_dict.keys()):
+         feats_dict[feats_idx_map[str(idx)]].extend(jet[idx].flatten().tolist())
 
-
-for idx, vector in enumerate(masked_vecs):
-    vecs_dict[vecs_idx_map[str(idx)]].extend(vector.flatten().tolist())
-
+for jet in masked_vecs:
+     for idx, key in enumerate(vecs_dict.keys()):
+         vecs_dict[vecs_idx_map[str(idx)]].extend(jet[idx].flatten().tolist())
 
 print("Features and vectors sorted.")
 
