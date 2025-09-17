@@ -125,7 +125,7 @@ def compile_histograms(data_dir, output_dir, feats_dict=None, vecs_dict=None, la
 
             # determine label
             if labelstype == 'jc':
-                if np.argmax(labels[0], axis=1) == np.argmax(labels[-1], axis=1):
+                if np.argmax(labels[0]) == np.argmax(labels[-1]):
                     label = np.argmax(labels[0], axis=1)
                     label_name = labels_list[label]
                 else:
