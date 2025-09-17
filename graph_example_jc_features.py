@@ -115,7 +115,7 @@ with uproot.open(datapath) as f:
 
 print("Features, vectors, and masks loaded.")
 
-print(mask[0])
+print(masks[0])
 
 masked_feats, masked_vecs = mask_out(features, vectors, masks)
 
