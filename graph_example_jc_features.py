@@ -136,7 +136,7 @@ feats_dict = {
     'part_deta': [],
     'part_dphi': [],
 }
-feats_idx_map = {str(i): key for i, key in enumerate(feats_dict.items())}
+feats_idx_map = {str(i): key for i, key in enumerate(feats_dict.keys())}
 print(f'feats_idx_map: {feats_idx_map}')
 vecs_dict = {
     'part_px': [],
@@ -144,7 +144,7 @@ vecs_dict = {
     'part_pz': [],
     'part_energy': [],
 }
-vecs_idx_map = {str(i): key for i, key in enumerate(vecs_dict.items())}
+vecs_idx_map = {str(i): key for i, key in enumerate(vecs_dict.keys())}
 print(f'vecs_idx_map: {vecs_idx_map}')
 
 
