@@ -136,6 +136,7 @@ feats_dict = {
     'part_deta': [],
     'part_dphi': [],
 }
+feats_idx_map = {str(i): key for i, key in enumerate(feats_dict.items())}
 
 vecs_dict = {
     'part_px': [],
@@ -143,14 +144,15 @@ vecs_dict = {
     'part_pz': [],
     'part_energy': [],
 }
-
+vecs_idx_map = {str(i): key for i, key in enumerate(vecs_dict.items())}
 
 for idx, feature in enumerate(masked_feats):
-    feats_dict[feats_dict.keys()[idx]].extend(feature.flatten().tolist())
+    feats_dict[feats_idx_map[str(idx)]].extend(feature.flatten().tolist())
 
-for vector in masked_vecs:
-    for idx, key in enumerate(vecs_dict.keys()):
-        vecs_dict[vecs_dict.keys()[idx]].extend(vector.flatten().tolist())
+
+for idx, vector in enumerate(masked_vecs):
+    vecs_dict[feats_idx_map[str(idx)]].extend(vector.flatten().tolist())
+
 
 print("Features and vectors sorted.")
 
