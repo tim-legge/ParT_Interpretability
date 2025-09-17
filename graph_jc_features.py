@@ -5,9 +5,13 @@ import numpy as np
 import matplotlib
 
 def mask_out(feats, vectors, mask):
-    num_particles = [np.sum(mask[i].astype('int')) for i in range(mask.shape[0])]
-    masked_feats = [feats[i][:][:num_particles[i]] for i in range(feats.shape[0])]
-    masked_vecs = [vectors[i][:][:num_particles[i]] for i in range(vectors.shape[0])]
+    masked_feats = []
+    masked_vecs = []
+    #masked_feats, masked_vecs = mask_out(features, vectors, masks)
+    for jet_idx, jet in enumerate(feats):
+        masked_feats.append(jet[:, :np.sum(mask[jet_idx].astype('bool'))])
+    for jet_idx, jet in enumerate(vectors):
+        masked_vecs.append(jet[:, :np.sum(mask[jet_idx].astype('bool'))])
     
     return masked_feats, masked_vecs
 
