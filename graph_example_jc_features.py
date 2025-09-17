@@ -119,11 +119,15 @@ print(len(features), len(vectors), len(masks))
 print(features[0].shape, vectors[0].shape, masks[0].shape)
 #num_particles = [np.sum(masks[i].astype('bool')) for i in range(masks.shape[0])]
 #print(num_particles[:10])
-
+masked_feats = []
+masked_vecs = []
 #masked_feats, masked_vecs = mask_out(features, vectors, masks)
-
-masked_feats = [features[i][j][:][masks[0][i].astype('bool')] for i in range(len(features)), j in range(features[i].shape[0])]
-masked_vecs = [vectors[i][j][:][masks[0][i].astype('bool')] for i in range(len(vectors)), j in range(vectors[i].shape[0])]
+for jet_idx, jet in enumerate(features):
+    masked_feats.append(jet[:, :np.sum(masks[jet_idx].astype('bool'))])
+for jet_idx, jet in enumerate(vectors):
+    masked_vecs.append(jet[:, :np.sum(masks[jet_idx].astype('bool'))])
+#masked_feats = [features[i][j][:][masks[0][i].astype('bool')] for i, j in (range(len(features)), features[0].shape[0]-1)]
+#masked_vecs = [vectors[i][j][:][masks[0][i].astype('bool')] for i, j in (range(len(vectors)), vectors[0].shape[0]-1)]
 
 print(f"Shapes of first 10 items in masked_feats and masked_vecs:")
 for i in range(10):
