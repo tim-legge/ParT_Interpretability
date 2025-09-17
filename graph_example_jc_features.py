@@ -109,9 +109,9 @@ datapath = '/part-vol-3/timlegge-ParT-trained/JetClass_example_100k.root'
 with uproot.open(datapath) as f:
     tree = f['tree']
     data = build_features_and_labels(tree)
-    features = data['pf_features'][:2000]
-    vectors = data['pf_vectors'][:2000]
-    masks = data['pf_mask'][:2000]
+    features = data['pf_features'][:200]
+    vectors = data['pf_vectors'][:200]
+    masks = data['pf_mask'][:200]
 
 print("Features, vectors, and masks loaded.")
 
@@ -147,13 +147,14 @@ vecs_dict = {
 vecs_idx_map = {str(i): key for i, key in enumerate(vecs_dict.keys())}
 print(f'vecs_idx_map: {vecs_idx_map}')
 
+print(masked_feats.shape, masked_vecs.shape)
 
 for idx, feature in enumerate(masked_feats):
-    feats_dict[feats_idx_map[str(idx)]] = feats_dict[feats_idx_map[str(idx)]].extend(feature.flatten().tolist())
+    feats_dict[feats_idx_map[str(idx)]].extend(feature.flatten().tolist())
 
 
 for idx, vector in enumerate(masked_vecs):
-    vecs_dict[vecs_idx_map[str(idx)]] = vecs_dict[vecs_idx_map[str(idx)]].extend(vector.flatten().tolist())
+    vecs_dict[vecs_idx_map[str(idx)]].extend(vector.flatten().tolist())
 
 
 print("Features and vectors sorted.")
