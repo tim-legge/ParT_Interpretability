@@ -137,7 +137,7 @@ feats_dict = {
     'part_dphi': [],
 }
 feats_idx_map = {str(i): key for i, key in enumerate(feats_dict.items())}
-
+print(f'feats_idx_map: {feats_idx_map}')
 vecs_dict = {
     'part_px': [],
     'part_py': [],
@@ -145,6 +145,8 @@ vecs_dict = {
     'part_energy': [],
 }
 vecs_idx_map = {str(i): key for i, key in enumerate(vecs_dict.items())}
+print(f'vecs_idx_map: {vecs_idx_map}')
+
 
 for idx, feature in enumerate(masked_feats):
     feats_dict[feats_idx_map[str(idx)]] = feats_dict[feats_idx_map[str(idx)]].extend(feature.flatten().tolist())
