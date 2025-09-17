@@ -116,13 +116,13 @@ with uproot.open(datapath) as f:
 print("Features, vectors, and masks loaded.")
 
 print(masks[0])
-num_particles = [np.sum(masks[i].astype('int')) for i in range(masks.shape[0])]
+num_particles = [np.sum(masks[i].astype('bool')) for i in range(masks.shape[0])]
 print(num_particles[:10])
 
 #masked_feats, masked_vecs = mask_out(features, vectors, masks)
 
-masked_feats = [features[i][:][:num_particles[i]] for i in range(len(features))]
-masked_vecs = [vectors[i][:][:num_particles[i]] for i in range(len(vectors))]
+masked_feats = [features[i][:][num_particles[i]] for i in range(len(features))]
+masked_vecs = [vectors[i][:][num_particles[i]] for i in range(len(vectors))]
 
 print(f"Shapes of first 10 items in masked_feats and masked_vecs:")
 for i in range(10):
