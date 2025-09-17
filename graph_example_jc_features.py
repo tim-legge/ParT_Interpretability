@@ -159,9 +159,13 @@ for jet_idx, jet in enumerate(masked_feats):
             print(f"IndexError for jet_idx {jet_idx}, idx {idx}, key {key}: {e}")
             continue
 
-for jet in masked_vecs:
+for jet_idx, jet in enumerate(masked_vecs):
      for idx, key in enumerate(vecs_dict.keys()):
-         vecs_dict[vecs_idx_map[str(idx)]].extend(jet[idx].flatten().tolist())
+        try:
+            vecs_dict[vecs_idx_map[idx]].extend(masked_feats[jet_idx][idx].flatten().tolist())
+        except IndexError as e:
+            print(f"IndexError for jet_idx {jet_idx}, idx {idx}, key {key}: {e}")
+            continue
 
 print("Features and vectors sorted.")
 
