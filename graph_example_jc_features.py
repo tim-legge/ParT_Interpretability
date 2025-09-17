@@ -147,7 +147,7 @@ vecs_dict = {
 vecs_idx_map = {str(i): key for i, key in enumerate(vecs_dict.keys())}
 print(f'vecs_idx_map: {vecs_idx_map}')
 
-print(masked_feats.shape, masked_vecs.shape)
+print(len(masked_feats), len(masked_vecs))
 
 for idx, feature in enumerate(masked_feats):
     feats_dict[feats_idx_map[str(idx)]].extend(feature.flatten().tolist())
