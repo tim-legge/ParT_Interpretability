@@ -126,7 +126,7 @@ def compile_histograms(data_dir, output_dir, feats_dict=None, vecs_dict=None, la
             # determine label
             if labelstype == 'jc':
                 if np.argmax(labels[0]) == np.argmax(labels[-1]):
-                    label = np.argmax(labels[0], axis=1)
+                    label = np.argmax(labels[0])
                     label_name = labels_list[label]
                 else:
                     print("Warning: Inconsistent labels in the batch, skipping this batch.")
