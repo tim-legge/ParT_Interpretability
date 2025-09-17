@@ -1,0 +1,148 @@
+import os
+import numpy as np
+import matplotlib.pyplot as plt
+import uproot
+from graph_jc_features import mask_out
+
+stem = '/part-vol-3/timlegge-ParT-trained/example_jc_feat_dists/'
+
+def build_features_and_labels(tree, transform_features=True):
+
+    # load arrays from the tree
+    a = tree.arrays(filter_name=['part_*', 'jet_pt', 'jet_energy', 'label_*'])
+
+    # compute new features
+    a['part_mask'] = ak.ones_like(a['part_energy'])
+    a['part_pt'] = np.hypot(a['part_px'], a['part_py'])
+    a['part_pt_log'] = np.log(a['part_pt'])
+    a['part_e_log'] = np.log(a['part_energy'])
+    a['part_logptrel'] = np.log(a['part_pt']/a['jet_pt'])
+    a['part_logerel'] = np.log(a['part_energy']/a['jet_energy'])
+    a['part_deltaR'] = np.hypot(a['part_deta'], a['part_dphi'])
+    a['part_d0'] = np.tanh(a['part_d0val'])
+    a['part_dz'] = np.tanh(a['part_dzval'])
+
+    # apply standardization
+    if transform_features:
+        a['part_pt_log'] = (a['part_pt_log'] - 1.7) * 0.7
+        a['part_e_log'] = (a['part_e_log'] - 2.0) * 0.7
+        a['part_logptrel'] = (a['part_logptrel'] - (-4.7)) * 0.7
+        a['part_logerel'] = (a['part_logerel'] - (-4.7)) * 0.7
+        a['part_deltaR'] = (a['part_deltaR'] - 0.2) * 4.0
+        a['part_d0err'] = _clip(a['part_d0err'], 0, 1)
+        a['part_dzerr'] = _clip(a['part_dzerr'], 0, 1)
+
+    feature_list = {
+        'pf_points': ['part_deta', 'part_dphi'], # not used in ParT
+        'pf_features': [
+            'part_pt_log',
+            'part_e_log',
+            'part_logptrel',
+            'part_logerel',
+            'part_deltaR',
+            'part_charge',
+            'part_isChargedHadron',
+            'part_isNeutralHadron',
+            'part_isPhoton',
+            'part_isElectron',
+            'part_isMuon',
+            'part_d0',
+            'part_d0err',
+            'part_dz',
+            'part_dzerr',
+            'part_deta',
+            'part_dphi',
+        ],
+        'pf_vectors': [
+            'part_px',
+            'part_py',
+            'part_pz',
+            'part_energy',
+        ],
+        'pf_mask': ['part_mask']
+    }
+
+    out = {}
+    for k, names in feature_list.items():
+        out[k] = np.stack([_pad(a[n], maxlen=128).to_numpy() for n in names], axis=1)
+
+    label_list = ['label_QCD', 'label_Hbb', 'label_Hcc', 'label_Hgg', 'label_H4q', 'label_Hqql', 'label_Zqq', 'label_Wqq', 'label_Tbqq', 'label_Tbl']
+    out['label'] = np.stack([a[n].to_numpy().astype('int') for n in label_list], axis=1)
+
+    return out
+
+if not os.path.exists('/part-vol-3/timlegge-ParT-trained/example_jc_feat_dists/'):
+    os.makedirs('/part-vol-3/timlegge-ParT-trained/example_jc_feat_dists/')
+
+datapath = '/part-vol-3/timlegge-ParT-trained/JetClass_example_100k.root'
+with uproot.open(datapath) as f:
+    tree = f['tree']
+    data = build_features_and_labels(tree)
+    features = data['pf_features'][:10000]
+    vectors = data['pf_vectors'][:10000]
+    masks = data['pf_mask'][:10000]
+
+masked_feats, masked_vecs = mask_out(features, vectors, masks)
+
+feats_dict = {
+    'part_pt_log': [],
+    'part_e_log': [],
+    'part_log_ptrel': [],
+    'part_log_erel': [],
+    'part_deltaR': [],
+    'part_charge': [],
+    'part_isChargedHadron': [],
+    'part_isNeutralHadron': [],
+    'part_isPhoton': [],
+    'part_isElectron': [],
+    'part_isMuon': [],
+    'part_d0': [],
+    'part_d0err': [],
+    'part_dz': [],
+    'part_dzerr': [],
+    'part_deta': [],
+}
+
+vecs_dict = {
+    'part_px': [],
+    'part_py': [],
+    'part_pz': [],
+    'part_energy': [],
+}
+
+for jet in masked_feats:
+    for idx, key in enumerate(feats_dict.keys()):
+        feats_dict[key].extend(jet[idx])
+
+for jet in masked_vecs:
+    for idx, key in enumerate(vecs_dict.keys()):
+        vecs_dict[key].extend(jet[idx])
+
+# before plotting, get maximum and minimum values for each feature
+feat_ranges = {}
+for key in feats_dict.keys():
+    feat_ranges[key] = (np.min(feats_dict[key]), np.max(feats_dict[key]))
+
+vec_ranges = {}
+for key in vecs_dict.keys():
+    vec_ranges[key] = (np.min(vecs_dict[key]), np.max(vecs_dict[key]))
+
+if os.path.exists(stem+'ranges.txt'):
+    with open(stem+'ranges.txt', 'w') as f:
+        f.write("Feature Ranges:\n")
+        for key, (min_val, max_val) in feat_ranges.items():
+            f.write(f"{key}: min={min_val}, max={max_val}\n")
+        f.write("\nVector Ranges:\n")
+        for key, (min_val, max_val) in vec_ranges.items():
+            f.write(f"{key}: min={min_val}, max={max_val}\n")
+
+# now plot histograms for each feature
+for key, values in feats_dict.items():
+    hist, bin_edges = np.histogram(values, bins=50, range=feat_ranges[key])
+    fig, ax = plt.subplots()
+    ax.step(bin_edges, hist, where='pre')
+    ax.set_title(f'{key} distribution - JetClass 100k Sample')
+    ax.set_xlabel(key)
+    ax.set_ylabel('Counts')
+    plt.savefig(stem+f'{key}_hist.png')
+    plt.close()
