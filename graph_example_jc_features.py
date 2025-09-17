@@ -116,6 +116,7 @@ with uproot.open(datapath) as f:
 print("Features, vectors, and masks loaded.")
 
 print(masks[0])
+print(np.sum(masks[0]))
 
 masked_feats, masked_vecs = mask_out(features, vectors, masks)
 
@@ -158,8 +159,8 @@ for jet_idx, jet in enumerate(masked_feats):
         try:
             feats_dict[key].extend(masked_feats[jet_idx][idx].flatten().tolist())
             # we need to check that padding is actually being removed
-            if np.random.rand() < 0.01:
-                print(f'Num of particles: {len(masked_feats[jet_idx][idx])} for jet_idx {jet_idx}, idx {idx}, key {key}')
+            #if np.random.rand() < 0.01:
+            #    print(f'Num of particles: {len(masked_feats[jet_idx][idx])} for jet_idx {jet_idx}, idx {idx}, key {key}')
         except IndexError as e:
             print(f"IndexError for jet_idx {jet_idx}, idx {idx}, key {key}: {e}")
             continue
