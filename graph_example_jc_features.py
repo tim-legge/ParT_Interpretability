@@ -143,13 +143,14 @@ vecs_dict = {
     'part_pz': [],
     'part_energy': [],
 }
-for feature in masked_feats:
-    for idx, key in enumerate(feats_dict.keys()):
-        feats_dict[key].extend(feature.flatten().tolist())
+
+
+for idx, feature in enumerate(masked_feats):
+    feats_dict[feats_dict.keys()[idx]].extend(feature.flatten().tolist())
 
 for vector in masked_vecs:
     for idx, key in enumerate(vecs_dict.keys()):
-        vecs_dict[key].extend(vector.flatten().tolist())
+        vecs_dict[vecs_dict.keys()[idx]].extend(vector.flatten().tolist())
 
 print("Features and vectors sorted.")
 
@@ -188,7 +189,7 @@ for key, values in feats_dict.items():
 for key, values in vecs_dict.items():
     hist, bin_edges = np.histogram(values, bins=50, range=vec_ranges[key])
     fig, ax = plt.subplots()
-    ax.step(bin_edges, hist, where='pre')
+    ax.step(bin_edges, hist[:-1], where='pre')
     ax.set_title(f'{key} distribution - JetClass 100k Sample')
     ax.set_xlabel(key)
     ax.set_ylabel('Counts')
