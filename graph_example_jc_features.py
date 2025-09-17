@@ -136,7 +136,7 @@ feats_dict = {
     'part_deta': [],
     'part_dphi': [],
 }
-feats_idx_map = {str(i): key for i, key in enumerate(feats_dict.keys())}
+feats_idx_map = [key for key in feats_dict.keys()]
 print(f'feats_idx_map: {feats_idx_map}')
 vecs_dict = {
     'part_px': [],
@@ -144,7 +144,7 @@ vecs_dict = {
     'part_pz': [],
     'part_energy': [],
 }
-vecs_idx_map = {str(i): key for i, key in enumerate(vecs_dict.keys())}
+vecs_idx_map = [key for key in vecs_dict.keys()]
 print(f'vecs_idx_map: {vecs_idx_map}')
 
 print(len(masked_feats), len(masked_vecs))
@@ -153,7 +153,7 @@ for jet_idx, jet in enumerate(masked_feats):
     for idx, key in enumerate(feats_dict.keys()):
         if idx >= 13 and np.random.rand() < 0.01:
             print(f'jet_idx: {jet_idx}, idx: {idx}, key: {key}')
-        feats_dict[feats_idx_map[str(idx)]].extend(masked_feats[jet][idx].flatten().tolist())
+        feats_dict[feats_idx_map[idx]].extend(masked_feats[jet_idx][idx].flatten().tolist())
 
 for jet in masked_vecs:
      for idx, key in enumerate(vecs_dict.keys()):
