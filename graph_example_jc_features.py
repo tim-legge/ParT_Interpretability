@@ -122,8 +122,8 @@ print(features[0].shape, vectors[0].shape, masks[0].shape)
 
 #masked_feats, masked_vecs = mask_out(features, vectors, masks)
 
-masked_feats = [features[i][:][masks[0][i].astype('bool')] for i in range(len(features))]
-masked_vecs = [vectors[i][:][masks[0][i].astype('bool')] for i in range(len(vectors))]
+masked_feats = [features[i][j][:][masks[0][i].astype('bool')] for i in range(len(features)), j in range(features[i].shape[0])]
+masked_vecs = [vectors[i][j][:][masks[0][i].astype('bool')] for i in range(len(vectors)), j in range(vectors[i].shape[0])]
 
 print(f"Shapes of first 10 items in masked_feats and masked_vecs:")
 for i in range(10):
