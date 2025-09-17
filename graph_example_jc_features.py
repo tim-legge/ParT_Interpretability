@@ -143,13 +143,13 @@ vecs_dict = {
     'part_pz': [],
     'part_energy': [],
 }
-for jet in masked_feats:
+for feature in masked_feats:
     for idx, key in enumerate(feats_dict.keys()):
-        feats_dict[key].extend(jet[idx])
+        feats_dict[key].extend(feature.flatten().tolist())
 
-for jet in masked_vecs:
+for vector in masked_vecs:
     for idx, key in enumerate(vecs_dict.keys()):
-        vecs_dict[key].extend(jet[idx])
+        vecs_dict[key].extend(vector.flatten().tolist())
 
 print("Features and vectors sorted.")
 
