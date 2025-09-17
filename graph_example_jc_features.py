@@ -78,9 +78,9 @@ datapath = '/part-vol-3/timlegge-ParT-trained/JetClass_example_100k.root'
 with uproot.open(datapath) as f:
     tree = f['tree']
     data = build_features_and_labels(tree)
-    features = data['pf_features'][:10000]
-    vectors = data['pf_vectors'][:10000]
-    masks = data['pf_mask'][:10000]
+    features = data['pf_features'][:2000]
+    vectors = data['pf_vectors'][:2000]
+    masks = data['pf_mask'][:2000]
 
 print("Features, vectors, and masks loaded.")
 
