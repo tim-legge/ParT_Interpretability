@@ -147,11 +147,11 @@ vecs_dict = {
 vecs_idx_map = {str(i): key for i, key in enumerate(vecs_dict.items())}
 
 for idx, feature in enumerate(masked_feats):
-    feats_dict[feats_idx_map[str(idx)]].extend(feature.flatten().tolist())
+    feats_dict[feats_idx_map[str(idx)]] = feats_dict[feats_idx_map[str(idx)]].extend(feature.flatten().tolist())
 
 
 for idx, vector in enumerate(masked_vecs):
-    vecs_dict[feats_idx_map[str(idx)]].extend(vector.flatten().tolist())
+    vecs_dict[vecs_idx_map[str(idx)]] = vecs_dict[vecs_idx_map[str(idx)]].extend(vector.flatten().tolist())
 
 
 print("Features and vectors sorted.")
