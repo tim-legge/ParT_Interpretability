@@ -32,6 +32,7 @@ def pool_hists(dataset):
         feature_histograms = [f for f in histograms if key in f]
         feature_histograms = [np.load(os.path.join(histograms_dir+f)) for f in feature_histograms]
         feature_histograms = sum(feature_histograms)
+        assert isinstance(feature_histograms, np.ndarray), "Summed histograms is not a numpy array"
         feature_histograms = feature_histograms/np.sum(feature_histograms.flatten())
         hists_dict[key] = feature_histograms
 
