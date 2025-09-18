@@ -124,7 +124,7 @@ def get_jetclass_features(dir_path='/part-vol-3/weaver-core/particle_transformer
                             'labels': data['label'][:batch_size]
                         }
                 for key, item in data.items():
-                    assert np.sum(item.flatten()) != 0.0, f"Data appears to be empty for key {key} in file {file}: {item}"
+                    assert np.sum(item.flatten()) != 0.0, f"Data appears to be empty for key {key} in file {file}: {item[:15]}"
                     np.save(f"/part-vol-3/timlegge-ParT-trained/data_from_jc_train/{key}_{i}.npy", item)           
             counter += 1
             with open(counter_path, "w") as f:
