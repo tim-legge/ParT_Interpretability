@@ -64,25 +64,25 @@ def sort_feats(masked_feats, masked_vecs, feats_dict=None, vecs_dict=None, label
 
                 try:
                     standardized = masked_feats[jet_idx][idx].flatten().tolist()
-                    standardized = [(val / feature_transforms[key][1]) + feature_transforms[key][0] for val in standardized]
+                    if idx < 5:
+                        standardized = [(val / feature_transforms[key][1]) + feature_transforms[key][0] for val in standardized]
+                    feats_dict[key].extend(standardized)
+                    
+                except IndexError as e:
+                    print(f"IndexError for jet_idx {jet_idx}, idx {idx}, key {key}: {e}")
+                    continue
+    else:
+        for jet_idx, jet in enumerate(masked_feats):
+            for idx, key in enumerate(feats_dict.keys()):
+            #if idx >= 13 and np.random.rand() < 0.01:
+            #    print(f'jet_idx: {jet_idx}, idx: {idx}, key: {key}')
+                try:
+                    
                     feats_dict[key].extend(masked_feats[jet_idx][idx].flatten().tolist())
                     
                 except IndexError as e:
                     print(f"IndexError for jet_idx {jet_idx}, idx {idx}, key {key}: {e}")
                     continue
-
-
-    for jet_idx, jet in enumerate(masked_feats):
-        for idx, key in enumerate(feats_dict.keys()):
-        #if idx >= 13 and np.random.rand() < 0.01:
-        #    print(f'jet_idx: {jet_idx}, idx: {idx}, key: {key}')
-            try:
-                
-                feats_dict[key].extend(masked_feats[jet_idx][idx].flatten().tolist())
-                
-            except IndexError as e:
-                print(f"IndexError for jet_idx {jet_idx}, idx {idx}, key {key}: {e}")
-                continue
     if vecs_dict is None:    
         vecs_dict = {
             'part_px': [],
