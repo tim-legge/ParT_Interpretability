@@ -155,7 +155,8 @@ def compile_histograms(data_dir, output_dir, feats_dict=None, vecs_dict=None,
                 vecs_hists = [np.zeros(50) for key in vecs_dict.keys()]
 
             # TODO: Figure out the right ranges for each feature (use 100k example jets probably)
-            feats_hists += [np.histogram(feats_dict[key], bins=50, range=feat_ranges[key]) for key in feats_dict.keys()]
+            #feats_hists += [np.histogram(feats_dict[key], bins=50, range=feat_ranges[key]) for key in feats_dict.keys()]
+            feats_hists += [np.histogram(feats_dict[key], bins=50) for key in feats_dict.keys()]
             assert np.sum(feats_hists[0]) != 0, "Histogram bins is zero despite good data input"
             vecs_hists += [np.histogram(vecs_dict[key], bins=50, range=vec_ranges[key]) for key in vecs_dict.keys()]
         print(f"Completed processing batch {hist_counter}, saving histograms.")
