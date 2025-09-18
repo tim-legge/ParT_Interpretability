@@ -22,10 +22,5 @@ if __name__ == "__main__":
         'part_deta': [],
         'part_dphi': [],
     }
-
-    feature_files = [f for f in sorted(os.listdir(features_dir)) if 'pf_features' in f and f.endswith('.npy')]
-    mask_files = [f for f in sorted(os.listdir(features_dir)) if 'pf_mask' in f and f.endswith('.npy')]
-    label_files = [f for f in sorted(os.listdir(features_dir)) if 'labels' in f and f.endswith('.npy')]
-    vector_files = [f for f in sorted(os.listdir(features_dir)) if 'pf_vectors' in f and f.endswith('.npy')]
-
+    
     compile_histograms(data_dir=features_dir, output_dir=output_dir, feats_dict=feats_dict, vecs_dict=None)

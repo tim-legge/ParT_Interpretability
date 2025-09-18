@@ -71,7 +71,8 @@ def sort_feats(masked_feats, masked_vecs, feats_dict=None, vecs_dict=None):
 
     return feats_dict, vecs_dict
 
-def compile_histograms(data_dir, output_dir, feats_dict=None, vecs_dict=None, labelstype='jc'):
+def compile_histograms(data_dir, output_dir, feats_dict=None, vecs_dict=None, 
+                        labelstype='jc'):
     assert os.path.exists(data_dir), f"Data directory {data_dir} does not exist."
     assert os.path.exists(output_dir), f"Output directory {output_dir} does not exist."
     print(f"Processing data from {data_dir} and saving histograms to {output_dir}")
@@ -117,6 +118,12 @@ def compile_histograms(data_dir, output_dir, feats_dict=None, vecs_dict=None, la
         print(f"Starting histogram collection from batch {hist_counter}")
         feats_hists = None
         vecs_hists = None
+
+        feature_files = [f for f in sorted(os.listdir(data_dir)) if 'pf_features' in f and f.endswith('.npy')]
+        mask_files = [f for f in sorted(os.listdir(data_dir)) if 'pf_mask' in f and f.endswith('.npy')]
+        label_files = [f for f in sorted(os.listdir(data_dir)) if 'labels' in f and f.endswith('.npy')]
+        vector_files = [f for f in sorted(os.listdir(data_dir)) if 'pf_vectors' in f and f.endswith('.npy')]
+
         for feat_file, mask_file, label_file, vec_file in list(zip(feature_files, mask_files, label_files, vector_files))[hist_counter*20:(hist_counter+1)*20]:
             feats = np.load(os.path.join(data_dir, feat_file))
             masks = np.load(os.path.join(data_dir, mask_file))
