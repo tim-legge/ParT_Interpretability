@@ -114,7 +114,7 @@ def compile_histograms(data_dir, output_dir, feats_dict=None, vecs_dict=None,
         with open(os.path.join(output_dir, 'hist_counter.txt'), "w") as f:
             f.write("0")
     with open(os.path.join(output_dir, 'hist_counter.txt'), "r") as f:
-            hist_counter = int(f.read())
+        hist_counter = int(f.read())
     while hist_counter < 50:
         print(f"Starting histogram collection from batch {hist_counter}")
         feats_hists = None
