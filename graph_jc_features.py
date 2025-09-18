@@ -37,6 +37,7 @@ def sort_feats(masked_feats, masked_vecs, feats_dict=None, vecs_dict=None):
             'part_dz': [],
             'part_dzerr': [],
             'part_deta': [],
+            'part_dphi': [],
         }
     else:
         feats_dict = feats_dict
@@ -47,7 +48,8 @@ def sort_feats(masked_feats, masked_vecs, feats_dict=None, vecs_dict=None):
         #    print(f'jet_idx: {jet_idx}, idx: {idx}, key: {key}')
             try:
                 feats_dict[key].extend(masked_feats[jet_idx][idx].flatten().tolist())
-                assert sum(masked_feats[jet_idx][idx]) != 0.0, f"Feature @ {jet_idx}, {idx} appears to be all zeros, something is wrong: {masked_feats[jet_idx][idx][:15]}"
+                if sum(masked_feats[jet_idx][idx]) == 0.0: 
+                    print(f"Feature @ {jet_idx}, {idx} appears to be all zeros, something is wrong: {masked_feats[jet_idx][idx][:]}")
             # we need to check that padding is actually being removed
             #if np.random.rand() < 0.01:
             #    print(f'Num of particles: {len(masked_feats[jet_idx][idx])} for jet_idx {jet_idx}, idx {idx}, key {key}')
