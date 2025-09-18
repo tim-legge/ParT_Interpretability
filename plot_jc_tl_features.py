@@ -31,7 +31,7 @@ def pool_hists(dataset):
     for key in hists_dict.keys():
         feature_histograms = [f for f in histograms if key in f]
         #print(f"elements of feature_histograms as filenames {key}: {feature_histograms}")
-        feature_histograms = [np.load(os.path.join(histograms_dir+f)) for f in feature_histograms]
+        feature_histograms = [np.load(os.path.join(histograms_dir,f)) for f in feature_histograms]
         print(f'first two elements of feature_histograms from {histograms_dir} as arrays {key}: {feature_histograms[:2]}')
         feature_histograms = sum(feature_histograms)
         assert isinstance(feature_histograms[0], np.ndarray), "Histogram bins is not a numpy array"
