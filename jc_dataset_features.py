@@ -110,13 +110,12 @@ def get_jetclass_features(dir_path='/part-vol-3/weaver-core/particle_transformer
     for i, file in enumerate(sorted(os.listdir(dir_path))):
         if i < counter:
             continue
-        if i==0:
-            print("Reading first file in the directory:", file)
+        print("Reading file:", file)
         if file.endswith('.root'):
             file_path = os.path.join(dir_path, file)
             with uproot.open(file_path) as f:
                 tree = f[tree_name]
-                data = build_features_and_labels(tree)
+                data = build_features_and_labels(tree, transform_features=False)
                 data = {
                             'pf_points': data['pf_points'][:batch_size],
                             'pf_features': data['pf_features'][:batch_size],
@@ -125,7 +124,8 @@ def get_jetclass_features(dir_path='/part-vol-3/weaver-core/particle_transformer
                             'labels': data['label'][:batch_size]
                         }
                 for key, item in data.items():
-                    np.save(f"/part-vol-3/timlegge-ParT-trained/data_from_jc_train/{key}_{i}.npy", data[key])           
+                    assert np.sum(item.flatten()) != 0.0, f"Data appears to be empty for key {key} in file {file}: {item}"
+                    np.save(f"/part-vol-3/timlegge-ParT-trained/data_from_jc_train/{key}_{i}.npy", item)           
             counter += 1
             with open(counter_path, "w") as f:
                 f.write(str(counter))
