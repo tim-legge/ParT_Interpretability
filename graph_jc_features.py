@@ -150,16 +150,19 @@ def compile_histograms(data_dir, output_dir, feats_dict=None, vecs_dict=None,
             feats_dict, vecs_dict = sort_feats(masked_feats, masked_vecs, feats_dict=feats_dict, vecs_dict=vecs_dict)
 
             if feats_hists is None:
-                feats_hists = np.zeros(50)
-                vecs_hists = np.zeros(50)
+                # dictionary comprehension to keep features separate
+                feats_hists = {key: np.zeros(50) for key in feats_dict.keys()}
+                vecs_hists = {key: np.zeros(50) for key in vecs_dict.keys()}
+            
+            
             # TODO: Figure out the right ranges for each feature (use 100k example jets probably)
             #feats_hists += [np.histogram(feats_dict[key], bins=50, range=feat_ranges[key]) for key in feats_dict.keys()]
             
             for key in feats_dict.keys():
-                feats_hists += np.histogram(feats_dict[key], bins=50, range=feat_ranges[key])[0]
+                feats_hists[key] += np.histogram(feats_dict[key], bins=50, range=feat_ranges[key])[0]
             #assert np.sum(feats_hists[0]) != 0, "Histogram bins is zero despite good data input"
             for key in vecs_dict.keys():
-                vecs_hists += np.histogram(vecs_dict[key], bins=50, range=vec_ranges[key])[0]
+                vecs_hists[key] += np.histogram(vecs_dict[key], bins=50, range=vec_ranges[key])[0]
             
         print(f"Completed processing batch {hist_counter}, saving histograms.")
         for idx, key in enumerate(feats_dict.keys()):
