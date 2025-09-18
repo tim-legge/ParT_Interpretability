@@ -197,9 +197,9 @@ def compile_histograms(data_dir, output_dir, feats_dict=None, vecs_dict=None,
             
         print(f"Completed processing batch {hist_counter}, saving histograms.")
         for idx, key in enumerate(feats_dict.keys()):
-            np.save(os.path.join(output_dir, f"{label_name}_{hist_counter}_hist_{key}.npy"), feats_hists[idx])
+            np.save(os.path.join(output_dir, f"{label_name}_{hist_counter}_hist_{key}.npy"), feats_hists[key])
         for idx, key in enumerate(vecs_dict.keys()):
-            np.save(os.path.join(output_dir, f"{label_name}_{hist_counter}_hist_{key}.npy"), vecs_hists[idx])
+            np.save(os.path.join(output_dir, f"{label_name}_{hist_counter}_hist_{key}.npy"), vecs_hists[key])
         hist_counter += 1
         with open(os.path.join(output_dir, 'hist_counter.txt'), "w") as f:
             f.write(str(hist_counter))
