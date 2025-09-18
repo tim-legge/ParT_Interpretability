@@ -13,7 +13,7 @@ def mask_out(feats, vectors, mask):
     for jet_idx, jet in enumerate(vectors):
         masked_vecs.append(jet[:, :np.sum(mask[jet_idx].astype('bool'))])
     
-    print(masked_feats[0][0])
+    #print(masked_feats[0][0])
     
     return masked_feats, masked_vecs
 
