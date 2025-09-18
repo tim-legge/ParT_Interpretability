@@ -17,7 +17,7 @@ def mask_out(feats, vectors, mask):
     
     return masked_feats, masked_vecs
 
-def sort_feats(masked_feats, masked_vecs, feats_dict=None, vecs_dict=None):
+def sort_feats(masked_feats, masked_vecs, feats_dict=None, vecs_dict=None, labelstype='jc'):
 
     if feats_dict is None:
         feats_dict = {
@@ -42,11 +42,42 @@ def sort_feats(masked_feats, masked_vecs, feats_dict=None, vecs_dict=None):
     else:
         feats_dict = feats_dict
     
+    # We'll do standardization in sort_feats
+    if labelstype == 'jc' or None:
+        feature_transforms = {
+            'part_pt_log': (1.7, 0.7),
+            'part_e_log': (2.0, 0.7),
+            'part_log_ptrel': (-4.7, 0.7),
+            'part_log_erel': (-4.7, 0.7),
+            'part_deltaR': (0.2, 4.0),
+            'part_deta': (0.0, 1.0),
+            'part_dphi': (0.0, 1.0),
+        }
+    else:
+        feature_transforms = None
+
+    if feature_transforms is not None:
+        for jet_idx, jet in enumerate(masked_feats):
+            for idx, key in enumerate(feats_dict.keys()):
+            #if idx >= 13 and np.random.rand() < 0.01:
+            #    print(f'jet_idx: {jet_idx}, idx: {idx}, key: {key}')
+
+                try:
+                    standardized = masked_feats[jet_idx][idx].flatten().tolist()
+                    standardized = [(val / feature_transforms[key][1]) + feature_transforms[key][0] for val in standardized]
+                    feats_dict[key].extend(masked_feats[jet_idx][idx].flatten().tolist())
+                    
+                except IndexError as e:
+                    print(f"IndexError for jet_idx {jet_idx}, idx {idx}, key {key}: {e}")
+                    continue
+
+
     for jet_idx, jet in enumerate(masked_feats):
         for idx, key in enumerate(feats_dict.keys()):
         #if idx >= 13 and np.random.rand() < 0.01:
         #    print(f'jet_idx: {jet_idx}, idx: {idx}, key: {key}')
             try:
+                
                 feats_dict[key].extend(masked_feats[jet_idx][idx].flatten().tolist())
                 
             except IndexError as e:
@@ -147,7 +178,7 @@ def compile_histograms(data_dir, output_dir, feats_dict=None, vecs_dict=None,
                     print("Warning: Inconsistent labels in the batch, skipping this batch.")
                     continue
             masked_feats, masked_vecs = mask_out(feats, vecs, masks)
-            feats_dict, vecs_dict = sort_feats(masked_feats, masked_vecs, feats_dict=feats_dict, vecs_dict=vecs_dict)
+            feats_dict, vecs_dict = sort_feats(masked_feats, masked_vecs, feats_dict=feats_dict, vecs_dict=vecs_dict, labelstype=labelstype)
 
             if feats_hists is None:
                 # dictionary comprehension to keep features separate
