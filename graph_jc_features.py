@@ -47,6 +47,7 @@ def sort_feats(masked_feats, masked_vecs, feats_dict=None, vecs_dict=None):
         #    print(f'jet_idx: {jet_idx}, idx: {idx}, key: {key}')
             try:
                 feats_dict[key].extend(masked_feats[jet_idx][idx].flatten().tolist())
+                assert sum(masked_feats[jet_idx][idx]) != 0.0, "Feature appears to be all zeros, something is wrong"
             # we need to check that padding is actually being removed
             #if np.random.rand() < 0.01:
             #    print(f'Num of particles: {len(masked_feats[jet_idx][idx])} for jet_idx {jet_idx}, idx {idx}, key {key}')
@@ -125,7 +126,7 @@ def compile_histograms(data_dir, output_dir, feats_dict=None, vecs_dict=None,
         mask_files = [f for f in sorted(os.listdir(data_dir)) if 'pf_mask' in f and f.endswith('.npy')]
         label_files = [f for f in sorted(os.listdir(data_dir)) if 'labels' in f and f.endswith('.npy')]
         vector_files = [f for f in sorted(os.listdir(data_dir)) if 'pf_vectors' in f and f.endswith('.npy')]
-
+        i = 0
         for feat_file, mask_file, label_file, vec_file in list(zip(feature_files, mask_files, label_files, vector_files))[hist_counter*20:(hist_counter+1)*20]:
             feats = np.load(os.path.join(data_dir, feat_file))
             masks = np.load(os.path.join(data_dir, mask_file))
@@ -150,15 +151,16 @@ def compile_histograms(data_dir, output_dir, feats_dict=None, vecs_dict=None,
             masked_feats, masked_vecs = mask_out(feats, vecs, masks)
             feats_dict, vecs_dict = sort_feats(masked_feats, masked_vecs, feats_dict=feats_dict, vecs_dict=vecs_dict)
 
-            if feats_hists is None:
-                feats_hists = [np.zeros(50) for key in feats_dict.keys()]
-                vecs_hists = [np.zeros(50) for key in vecs_dict.keys()]
 
             # TODO: Figure out the right ranges for each feature (use 100k example jets probably)
             #feats_hists += [np.histogram(feats_dict[key], bins=50, range=feat_ranges[key]) for key in feats_dict.keys()]
-            feats_hists += [np.histogram(feats_dict[key], bins=50) for key in feats_dict.keys()]
+            if i == 0:
+                feats_hists = [np.histogram(feats_dict[key], bins=50) for key in feats_dict.keys()]
+            else:
+                feats_hists += [np.histogram(feats_dict[key], bins=50) for key in feats_dict.keys()]
             assert np.sum(feats_hists[0]) != 0, "Histogram bins is zero despite good data input"
             vecs_hists += [np.histogram(vecs_dict[key], bins=50, range=vec_ranges[key]) for key in vecs_dict.keys()]
+            i += 1
         print(f"Completed processing batch {hist_counter}, saving histograms.")
         for idx, key in enumerate(feats_dict.keys()):
             np.save(os.path.join(output_dir, f"{label_name}_{hist_counter}_hist_{key}.npy"), feats_hists[idx])
